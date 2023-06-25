@@ -1,4 +1,4 @@
-package com.KrishiG.dtos;
+package com.KrishiG.dtos.request;
 
 import lombok.*;
 
@@ -8,10 +8,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoleDto {
+public class ImagesDto {
     private Long id;
 
-    private String roleName;
+    private Long product_id;
+
+    private String imageName;
+
+    private String imageUrl;
 
     private String createdBy;
 

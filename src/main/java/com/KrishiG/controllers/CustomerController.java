@@ -1,6 +1,9 @@
 package com.KrishiG.controllers;
 
-import com.KrishiG.dtos.CustomerDto;
+import com.KrishiG.dtos.request.CustomerAddressDto;
+import com.KrishiG.dtos.request.CustomerDto;
+import com.KrishiG.dtos.response.CustomerAddressResponseDto;
+import com.KrishiG.dtos.response.CustomerResponseDto;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +21,9 @@ public class CustomerController {
     private CustomerService customerService;
 
     //create
-    @PostMapping
-    public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
-        CustomerDto createdCustomer = customerService.createCustomer(customerDto);
+    @PostMapping("/addCustomer")
+    public ResponseEntity<CustomerResponseDto> createCustomer(@RequestBody CustomerDto customerDto) {
+        CustomerResponseDto createdCustomer = customerService.createCustomer(customerDto);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
@@ -47,5 +50,11 @@ public class CustomerController {
     {
        List<CustomerDto> customerDtos =  customerService.getAllCustomers();
        return new ResponseEntity<>(customerDtos, HttpStatus.OK);
+    }
+
+    @PostMapping("/addAddress")
+    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@RequestBody CustomerAddressDto addressDto) {
+        CustomerAddressResponseDto addressDtos = customerService.addCustomerAddress(addressDto);
+        return new ResponseEntity<>(addressDtos, HttpStatus.CREATED);
     }
 }

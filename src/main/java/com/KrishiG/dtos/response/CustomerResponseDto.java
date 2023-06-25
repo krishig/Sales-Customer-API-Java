@@ -1,17 +1,20 @@
-package com.KrishiG.dtos;
+package com.KrishiG.dtos.response;
 
-import com.KrishiG.enitites.CustomerAddress;
+import com.KrishiG.dtos.request.CustomerAddressDto;
 import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerDto {
+public class CustomerResponseDto {
+
+    private Long id;
 
     private String fullName;
 
@@ -19,7 +22,7 @@ public class CustomerDto {
 
     private String gender;
 
-    private List<CustomerAddressDto> address;
+    private List<CustomerAddressResponseDto> address;
 
     private Long createdBy;
 
@@ -28,4 +31,5 @@ public class CustomerDto {
     private Long modifiedBy;
 
     private Date modifiedAt;
+
 }

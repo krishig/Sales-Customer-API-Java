@@ -1,6 +1,6 @@
 package com.KrishiG.services;
 
-import com.KrishiG.dtos.UserDto;
+import com.KrishiG.dtos.request.UserDto;
 
 import java.util.List;
 
