@@ -1,16 +1,14 @@
 package com.KrishiG.services;
 
-import com.KrishiG.dtos.request.CustomerAddressDto;
-import com.KrishiG.dtos.request.CustomerDto;
-import com.KrishiG.dtos.response.CustomerAddressResponseDto;
-import com.KrishiG.dtos.response.CustomerResponseDto;
+import com.KrishiG.dtos.CustomerDto;
+import lombok.Lombok;
 
 import java.util.List;
 
 public interface CustomerService {
 
     //create
-    CustomerResponseDto createCustomer(CustomerDto customerDto);
+    CustomerDto createCustomer(CustomerDto customerDto);
 
     //update
     CustomerDto updateCustomer(Long customerId, CustomerDto customerDto);
@@ -20,6 +18,4 @@ public interface CustomerService {
 
     //delete
     void deleteCustomer(Long customerId);
-
-    public CustomerAddressResponseDto addCustomerAddress(CustomerAddressDto addressDto);
 }

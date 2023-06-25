@@ -1,4 +1,4 @@
-package com.KrishiG.dtos.request;
+package com.KrishiG.dtos;
 
 import lombok.*;
 
@@ -8,15 +8,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BrandsDto {
+public class OrderStatusDto {
 
     private Long id;
 
-    private String brandName;
+    private String type;
 
-    private int brandImageId;
-
-    private String createdBy;
+    private String createBy;
 
     private Date createdAt;
 

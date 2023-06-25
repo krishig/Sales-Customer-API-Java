@@ -1,4 +1,4 @@
-package com.KrishiG.dtos.request;
+package com.KrishiG.dtos;
 
 import lombok.*;
 

@@ -1,13 +1,10 @@
 package com.KrishiG.services.Impl;
 
-import com.KrishiG.dtos.request.CustomerAddressDto;
-import com.KrishiG.dtos.request.CustomerDto;
-import com.KrishiG.dtos.response.CustomerAddressResponseDto;
-import com.KrishiG.dtos.response.CustomerResponseDto;
+import com.KrishiG.dtos.CustomerAddressDto;
+import com.KrishiG.dtos.CustomerDto;
 import com.KrishiG.enitites.Customer;
 import com.KrishiG.enitites.CustomerAddress;
 import com.KrishiG.exception.ResourceNotFoundException;
-import com.KrishiG.repositories.AddressRepository;
 import com.KrishiG.repositories.CustomerRepository;
 import com.KrishiG.services.CustomerService;
 import org.modelmapper.ModelMapper;
@@ -25,26 +22,20 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
     private ModelMapper mapper;
 
     @Override
-    public CustomerResponseDto createCustomer(CustomerDto customerDto) {
+    public CustomerDto createCustomer(CustomerDto customerDto) {
         Customer customer = mapper.map(customerDto, Customer.class);
         List<CustomerAddress> lstOfAddresses = new ArrayList<>();
-        Customer dbCustomer = customerRepository.save(customer);
         for(CustomerAddressDto temp : customerDto.getAddress())
         {
             CustomerAddress customerAddress = mapper.map(temp, CustomerAddress.class);
-            customerAddress.setCustomer(dbCustomer);
-            CustomerAddress address = addressRepository.save(customerAddress);
-            lstOfAddresses.add(address);
+            lstOfAddresses.add(customerAddress);
         }
-        customer.setAddress(lstOfAddresses);
-        CustomerResponseDto customerDto1 = convertEntityToDto(customer);
-        return customerDto1;
+        customer.setAddressId(lstOfAddresses);
+        customerRepository.save(customer);
+        return mapper.map(customer, CustomerDto.class);
     }
 
     @Override
@@ -60,7 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
             CustomerAddress customerAddress = mapper.map(temp, CustomerAddress.class);
             lstOfAddresses.add(customerAddress);
         }
-        customer.setAddress(lstOfAddresses);
+        customer.setAddressId(lstOfAddresses);
         customer.setCreatedBy(customerDto.getCreatedBy());
         customer.setCreatedDate(customer.getCreatedDate());
         customer.setModifiedBy(customer.getModifiedBy());
@@ -85,46 +76,5 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new ResourceNotFoundException("Customer not found with the given ID"));
         customerRepository.delete(customer);
-    }
-
-    @Override
-    public CustomerAddressResponseDto addCustomerAddress(CustomerAddressDto addressDto) {
-        CustomerAddress customerAddress = mapper.map(addressDto, CustomerAddress.class);
-        CustomerAddress customerAddresses = addressRepository.save(customerAddress);
-        CustomerAddressResponseDto addressDto1 = convertEntityToDtoForAddress(addressDto.getCustomer().getId(),customerAddresses);
-        return addressDto1;
-    }
-
-    private CustomerResponseDto convertEntityToDto(Customer customer) {
-        CustomerResponseDto customerResDto = new CustomerResponseDto();
-        customerResDto.setId(customer.getId());
-        customerResDto.setFullName(customer.getFullName());
-        customerResDto.setGender(customer.getGender());
-        List<CustomerAddressResponseDto> addressDtos = new ArrayList<>();
-        for(CustomerAddress custAddress : customer.getAddress()) {
-            CustomerAddressResponseDto addressDto = mapper.map(custAddress, CustomerAddressResponseDto.class);
-            addressDtos.add(addressDto);
-        }
-
-        customerResDto.setAddress(addressDtos);
-        customerResDto.setMobileNo(customer.getMobileNo());
-        customerResDto.setCreatedBy(customer.getCreatedBy());
-        customerResDto.setCreatedAt(customer.getCreatedDate());
-        customerResDto.setModifiedBy(customer.getModifiedBy());
-        customerResDto.setModifiedAt(customer.getModifiedDate());
-        return  customerResDto;
-    }
-
-    public CustomerAddressResponseDto convertEntityToDtoForAddress(Long customerId, CustomerAddress customerAddress) {
-        CustomerAddressResponseDto customerAddressDto = new CustomerAddressResponseDto();
-        customerAddressDto.setAddress(customerAddress.getAddress());
-        customerAddressDto.setHouseNumber(customerAddress.getHouseNumber());
-        customerAddressDto.setId(customerAddress.getId());
-        customerAddressDto.setStreetName(customerAddress.getStreetName());
-        customerAddressDto.setDistrict(customerAddress.getDistrict());
-        customerAddressDto.setVillageName(customerAddress.getVillageName());
-        customerAddressDto.setState(customerAddress.getState());
-        customerAddressDto.setCustId(customerId);
-        return customerAddressDto;
     }
 }
