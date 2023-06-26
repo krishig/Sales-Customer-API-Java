@@ -1,6 +1,6 @@
 package com.KrishiG.controllers;
 
-import com.KrishiG.dtos.UserDto;
+import com.KrishiG.dtos.request.UserDto;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

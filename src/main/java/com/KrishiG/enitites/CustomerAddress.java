@@ -1,5 +1,6 @@
 package com.KrishiG.enitites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,14 +12,15 @@ import java.util.Date;
 @Builder
 @Getter
 @Setter
-@Table(name = "USER_ADDRESSES")
+@Table(name = "CUSTOMER_ADDRESS")
 public class CustomerAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

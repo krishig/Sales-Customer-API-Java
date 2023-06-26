@@ -2,6 +2,8 @@ package com.KrishiG.enitites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -16,18 +18,27 @@ public class CustomerCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_id")
     private Long id;
 
-    private Long customerId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    private float totalPrice;
+    //private float totalPrice;
 
-    private String createdBy;
+    @Column(name = "created_by")
+    private Long createdBy;
 
-    private Date createdAt;
+    @CreationTimestamp
+    @Column(name = "created_date")
+    private Date createdDate;
 
-    private String modifiedBy;
+    @Column(name = "modified_by")
+    private Long modifiedBy;
 
-    private Date modifiedAt;
+    @UpdateTimestamp
+    @Column(name = "modified_date")
+    private Date modifiedDate;
 
 }

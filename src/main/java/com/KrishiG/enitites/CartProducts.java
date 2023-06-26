@@ -18,11 +18,9 @@ public class CartProducts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sales_user_id")
-    private Long salesUserId;
-
     @Column(name = "cart_id")
-    private Long cartId;
+    @ManyToOne
+    private CustomerCart cart;
 
     @Column(name = "product_id")
     private Long productId;
@@ -30,7 +28,14 @@ public class CartProducts {
     @Column(name = "product_quantity")
     private int productQuantity;
 
-    private float price;
+    @Column(name = "actual_price")
+    private float actualPrice;
+
+    @Column(name = "discount")
+    private int discount;
+
+    @Column(name = "purchase_price")
+    private float purchasePrice;
 
     @Column(name = "created_by")
     private  String createdBy;

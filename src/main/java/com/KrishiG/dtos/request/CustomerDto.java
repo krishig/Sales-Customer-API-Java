@@ -1,6 +1,5 @@
-package com.KrishiG.dtos;
+package com.KrishiG.dtos.request;
 
-import com.KrishiG.enitites.CustomerAddress;
 import lombok.*;
 
 import java.util.Date;
@@ -12,6 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CustomerDto {
+
+    private Long id;
 
     private String fullName;
 

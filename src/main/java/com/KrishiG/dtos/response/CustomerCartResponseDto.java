@@ -1,23 +1,26 @@
-package com.KrishiG.dtos;
+package com.KrishiG.dtos.response;
 
 import lombok.*;
 
 import java.util.Date;
+
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoleDto {
+public class CustomerCartResponseDto {
+
     private Long id;
 
-    private String roleName;
+    private Long customerId;
 
-    private String createdBy;
+    private Long createdBy;
 
     private Date createdAt;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
     private Date modifiedAt;
 }

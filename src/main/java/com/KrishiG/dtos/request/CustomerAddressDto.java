@@ -1,4 +1,4 @@
-package com.KrishiG.dtos;
+package com.KrishiG.dtos.request;
 
 import lombok.*;
 
@@ -12,6 +12,7 @@ public class CustomerAddressDto {
 
     private Long id;
 
+    private CustomerDto customer;
     private Long userId;
 
     private String address;

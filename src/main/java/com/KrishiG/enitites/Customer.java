@@ -30,7 +30,7 @@ public class Customer {
     private String gender;
 
     @OneToMany(mappedBy = "customer")
-    private List<CustomerAddress> addressId;
+    private List<CustomerAddress> address;
 
     @Column(name = "created_by")
     private Long createdBy;

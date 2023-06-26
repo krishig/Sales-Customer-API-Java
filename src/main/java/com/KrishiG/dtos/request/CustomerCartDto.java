@@ -1,5 +1,6 @@
-package com.KrishiG.dtos;
+package com.KrishiG.dtos.request;
 
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Date;
@@ -8,17 +9,17 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderStatusDto {
+public class CustomerCartDto {
 
     private Long id;
 
-    private String type;
+    private Long customerId;
 
-    private String createBy;
+    private Long createdBy;
 
     private Date createdAt;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
     private Date modifiedAt;
 }
