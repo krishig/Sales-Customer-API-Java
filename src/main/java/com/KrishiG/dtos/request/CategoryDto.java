@@ -1,5 +1,6 @@
 package com.KrishiG.dtos.request;
 
+import com.KrishiG.enitites.SubCategory;
 import lombok.*;
 
 import java.util.Date;
@@ -14,7 +15,7 @@ public class CategoryDto {
 
     private String categoryName;
 
-    private int imageId;
+    private SubCategory subCategory;
 
     private String createdBy;
 

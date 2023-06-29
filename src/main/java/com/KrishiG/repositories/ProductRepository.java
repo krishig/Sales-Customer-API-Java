@@ -1,9 +1,9 @@
 package com.KrishiG.repositories;
 
-import com.KrishiG.enitites.CustomerCart;
+import com.KrishiG.enitites.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CartRepository extends JpaRepository<CustomerCart, Long> {
+public interface ProductRepository extends JpaRepository<Product,Long> {
 }

@@ -17,11 +17,11 @@ public class ImagesDto {
 
     private String imageUrl;
 
-    private String createdBy;
+    private Long createdBy;
 
     private Date createdAt;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
     private Date modifiedAt;
 }

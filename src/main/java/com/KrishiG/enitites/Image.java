@@ -18,8 +18,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @ManyToOne
+    private Product product;
 
     @Column(name = "image_name")
     private String imageName;
@@ -28,13 +28,13 @@ public class Image {
     private String imageUrl;
 
     @Column(name = "created_by")
-    private String createdBy;
+    private Long createdBy;
 
     @Column(name = "created_at")
     private Date createdAt;
 
     @Column(name = "modified_by")
-    private String modifiedBy;
+    private Long modifiedBy;
 
     @Column(name = "modified_at")
     private Date modifiedAt;

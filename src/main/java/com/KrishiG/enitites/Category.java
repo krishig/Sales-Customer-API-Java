@@ -21,9 +21,6 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @Column(name = "image_id")
-    private Long imageId;
-
     @Column(name = "created_by")
     private String createdBy;
 

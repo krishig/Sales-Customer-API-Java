@@ -1,9 +1,13 @@
 package com.KrishiG.dtos.request;
 
+import com.KrishiG.enitites.CartProducts;
+import com.KrishiG.enitites.Customer;
 import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,11 +19,17 @@ public class CustomerCartDto {
 
     private Long customerId;
 
+    private Customer customer;
+
+    private List<CartProducts> cartProducts;
+
+    private float totalPrice;
+
     private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
     private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

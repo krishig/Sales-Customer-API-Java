@@ -18,36 +18,38 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    private SubCategory sub_category;
+
     @Column(name = "product_name")
     private String productName;
 
     @Column(name = "price")
     private double actualPrice;
 
-    @Column(name = "discounted_price")
-    private int discountPrice;
-
-    private int category;
-
     @Column(name = "whole_sale_price")
     private int wholeSalePrice;
 
     private int quantity;
 
-    @Column(name = "brand_name")
-    private String brandName;
+    @Column(name = "discount")
+    private int discountPrice;
+
+    @ManyToOne
+    @Column(name = "brand_id")
+    private Brands brandId;
 
     @Column(name = "product_description")
     private String productDescription;
 
     @Column(name = "created_by")
-    private String createdBy;
+    private Long createdBy;
 
     @Column(name = "created_at")
     private Date createdAt;
 
     @Column(name = "modified_by")
-    private String modifiedBy;
+    private Long modifiedBy;
 
     @Column(name = "modified_at")
     private Date modifiedAt;

@@ -25,13 +25,13 @@ public class Brands {
     private Long brandImageId;
 
     @Column(name = "created_by")
-    private String createdBy;
+    private Long createdBy;
 
     @Column(name = "created_at")
     private Date createdAt;
 
     @Column(name = "modified_by")
-    private String modifiedBy;
+    private Long modifiedBy;
 
     @Column(name = "modified_at")
     private Date modifiedAt;

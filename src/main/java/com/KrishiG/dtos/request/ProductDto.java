@@ -1,6 +1,9 @@
 package com.KrishiG.dtos.request;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.util.Date;
@@ -10,27 +13,32 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class ProductDto {
+
     private Long id;
 
-    @Column(name = "product_name")
+    private Long sub_category;
+
     private String productName;
 
     private double actualPrice;
 
-    private int discount;
+    private int wholeSalePrice;
 
-    private int category;
+    private int quantity;
 
-    private String brand_name;
+    private int discountPrice;
+
+    private int subCategory;
+
+    private Long brandId;
 
     private String productDescription;
 
-    private String createdBy;
+    private Long createdBy;
 
     private Date createdAt;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
     private Date modifiedAt;
-
 }
