@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -18,8 +19,11 @@ public class Brands {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "brand_id")
-    private Long brandId;
+    @OneToMany(mappedBy = "brand")
+    private List<Product> products;
+
+    @Column(name = "brand_name")
+    private String brandName;
 
     @Column(name = "brand_image_id")
     private Long brandImageId;

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -18,8 +19,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    private SubCategory sub_category;
+    @OneToMany(mappedBy = "product")
+    private List<Image> images;
 
     @Column(name = "product_name")
     private String productName;
@@ -36,8 +37,8 @@ public class Product {
     private int discountPrice;
 
     @ManyToOne
-    @Column(name = "brand_id")
-    private Brands brandId;
+    @JoinColumn(name = "brand_id")
+    private Brands brand;
 
     @Column(name = "product_description")
     private String productDescription;
