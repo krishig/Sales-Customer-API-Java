@@ -37,6 +37,10 @@ public class Product {
     private int discountPrice;
 
     @ManyToOne
+    @JoinColumn(name = "sub_category_id")
+    private SubCategory subCategory;
+
+    @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brands brand;
 

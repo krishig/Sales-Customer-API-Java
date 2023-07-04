@@ -3,6 +3,8 @@ package com.KrishiG.enitites;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -18,6 +20,9 @@ public class SubCategory {
 
     @Column(name = "sub_category_name")
     private String subCategoryName;
+
+    @OneToMany(mappedBy = "subCategory")
+    private List<Product> productList;
 
     @ManyToOne
     @JoinColumn(name = "category_Id")
