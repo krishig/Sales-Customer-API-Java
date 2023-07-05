@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cart")
 public class CartController {
@@ -33,9 +35,9 @@ public class CartController {
     }
 
     @PostMapping("/addProducts")
-    public ResponseEntity<CartProductResponseDto> addProductToCart(@RequestBody CartProductsDto cartProductsDto)
+    public ResponseEntity<List<CartProductResponseDto>> addProductToCart(@RequestBody List<CartProductsDto> cartProductsDto)
     {
-        CartProductResponseDto cartProductResponseDto = cartProductService.addProductToCart(cartProductsDto);
+        List<CartProductResponseDto> cartProductResponseDto = cartProductService.addProductToCart(cartProductsDto);
         return new ResponseEntity(cartProductResponseDto,HttpStatus.OK);
     }
 
