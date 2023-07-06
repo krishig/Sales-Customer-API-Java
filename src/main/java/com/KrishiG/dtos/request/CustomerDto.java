@@ -16,7 +16,7 @@ public class CustomerDto {
 
     private String fullName;
 
-    private String mobileNo;
+    private String mobileNumber;
 
     private String gender;
 
@@ -24,9 +24,9 @@ public class CustomerDto {
 
     private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
     private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

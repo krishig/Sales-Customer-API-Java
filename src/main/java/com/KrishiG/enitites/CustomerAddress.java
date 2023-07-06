@@ -21,15 +21,13 @@ public class CustomerAddress {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "user_id")
     private Customer customer;
-
-    private String address;
 
     @Column(name = "house_number")
     private int houseNumber;
 
-    @Column(name = "street_name")
+    @Column(name = "street_name_or_locality")
     private String streetName;
 
     @Column(name = "village_name")
@@ -39,7 +37,7 @@ public class CustomerAddress {
 
     private String state;
 
-    @Column(name = "postal_code")
+    @Column(name = "postalcode")
     private int postalCode;
 
     @Column(name = "crated_by")

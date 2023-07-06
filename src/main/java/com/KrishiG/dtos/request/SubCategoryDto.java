@@ -1,6 +1,10 @@
 package com.KrishiG.dtos.request;
 
 
+import jakarta.persistence.Column;
+
+import java.util.Date;
+
 public class SubCategoryDto
 {
 
@@ -11,4 +15,12 @@ public class SubCategoryDto
     private Long categoryId;
 
     private String imageUrl;
+
+    private String createdBy;
+
+    private Date createdDate;
+
+    private String modifiedBy;
+
+    private Date modifiedAt;
 }

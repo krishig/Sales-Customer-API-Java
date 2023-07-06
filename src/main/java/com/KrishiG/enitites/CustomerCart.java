@@ -32,14 +32,14 @@ public class CustomerCart {
     private Long createdBy;
 
     @CreationTimestamp
-    @Column(name = "created_date")
+    @Column(name = "created_at")
     private Date createdDate;
 
     @Column(name = "modified_by")
     private Long modifiedBy;
 
     @UpdateTimestamp
-    @Column(name = "modified_date")
+    @Column(name = "modified_at")
     private Date modifiedDate;
 
 }

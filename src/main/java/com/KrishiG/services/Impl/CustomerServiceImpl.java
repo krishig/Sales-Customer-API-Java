@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new ResourceNotFoundException("Customer not found with the given ID"));
         customer.setFullName(customerDto.getFullName());
-        customer.setMobileNo(customerDto.getMobileNo());
+        customer.setMobileNumber(customerDto.getMobileNumber());
         customer.setGender(customerDto.getGender());
         List<CustomerAddress> lstOfAddresses = new ArrayList<>();
         for(CustomerAddressDto temp : customerDto.getAddress())
@@ -107,7 +107,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         customerResDto.setAddress(addressDtos);
-        customerResDto.setMobileNo(customer.getMobileNo());
+        customerResDto.setMobileNo(customer.getMobileNumber());
         customerResDto.setCreatedBy(customer.getCreatedBy());
         customerResDto.setCreatedAt(customer.getCreatedDate());
         customerResDto.setModifiedBy(customer.getModifiedBy());
@@ -117,7 +117,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     public CustomerAddressResponseDto convertEntityToDtoForAddress(Long customerId, CustomerAddress customerAddress) {
         CustomerAddressResponseDto customerAddressDto = new CustomerAddressResponseDto();
-        customerAddressDto.setAddress(customerAddress.getAddress());
         customerAddressDto.setHouseNumber(customerAddress.getHouseNumber());
         customerAddressDto.setId(customerAddress.getId());
         customerAddressDto.setStreetName(customerAddress.getStreetName());

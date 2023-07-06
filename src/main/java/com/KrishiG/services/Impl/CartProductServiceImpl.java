@@ -49,7 +49,6 @@ public class CartProductServiceImpl implements CartProductService {
             CartProductResponseDto cartProductResponseDto = new CartProductResponseDto();
             cartProductResponseDto.setProductQuantity(cartProducts1.getProductQuantity());
             cartProductResponseDto.setActualPrice(cartProducts1.getActualPrice());
-            cartProductResponseDto.setDiscount(cartProducts1.getDiscount());
             cartProductResponseDto.setPurchasePrice(cartProducts1.getPurchasePrice());
             cartProductResponseDto.setTotalAmount(cartProducts1.getTotalAmount());
             cartProductResponseDto.setCreatedBy(cartProducts1.getCreatedBy());
@@ -72,7 +71,6 @@ public class CartProductServiceImpl implements CartProductService {
             cartProducts.setProductId(cartProductsDto1.getProductId());
             cartProducts.setProductQuantity(cartProductsDto1.getProductQuantity());
             cartProducts.setActualPrice(cartProductsDto1.getActualPrice());
-            cartProducts.setDiscount(cartProductsDto1.getDiscount());
             cartProducts.setPurchasePrice(cartProductsDto1.getPurchasePrice());
             cartProducts.setCreatedBy(cartProductsDto1.getCreatedBy());
             cartProducts.setCreatedDate(cartProductsDto1.getCreatedDate());

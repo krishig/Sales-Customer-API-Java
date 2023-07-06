@@ -1,8 +1,14 @@
 package com.KrishiG.dtos.request;
 
+import com.KrishiG.enitites.CartProducts;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,19 +17,20 @@ import java.util.Date;
 @Builder
 public class UserDto {
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String userName;
+    private String fullName;
+    private String gender;
     private String emailId;
-    private String mobileNumber;
     private String password;
-    private String address;
+    private String mobileNumber;
+    private String aadhaarNumber;
+    private String houseNumber;
     private Long pinCode;
-    private String tehsil;
+    private String district;
     private String city;
     private String state;
-    private String gender;
-    private String landMark;
     private Long role;
+    private String landMark;
     private Long createdBy;
     private Date createdAt;
     private Long modifiedBy;
