@@ -1,5 +1,6 @@
 package com.KrishiG.enitites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,7 +30,8 @@ public class Customer {
 
     private String gender;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<CustomerAddress> address;
 
     @Column(name = "created_by")
@@ -45,6 +47,5 @@ public class Customer {
     @UpdateTimestamp
     @Column(name = "modified_at")
     private Date modifiedDate;
-
 
 }

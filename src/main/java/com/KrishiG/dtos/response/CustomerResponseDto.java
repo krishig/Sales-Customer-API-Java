@@ -1,6 +1,8 @@
 package com.KrishiG.dtos.response;
 
 import com.KrishiG.dtos.request.CustomerAddressDto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Date;
@@ -14,11 +16,12 @@ import java.util.List;
 @Builder
 public class CustomerResponseDto {
 
+
     private Long id;
 
     private String fullName;
 
-    private String mobileNo;
+    private String mobileNumber;
 
     private String gender;
 
@@ -26,10 +29,10 @@ public class CustomerResponseDto {
 
     private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
     private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 
 }

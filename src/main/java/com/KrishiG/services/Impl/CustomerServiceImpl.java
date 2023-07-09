@@ -73,11 +73,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> getAllCustomers() {
+    public List<CustomerResponseDto> getAllCustomers() {
 
         List<Customer> customers = customerRepository.findAll();
-        List<CustomerDto> customerDtos = customers.stream().map(customer -> mapper.map(customer,CustomerDto.class)).collect(Collectors.toList());
-        return customerDtos;
+        List<CustomerResponseDto> customerResponseDtos = customers.stream().map(customer -> mapper.map(customer,CustomerResponseDto.class)).collect(Collectors.toList());
+        return customerResponseDtos;
     }
 
     @Override
@@ -107,11 +107,11 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         customerResDto.setAddress(addressDtos);
-        customerResDto.setMobileNo(customer.getMobileNumber());
+        customerResDto.setMobileNumber(customer.getMobileNumber());
         customerResDto.setCreatedBy(customer.getCreatedBy());
-        customerResDto.setCreatedAt(customer.getCreatedDate());
+        customerResDto.setCreatedDate(customer.getCreatedDate());
         customerResDto.setModifiedBy(customer.getModifiedBy());
-        customerResDto.setModifiedAt(customer.getModifiedDate());
+        customerResDto.setModifiedDate(customer.getModifiedDate());
         return  customerResDto;
     }
 
