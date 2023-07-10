@@ -12,7 +12,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class CustomerAddressResponseDto {
-
     private Long id;
 
     private Long custId;

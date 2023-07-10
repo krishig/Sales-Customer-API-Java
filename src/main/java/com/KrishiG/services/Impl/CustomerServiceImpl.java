@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new ResourceNotFoundException("Customer not found with the given ID"));
         customer.setFullName(customerDto.getFullName());
-        customer.setMobileNumber(customerDto.getMobileNumber());
+        customer.setMobileNo(customerDto.getMobileNo());
         customer.setGender(customerDto.getGender());
         List<CustomerAddress> lstOfAddresses = new ArrayList<>();
         for(CustomerAddressDto temp : customerDto.getAddress())
@@ -73,11 +73,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerResponseDto> getAllCustomers() {
+    public List<CustomerDto> getAllCustomers() {
 
         List<Customer> customers = customerRepository.findAll();
-        List<CustomerResponseDto> customerResponseDtos = customers.stream().map(customer -> mapper.map(customer,CustomerResponseDto.class)).collect(Collectors.toList());
-        return customerResponseDtos;
+        List<CustomerDto> customerDtos = customers.stream().map(customer -> mapper.map(customer,CustomerDto.class)).collect(Collectors.toList());
+        return customerDtos;
     }
 
     @Override
@@ -107,16 +107,17 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         customerResDto.setAddress(addressDtos);
-        customerResDto.setMobileNumber(customer.getMobileNumber());
+        customerResDto.setMobileNo(customer.getMobileNo());
         customerResDto.setCreatedBy(customer.getCreatedBy());
-        customerResDto.setCreatedDate(customer.getCreatedDate());
+        customerResDto.setCreatedAt(customer.getCreatedDate());
         customerResDto.setModifiedBy(customer.getModifiedBy());
-        customerResDto.setModifiedDate(customer.getModifiedDate());
+        customerResDto.setModifiedAt(customer.getModifiedDate());
         return  customerResDto;
     }
 
     public CustomerAddressResponseDto convertEntityToDtoForAddress(Long customerId, CustomerAddress customerAddress) {
         CustomerAddressResponseDto customerAddressDto = new CustomerAddressResponseDto();
+        customerAddressDto.setAddress(customerAddress.getAddress());
         customerAddressDto.setHouseNumber(customerAddress.getHouseNumber());
         customerAddressDto.setId(customerAddress.getId());
         customerAddressDto.setStreetName(customerAddress.getStreetName());

@@ -1,6 +1,5 @@
 package com.KrishiG.enitites;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,27 +24,27 @@ public class Customer {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "mobile_number")
-    private String mobileNumber;
+    @Column(name = "mobile_no")
+    private String mobileNo;
 
     private String gender;
 
-    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "customer")
     private List<CustomerAddress> address;
 
     @Column(name = "created_by")
     private Long createdBy;
 
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_date")
     private Date createdDate;
 
     @Column(name = "modified_by")
     private Long modifiedBy;
 
     @UpdateTimestamp
-    @Column(name = "modified_at")
+    @Column(name = "modified_date")
     private Date modifiedDate;
+
 
 }

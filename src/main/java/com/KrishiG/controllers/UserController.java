@@ -3,7 +3,6 @@ package com.KrishiG.controllers;
 import com.KrishiG.dtos.request.UserDto;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.UserService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ public class UserController {
 
     //create
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto)
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
     {
          UserDto user = userService.createUser(userDto);
          return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -28,7 +27,7 @@ public class UserController {
 
     //update
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,
                                               @PathVariable("userId") Long userId)
     {
         UserDto updatedUser = userService.updateUser(userDto,userId);

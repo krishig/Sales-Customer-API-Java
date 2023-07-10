@@ -25,8 +25,8 @@ public class Brands {
     @Column(name = "brand_name")
     private String brandName;
 
-    @Column(name = "brand_image_url",columnDefinition = "TEXT")
-    private String brandImageUrl;
+    @Column(name = "brand_image_id")
+    private Long brandImageId;
 
     @Column(name = "created_by")
     private Long createdBy;

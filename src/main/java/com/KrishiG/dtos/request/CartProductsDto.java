@@ -28,6 +28,8 @@ public class CartProductsDto {
 
     private float actualPrice;
 
+    private int discount;
+
     private float totalAmount;
 
     private float purchasePrice;

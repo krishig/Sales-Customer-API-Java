@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
@@ -20,44 +19,36 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "salesUserId")
-    private List<CartProducts> cartProducts;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(name = "username")
-    private String userName;
-
-    @Column(name = "fullname")
-    private String fullName;
+    @Column(name = "last_name")
+    private String lastName;
 
     private String gender;
 
-    @Column(name = "email")
+    @Column(name = "email_id")
     private String emailId;
 
     private String password;
 
-    @Column(name = "mobile_number")
+    @Column(name = "mobile_no")
     private String mobileNumber;
 
-    @Column(name = "aadhaar_number")
-    private String aadhaarNumber;
+    private String address;
 
-    @Column(name = "house_number")
-    private String houseNumber;
-
-    @Column(name = "pincode")
+    @Column(name = "pin_code")
     private Long pinCode;
 
-    private String district;
+    private String tehsil;
 
     private String city;
 
     private String state;
 
-    @Column(name = "Role")
     private Long role;
 
-    @Column(name = "landmark")
+    @Column(name = "land_mark")
     private String landMark;
 
     @Column(name = "created_by")
