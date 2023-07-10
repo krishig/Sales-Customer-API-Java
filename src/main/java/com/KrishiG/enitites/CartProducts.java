@@ -19,15 +19,12 @@ public class CartProducts {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "sales_user_id")
-    private User salesUserId;
-
-    @ManyToOne
     @JoinColumn(name = "cart_id")
     private CustomerCart cart;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Column(name = "quantity")
     private int productQuantity;
@@ -38,8 +35,8 @@ public class CartProducts {
     @Column(name = "purchase_price")
     private float purchasePrice;
 
-    @Column(name = "total_amount")
-    private float totalAmount;
+    @Column(name = "discount")
+    private float discount;
 
     @Column(name = "created_by")
     private  Long createdBy;
