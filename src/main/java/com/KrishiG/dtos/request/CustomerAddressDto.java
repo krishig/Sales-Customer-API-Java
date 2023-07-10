@@ -13,9 +13,6 @@ public class CustomerAddressDto {
     private Long id;
 
     private CustomerDto customer;
-    private Long userId;
-
-    private String address;
 
     private int houseNumber;
 

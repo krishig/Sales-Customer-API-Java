@@ -1,5 +1,7 @@
 package com.KrishiG.dtos.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Date;
@@ -10,23 +12,29 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class CustomerDto {
 
     private Long id;
 
+    @NotBlank(message = "Enter Name")
+    @Size(min = 3,message = "Invalid Name!!")
     private String fullName;
 
-    private String mobileNo;
+    @NotBlank(message = "Phone Number Required !!")
+    @Size(min = 10,max = 11,message = "Invalid Number")
+    private String mobileNumber;
 
+    @NotBlank(message = "Please provide gender")
     private String gender;
 
     private List<CustomerAddressDto> address;
 
     private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
     private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

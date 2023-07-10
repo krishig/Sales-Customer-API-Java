@@ -19,20 +19,21 @@ public class CartProducts {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "sales_user_id")
+    private User salesUserId;
+
+    @ManyToOne
     @JoinColumn(name = "cart_id")
     private CustomerCart cart;
 
     @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "product_quantity")
+    @Column(name = "quantity")
     private int productQuantity;
 
-    @Column(name = "actual_price")
+    @Column(name = "price")
     private float actualPrice;
-
-    @Column(name = "discount")
-    private int discount;
 
     @Column(name = "purchase_price")
     private float purchasePrice;

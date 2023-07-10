@@ -6,6 +6,7 @@ import com.KrishiG.dtos.response.CustomerAddressResponseDto;
 import com.KrishiG.dtos.response.CustomerResponseDto;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,14 @@ public class CustomerController {
 
     //create
     @PostMapping("/addCustomer")
-    public ResponseEntity<CustomerResponseDto> createCustomer(@RequestBody CustomerDto customerDto) {
+    public ResponseEntity<CustomerResponseDto> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         CustomerResponseDto createdCustomer = customerService.createCustomer(customerDto);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
     //update
     @PutMapping("/{customerId}")
-    public ResponseEntity<CustomerDto> updateCustomer(@RequestBody CustomerDto customerDto, @PathVariable("customerId") Long customerId) {
+    public ResponseEntity<CustomerDto> updateCustomer(@Valid @RequestBody CustomerDto customerDto, @PathVariable("customerId") Long customerId) {
         CustomerDto updatedCustomer = customerService.updateCustomer(customerId, customerDto);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
@@ -45,15 +46,15 @@ public class CustomerController {
     }
 
     //getAll
-    @GetMapping
-    public ResponseEntity<List<CustomerDto>> getAllCustomers()
+    @GetMapping("/")
+    public ResponseEntity<List<CustomerResponseDto>> getAllCustomers()
     {
-       List<CustomerDto> customerDtos =  customerService.getAllCustomers();
-       return new ResponseEntity<>(customerDtos, HttpStatus.OK);
+       List<CustomerResponseDto> customerResponseDtos =  customerService.getAllCustomers();
+        return new ResponseEntity<>(customerResponseDtos,HttpStatus.OK);
     }
 
     @PostMapping("/addAddress")
-    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@RequestBody CustomerAddressDto addressDto) {
+    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressDto addressDto) {
         CustomerAddressResponseDto addressDtos = customerService.addCustomerAddress(addressDto);
         return new ResponseEntity<>(addressDtos, HttpStatus.CREATED);
     }

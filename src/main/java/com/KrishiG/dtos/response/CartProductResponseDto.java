@@ -14,6 +14,7 @@ public class CartProductResponseDto {
 
     private Long id;
 
+
     private Long cartId;
 
     private ProductResponseDto productResponseDto;
