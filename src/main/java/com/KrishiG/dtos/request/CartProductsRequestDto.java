@@ -1,8 +1,6 @@
 package com.KrishiG.dtos.request;
 
 import com.KrishiG.enitites.Customer;
-import com.KrishiG.enitites.CustomerCart;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
@@ -11,7 +9,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartProductsDto {
+public class CartProductsRequestDto {
 
 
     private Long id;

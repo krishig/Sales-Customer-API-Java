@@ -8,10 +8,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RoleDto {
+public class BrandsRequestDto {
+
     private Long id;
 
-    private String roleName;
+    private String brandName;
+
+    private int brandImageId;
 
     private String createdBy;
 

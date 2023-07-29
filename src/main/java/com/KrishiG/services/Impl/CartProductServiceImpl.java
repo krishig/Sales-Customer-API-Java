@@ -1,6 +1,6 @@
 package com.KrishiG.services.Impl;
 
-import com.KrishiG.dtos.request.CartProductsDto;
+import com.KrishiG.dtos.request.CartProductsRequestDto;
 import com.KrishiG.dtos.response.CartProductResponseDto;
 import com.KrishiG.dtos.response.ProductResponseDto;
 import com.KrishiG.enitites.CartProducts;
@@ -26,9 +26,9 @@ public class CartProductServiceImpl implements CartProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<CartProductResponseDto> addProductToCart(List<CartProductsDto> cartProductsDto) {
+    public List<CartProductResponseDto> addProductToCart(List<CartProductsRequestDto> cartProductsRequestDto) {
 
-        List<CartProducts> cartProducts = convertDtoToEntityList(cartProductsDto);
+        List<CartProducts> cartProducts = convertDtoToEntityList(cartProductsRequestDto);
         List<CartProducts> savedCartProduct = cartProductRepository.saveAll(cartProducts);
         List<CartProductResponseDto> savedCartProductResponseDto = convertEntityToDtoList(savedCartProduct);
         return savedCartProductResponseDto;
@@ -39,7 +39,7 @@ public class CartProductServiceImpl implements CartProductService {
         List<CartProductResponseDto> cartProductResponseDtoList = new ArrayList<CartProductResponseDto>();
         for(CartProducts cartProducts1 : cartProducts) {
             ProductResponseDto productResponseDto = new ProductResponseDto();
-            Optional<Product> product = productRepository.findById(cartProducts1.getProductId());
+            Optional<Product> product = productRepository.findById(cartProducts1.getProduct().getId());
             if (!product.isEmpty()) {
                 productResponseDto.setId(product.get().getId());
                 productResponseDto.setProductName(product.get().getProductName());
@@ -50,32 +50,31 @@ public class CartProductServiceImpl implements CartProductService {
             cartProductResponseDto.setProductQuantity(cartProducts1.getProductQuantity());
             cartProductResponseDto.setActualPrice(cartProducts1.getActualPrice());
             cartProductResponseDto.setPurchasePrice(cartProducts1.getPurchasePrice());
-            cartProductResponseDto.setTotalAmount(cartProducts1.getTotalAmount());
             cartProductResponseDto.setCreatedBy(cartProducts1.getCreatedBy());
             cartProductResponseDto.setCreatedDate(cartProducts1.getCreatedDate());
             cartProductResponseDto.setModifiedDate(cartProducts1.getModifiedDate());
             cartProductResponseDto.setModifiedBy(cartProducts1.getModifiedBY());
             cartProductResponseDtoList.add(cartProductResponseDto);
         }
-        return  cartProductResponseDtoList;
+        return cartProductResponseDtoList;
     }
 
-    private List<CartProducts> convertDtoToEntityList(List<CartProductsDto> cartProductsDto) {
+    private List<CartProducts> convertDtoToEntityList(List<CartProductsRequestDto> cartProductsRequestDto) {
 
         List<CartProducts> cartProductsList = new ArrayList<CartProducts>();
-        for(CartProductsDto cartProductsDto1 : cartProductsDto) {
+        for(CartProductsRequestDto cartProductsRequestDto1 : cartProductsRequestDto) {
             CustomerCart customerCart = new CustomerCart();
-            customerCart.setId(cartProductsDto1.getCartId());
+            customerCart.setId(cartProductsRequestDto1.getCartId());
             CartProducts cartProducts = new CartProducts();
             cartProducts.setCart(customerCart);
-            cartProducts.setProductId(cartProductsDto1.getProductId());
-            cartProducts.setProductQuantity(cartProductsDto1.getProductQuantity());
-            cartProducts.setActualPrice(cartProductsDto1.getActualPrice());
-            cartProducts.setPurchasePrice(cartProductsDto1.getPurchasePrice());
-            cartProducts.setCreatedBy(cartProductsDto1.getCreatedBy());
-            cartProducts.setCreatedDate(cartProductsDto1.getCreatedDate());
-            cartProducts.setModifiedBY(cartProductsDto1.getModifiedBY());
-            cartProducts.setModifiedDate(cartProductsDto1.getModifiedDate());
+           // cartProducts.setProductId(cartProductsDto1.getProductId());
+            cartProducts.setProductQuantity(cartProductsRequestDto1.getProductQuantity());
+            cartProducts.setActualPrice(cartProductsRequestDto1.getActualPrice());
+            cartProducts.setPurchasePrice(cartProductsRequestDto1.getPurchasePrice());
+            cartProducts.setCreatedBy(cartProductsRequestDto1.getCreatedBy());
+            cartProducts.setCreatedDate(cartProductsRequestDto1.getCreatedDate());
+            cartProducts.setModifiedBY(cartProductsRequestDto1.getModifiedBY());
+            cartProducts.setModifiedDate(cartProductsRequestDto1.getModifiedDate());
             cartProductsList.add(cartProducts);
         }
         return cartProductsList;

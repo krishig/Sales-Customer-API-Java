@@ -1,8 +1,7 @@
 package com.KrishiG.controllers;
 
-import com.KrishiG.dtos.request.CartProductsDto;
-import com.KrishiG.dtos.request.CustomerCartDto;
-import com.KrishiG.dtos.request.ProductDto;
+import com.KrishiG.dtos.request.CartProductsRequestDto;
+import com.KrishiG.dtos.request.CustomerCartRequestDto;
 import com.KrishiG.dtos.response.CartProductResponseDto;
 import com.KrishiG.dtos.response.CustomerCartResponseDto;
 import com.KrishiG.services.CartProductService;
@@ -29,16 +28,16 @@ public class CartController {
     private CartProductService cartProductService;
 
     @PostMapping("/addCustomerCart")
-    public ResponseEntity<CustomerCartResponseDto> addCart(@Valid @RequestBody CustomerCartDto customerCartDto)
+    public ResponseEntity<CustomerCartResponseDto> addCart(@Valid @RequestBody CustomerCartRequestDto customerCartRequestDto)
     {
-        CustomerCartResponseDto responseDto = cartService.addCart(customerCartDto);
+        CustomerCartResponseDto responseDto = cartService.addCart(customerCartRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PostMapping("/addProducts")
-    public ResponseEntity<List<CartProductResponseDto>> addProductToCart(@Valid @RequestBody List<CartProductsDto> cartProductsDto)
+    public ResponseEntity<List<CartProductResponseDto>> addProductToCart(@Valid @RequestBody List<CartProductsRequestDto> cartProductsRequestDto)
     {
-        List<CartProductResponseDto> cartProductResponseDto = cartProductService.addProductToCart(cartProductsDto);
+        List<CartProductResponseDto> cartProductResponseDto = cartProductService.addProductToCart(cartProductsRequestDto);
         return new ResponseEntity(cartProductResponseDto,HttpStatus.OK);
     }
 

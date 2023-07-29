@@ -1,11 +1,9 @@
 package com.KrishiG.dtos.request;
 
 
-import jakarta.persistence.Column;
-
 import java.util.Date;
 
-public class SubCategoryDto
+public class SubCategoryRequestDto
 {
 
     private Long id;

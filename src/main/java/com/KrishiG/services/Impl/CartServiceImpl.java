@@ -1,6 +1,6 @@
 package com.KrishiG.services.Impl;
 
-import com.KrishiG.dtos.request.CustomerCartDto;
+import com.KrishiG.dtos.request.CustomerCartRequestDto;
 import com.KrishiG.dtos.response.CustomerCartResponseDto;
 import com.KrishiG.enitites.Customer;
 import com.KrishiG.enitites.CustomerCart;
@@ -16,20 +16,20 @@ public class CartServiceImpl implements CartService {
     private CartRepository cartRepository;
 
     @Override
-    public CustomerCartResponseDto addCart(CustomerCartDto customerCartDto) {
-        CustomerCart customerCart = convertDtoToEntity(customerCartDto);
+    public CustomerCartResponseDto addCart(CustomerCartRequestDto customerCartRequestDto) {
+        CustomerCart customerCart = convertDtoToEntity(customerCartRequestDto);
         CustomerCart customerCartDB = cartRepository.save(customerCart);
-        CustomerCartResponseDto response = convertEntityToDto(customerCartDto.getCustomerId(),customerCartDB);
+        CustomerCartResponseDto response = convertEntityToDto(customerCartRequestDto.getCustomerId(),customerCartDB);
         return response;
     }
 
-    private CustomerCart convertDtoToEntity(CustomerCartDto customerCartDto) {
+    private CustomerCart convertDtoToEntity(CustomerCartRequestDto customerCartRequestDto) {
         CustomerCart customerCart = new CustomerCart();
         Customer customer = new Customer();
-        customer.setId(customerCartDto.getCustomerId());
+        customer.setId(customerCartRequestDto.getCustomerId());
         customerCart.setCustomer(customer);
-        customerCart.setCreatedBy(customerCartDto.getCreatedBy());
-        customerCart.setModifiedBy(customerCartDto.getModifiedBy());
+        customerCart.setCreatedBy(customerCartRequestDto.getCreatedBy());
+        customerCart.setModifiedBy(customerCartRequestDto.getModifiedBy());
         return customerCart;
     }
 

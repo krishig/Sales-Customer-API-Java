@@ -8,11 +8,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerAddressDto {
+public class CustomerAddressRequestDto {
 
     private Long id;
 
-    private CustomerDto customer;
+    private CustomerRequestDto customer;
 
     private int houseNumber;
 

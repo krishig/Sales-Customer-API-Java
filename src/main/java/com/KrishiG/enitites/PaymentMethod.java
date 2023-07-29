@@ -9,11 +9,12 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@Table(name = "payment")
-public class Payment {
+public class PaymentMethod {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String paymentType;
 
+    @Column(name = "payment_type")
+    private String PaymentType;
 }

@@ -1,6 +1,5 @@
 package com.KrishiG.dtos.response;
 
-import com.KrishiG.dtos.request.CustomerDto;
 import lombok.*;
 
 import java.util.Date;
@@ -38,4 +37,6 @@ public class CustomerAddressResponseDto {
     private String modifiedBy;
 
     private Date modifiedAt;
+
+    private CustomerCartResponseDto customerCartResponseDto;
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
-public class CustomerDto {
+public class CustomerRequestDto {
 
     private Long id;
 
@@ -28,7 +28,7 @@ public class CustomerDto {
     @NotBlank(message = "Please provide gender")
     private String gender;
 
-    private List<CustomerAddressDto> address;
+    private List<CustomerAddressRequestDto> address;
 
     private Long createdBy;
 

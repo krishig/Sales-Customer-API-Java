@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -21,18 +22,20 @@ public class Orders {
     @Column(name = "order_id")
     private String orderId;
 
-    @Column(name = "customer_id")
-    private Long customerId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customerId;
 
-    @Column(name = "sales_user_id")
-    private Long salesUserId;
+    @Column(name = "total_price")
+    private float totalPrice;
 
-    @Column(name = "product_id")
-    private Long product_id;
+    @OneToOne
+    @JoinColumn(name = "status")
+    private OrderStatus status;
 
-    private int quantity;
-
-    private boolean status;
+    @OneToOne
+    @JoinColumn(name = "payment_method")
+    private PaymentMethod paymentMethod;
 
     @Column(name = "created_by")
     private String createdBy;
