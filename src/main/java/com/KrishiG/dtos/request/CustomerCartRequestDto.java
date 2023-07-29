@@ -2,7 +2,6 @@ package com.KrishiG.dtos.request;
 
 import com.KrishiG.enitites.CartProducts;
 import com.KrishiG.enitites.Customer;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -14,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerCartDto {
+public class CustomerCartRequestDto {
 
     private Long id;
 
@@ -26,9 +25,6 @@ public class CustomerCartDto {
 
     @NotBlank
     private List<CartProducts> cartProducts;
-
-    @NotBlank
-    private float totalPrice;
 
     @NotBlank
     private Long createdBy;

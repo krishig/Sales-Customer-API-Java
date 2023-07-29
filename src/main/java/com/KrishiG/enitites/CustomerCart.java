@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -22,11 +21,9 @@ public class CustomerCart {
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    private float totalPrice;
 
     @Column(name = "created_by")
     private Long createdBy;

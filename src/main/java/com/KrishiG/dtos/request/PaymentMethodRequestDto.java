@@ -9,6 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PaymentReqDto {
+public class PaymentMethodRequestDto {
     private String paymentType;
 }

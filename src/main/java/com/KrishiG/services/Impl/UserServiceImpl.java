@@ -1,6 +1,6 @@
 package com.KrishiG.services.Impl;
 
-import com.KrishiG.dtos.request.UserDto;
+import com.KrishiG.dtos.request.UserRequestDto;
 import com.KrishiG.enitites.User;
 import com.KrishiG.exception.ResourceNotFoundException;
 import com.KrishiG.repositories.UserRepository;
@@ -23,43 +23,43 @@ public class UserServiceImpl implements UserService {
     private ModelMapper mapper;
 
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public UserRequestDto createUser(UserRequestDto userRequestDto) {
 
-        User user = mapper.map(userDto, User.class);
+        User user = mapper.map(userRequestDto, User.class);
         User savedUser = userRepository.save(user);
-        return mapper.map(savedUser,UserDto.class);
+        return mapper.map(savedUser, UserRequestDto.class);
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto, Long userId) {
+    public UserRequestDto updateUser(UserRequestDto userRequestDto, Long userId) {
 
         //fetch the user from DB using userId
         User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User not found with the Given userID"));
 
         //setting the values
-        user.setUserName(userDto.getUserName());
-        user.setFullName(userDto.getFullName());
-        user.setEmailId(userDto.getEmailId());
-        user.setHouseNumber(userDto.getHouseNumber());
-        user.setGender(userDto.getGender());
-        user.setPassword(userDto.getPassword());
-        user.setMobileNumber(userDto.getMobileNumber());
-        user.setPinCode(userDto.getPinCode());
-        user.setDistrict(userDto.getDistrict());
-        user.setCity(userDto.getCity());
-        user.setState(userDto.getState());
-        user.setRole(userDto.getRole());
-        user.setCreatedBy(userDto.getCreatedBy());
-        user.setCreatedAt(userDto.getCreatedAt());
-        user.setModifiedBy(userDto.getModifiedBy());
-        user.setLandMark(userDto.getLandMark());
-        user.setGender(userDto.getGender());
+        user.setUserName(userRequestDto.getUserName());
+        user.setFullName(userRequestDto.getFullName());
+        user.setEmailId(userRequestDto.getEmailId());
+        user.setHouseNumber(userRequestDto.getHouseNumber());
+        user.setGender(userRequestDto.getGender());
+        user.setPassword(userRequestDto.getPassword());
+        user.setMobileNumber(userRequestDto.getMobileNumber());
+        user.setPinCode(userRequestDto.getPinCode());
+        user.setDistrict(userRequestDto.getDistrict());
+        user.setCity(userRequestDto.getCity());
+        user.setState(userRequestDto.getState());
+        user.setRole(userRequestDto.getRole());
+        user.setCreatedBy(userRequestDto.getCreatedBy());
+        user.setCreatedAt(userRequestDto.getCreatedAt());
+        user.setModifiedBy(userRequestDto.getModifiedBy());
+        user.setLandMark(userRequestDto.getLandMark());
+        user.setGender(userRequestDto.getGender());
 
         //save the user
         userRepository.save(user);
 
         //convert the user from User -> UserDto
-       return mapper.map(user,UserDto.class);
+       return mapper.map(user, UserRequestDto.class);
     }
 
     @Override
@@ -69,9 +69,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserRequestDto> getAllUsers() {
         List<User> users = userRepository.findAll();
-        List<UserDto> dtoList = users.stream().map(user -> mapper.map(user,UserDto.class)).collect(Collectors.toList());
+        List<UserRequestDto> dtoList = users.stream().map(user -> mapper.map(user, UserRequestDto.class)).collect(Collectors.toList());
         return dtoList;
     }
 }

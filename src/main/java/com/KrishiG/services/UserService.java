@@ -1,20 +1,20 @@
 package com.KrishiG.services;
 
-import com.KrishiG.dtos.request.UserDto;
+import com.KrishiG.dtos.request.UserRequestDto;
 
 import java.util.List;
 
 public interface UserService {
 
     //create user
-    UserDto createUser(UserDto userDto);
+    UserRequestDto createUser(UserRequestDto userRequestDto);
 
     //update
-    UserDto updateUser(UserDto userDto, Long userId);
+    UserRequestDto updateUser(UserRequestDto userRequestDto, Long userId);
 
     //delete
     void deleteUser(Long userId);
 
     //get all users
-    List<UserDto> getAllUsers();
+    List<UserRequestDto> getAllUsers();
 }

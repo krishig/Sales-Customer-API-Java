@@ -20,9 +20,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "salesUserId")
-    private List<CartProducts> cartProducts;
-
     @Column(name = "username")
     private String userName;
 

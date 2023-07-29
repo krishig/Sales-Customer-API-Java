@@ -8,20 +8,17 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ImagesDto {
+public class OrderStatusRequestDto {
+
     private Long id;
 
-    private Long product_id;
+    private String type;
 
-    private String imageName;
-
-    private String imageUrl;
-
-    private Long createdBy;
+    private String createBy;
 
     private Date createdAt;
 
-    private Long modifiedBy;
+    private String modifiedBy;
 
     private Date modifiedAt;
 }

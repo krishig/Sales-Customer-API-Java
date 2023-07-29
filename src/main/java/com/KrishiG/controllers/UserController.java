@@ -1,6 +1,6 @@
 package com.KrishiG.controllers;
 
-import com.KrishiG.dtos.request.UserDto;
+import com.KrishiG.dtos.request.UserRequestDto;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.UserService;
 import jakarta.validation.Valid;
@@ -20,18 +20,18 @@ public class UserController {
 
     //create
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto)
+    public ResponseEntity<UserRequestDto> createUser(@Valid @RequestBody UserRequestDto userRequestDto)
     {
-         UserDto user = userService.createUser(userDto);
+         UserRequestDto user = userService.createUser(userRequestDto);
          return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     //update
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,
-                                              @PathVariable("userId") Long userId)
+    public ResponseEntity<UserRequestDto> updateUser(@Valid @RequestBody UserRequestDto userRequestDto,
+                                                     @PathVariable("userId") Long userId)
     {
-        UserDto updatedUser = userService.updateUser(userDto,userId);
+        UserRequestDto updatedUser = userService.updateUser(userRequestDto,userId);
         return new ResponseEntity<>(updatedUser,HttpStatus.OK);
     }
 
@@ -41,7 +41,7 @@ public class UserController {
     {
         userService.deleteUser(userId);
         ApiResponseMessage message = ApiResponseMessage.builder()
-                        .message("User is deleted Successfully")
+                        .message("User Deleted Successfully")
                         .success(true).status(HttpStatus.OK)
                         .build();
         return new ResponseEntity<>(message, HttpStatus.OK);
@@ -49,9 +49,9 @@ public class UserController {
 
     //getAll
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers()
+    public ResponseEntity<List<UserRequestDto>> getAllUsers()
     {
-        List<UserDto> users = userService.getAllUsers();
+        List<UserRequestDto> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 

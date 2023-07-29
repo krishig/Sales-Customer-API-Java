@@ -1,8 +1,5 @@
 package com.KrishiG.dtos.response;
 
-import com.KrishiG.dtos.request.CustomerAddressDto;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Date;
@@ -16,7 +13,6 @@ import java.util.List;
 @Builder
 public class CustomerResponseDto {
 
-
     private Long id;
 
     private String fullName;
@@ -26,6 +22,8 @@ public class CustomerResponseDto {
     private String gender;
 
     private List<CustomerAddressResponseDto> address;
+
+    private CustomerCartResponseDto customerCartResponseDto;
 
     private Long createdBy;
 

@@ -1,13 +1,18 @@
 package com.KrishiG.controllers;
 
-import com.KrishiG.dtos.request.CustomerAddressDto;
-import com.KrishiG.dtos.request.CustomerDto;
+import com.KrishiG.dtos.request.CustomerAddressRequestDto;
+import com.KrishiG.dtos.request.CustomerRequestDto;
 import com.KrishiG.dtos.response.CustomerAddressResponseDto;
 import com.KrishiG.dtos.response.CustomerResponseDto;
+import com.KrishiG.dtos.response.PageableResponse;
+import com.KrishiG.enitites.Customer;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,17 +26,18 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+
     //create
     @PostMapping("/addCustomer")
-    public ResponseEntity<CustomerResponseDto> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
-        CustomerResponseDto createdCustomer = customerService.createCustomer(customerDto);
+    public ResponseEntity<CustomerResponseDto> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
+        CustomerResponseDto createdCustomer = customerService.createCustomer(customerRequestDto);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
     //update
     @PutMapping("/{customerId}")
-    public ResponseEntity<CustomerDto> updateCustomer(@Valid @RequestBody CustomerDto customerDto, @PathVariable("customerId") Long customerId) {
-        CustomerDto updatedCustomer = customerService.updateCustomer(customerId, customerDto);
+    public ResponseEntity<CustomerRequestDto> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId) {
+        CustomerRequestDto updatedCustomer = customerService.updateCustomer(customerId, customerRequestDto);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
@@ -47,14 +53,17 @@ public class CustomerController {
 
     //getAll
     @GetMapping("/")
-    public ResponseEntity<List<CustomerResponseDto>> getAllCustomers()
+    public ResponseEntity<PageableResponse<CustomerResponseDto>> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+                                                                                  @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
+                                                                                  @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
+                                                                                  @RequestParam(value = "sortDir",defaultValue = "desc",required = false) String sortDir)
     {
-       List<CustomerResponseDto> customerResponseDtos =  customerService.getAllCustomers();
-        return new ResponseEntity<>(customerResponseDtos,HttpStatus.OK);
+        PageableResponse<CustomerResponseDto> response =  customerService.getAllCustomers(pageNumber,pageSize,sortBy,sortDir);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PostMapping("/addAddress")
-    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressDto addressDto) {
+    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto) {
         CustomerAddressResponseDto addressDtos = customerService.addCustomerAddress(addressDto);
         return new ResponseEntity<>(addressDtos, HttpStatus.CREATED);
     }

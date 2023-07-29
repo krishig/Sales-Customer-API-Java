@@ -8,28 +8,16 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDto {
+public class RoleRequestDto {
     private Long id;
 
-    private String orderId;
-
-    private Long customerId;
-
-    private Long salesUserId;
-
-    private Long product_id;
-
-    private int quantity;
-
-    private boolean status;
+    private String roleName;
 
     private String createdBy;
 
     private Date createdAt;
 
-    private Date modifiedAt;
-
     private String modifiedBy;
 
-    private Date closedAt;
+    private Date modifiedAt;
 }

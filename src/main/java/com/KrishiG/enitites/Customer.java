@@ -34,6 +34,10 @@ public class Customer {
     @JsonIgnore
     private List<CustomerAddress> address;
 
+    @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private CustomerCart customerCart;
+
     @Column(name = "created_by")
     private Long createdBy;
 
