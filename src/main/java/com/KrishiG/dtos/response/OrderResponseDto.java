@@ -1,17 +1,20 @@
-package com.KrishiG.dtos.request;
+package com.KrishiG.dtos.response;
 
 import com.KrishiG.enitites.Customer;
 import com.KrishiG.enitites.OrderStatus;
 import com.KrishiG.enitites.PaymentMethod;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class OrderRequestDto {
+public class OrderResponseDto {
 
     private Long id;
 

@@ -30,10 +30,10 @@ public class CartProducts {
     private int productQuantity;
 
     @Column(name = "price")
-    private float actualPrice;
+    private Double actualPrice;
 
     @Column(name = "purchase_price")
-    private float purchasePrice;
+    private Double purchasePrice;
 
     @Column(name = "discount")
     private float discount;

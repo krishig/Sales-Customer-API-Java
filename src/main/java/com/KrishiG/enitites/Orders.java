@@ -37,6 +37,12 @@ public class Orders {
     @JoinColumn(name = "payment_method")
     private PaymentMethod paymentMethod;
 
+    @Column(name = "contact_number")
+    private String contactNumber;
+
+    @Column(name = "address_id")
+    private Long addressId;
+
     @Column(name = "created_by")
     private String createdBy;
 

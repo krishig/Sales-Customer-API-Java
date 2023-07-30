@@ -5,14 +5,10 @@ import com.KrishiG.dtos.request.CustomerRequestDto;
 import com.KrishiG.dtos.response.CustomerAddressResponseDto;
 import com.KrishiG.dtos.response.CustomerResponseDto;
 import com.KrishiG.dtos.response.PageableResponse;
-import com.KrishiG.enitites.Customer;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,9 +58,10 @@ public class CustomerController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @PostMapping("/addAddress")
-    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto) {
-        CustomerAddressResponseDto addressDtos = customerService.addCustomerAddress(addressDto);
+    @PostMapping("/address/{addressId}")
+    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto,
+                                                                           @PathVariable("addressId") Long addressId) {
+        CustomerAddressResponseDto addressDtos = customerService.addCustomerAddress(addressDto, addressId);
         return new ResponseEntity<>(addressDtos, HttpStatus.CREATED);
     }
 }

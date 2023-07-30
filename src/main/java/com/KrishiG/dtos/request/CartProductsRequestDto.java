@@ -14,21 +14,15 @@ public class CartProductsRequestDto {
 
     private Long id;
 
-    private Long customerId;
-
-    private Customer customer;
-
     private Long cartId;
 
-    private Long productId;
+    private ProductRequestDto product;
 
     private int productQuantity;
 
-    private float actualPrice;
+    private Double price;
 
-    private float totalAmount;
-
-    private float purchasePrice;
+    private Double totalPrice;
 
     private  Long createdBy;
 
