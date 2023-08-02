@@ -58,10 +58,9 @@ public class CustomerController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    @PostMapping("/address/{addressId}")
-    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto,
-                                                                           @PathVariable("addressId") Long addressId) {
-        CustomerAddressResponseDto addressDtos = customerService.addCustomerAddress(addressDto, addressId);
+    @PostMapping("/address")
+    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto) {
+        CustomerAddressResponseDto addressDtos = customerService.addCustomerAddress(addressDto);
         return new ResponseEntity<>(addressDtos, HttpStatus.CREATED);
     }
 }

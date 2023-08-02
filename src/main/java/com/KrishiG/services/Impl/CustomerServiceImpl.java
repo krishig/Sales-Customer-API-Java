@@ -111,10 +111,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerAddressResponseDto addCustomerAddress(CustomerAddressRequestDto addressDto, Long addressId) {
-        if(addressId!=null) {
-            addressDto.setId(addressId);
-        }
+    public CustomerAddressResponseDto addCustomerAddress(CustomerAddressRequestDto addressDto) {
         CustomerAddress customerAddress = mapper.map(addressDto, CustomerAddress.class);
         CustomerAddress customerAddresses = addressRepository.save(customerAddress);
         CustomerAddressResponseDto addressDto1 = convertEntityToDtoForAddress(addressDto.getCustomer().getId(),customerAddresses);

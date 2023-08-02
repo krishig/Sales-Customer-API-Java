@@ -23,5 +23,5 @@ public interface CustomerService {
     //delete
     void deleteCustomer(Long customerId);
 
-    public CustomerAddressResponseDto addCustomerAddress(CustomerAddressRequestDto addressDto, Long addressId);
+    public CustomerAddressResponseDto addCustomerAddress(CustomerAddressRequestDto addressDto);
 }
