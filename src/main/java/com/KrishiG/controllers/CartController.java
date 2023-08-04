@@ -32,6 +32,7 @@ public class CartController {
         return new ResponseEntity(totalCartProductResponseDto,HttpStatus.OK);
     }
 
+
     @PostMapping("/{cartId}/{cartProductId}/quantity")
     public ResponseEntity<TotalCartProductResponseDto> updateQuantityForProduct(@PathVariable("cartId") Long cartId,
                                                                                  @PathVariable("cartProductId") Long cartProductId,

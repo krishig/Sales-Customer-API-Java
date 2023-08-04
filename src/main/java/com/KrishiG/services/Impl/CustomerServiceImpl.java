@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -47,16 +48,12 @@ public class CustomerServiceImpl implements CustomerService {
         List<CustomerAddress> lstOfAddresses = new ArrayList<>();
         Customer dbCustomer = customerRepository.save(customer);
         if(dbCustomer!=null){
-            for(CustomerAddressRequestDto temp : customerRequestDto.getAddress())
-            {
-                CustomerAddress customerAddress = mapper.map(temp, CustomerAddress.class);
-                customerAddress.setCustomer(dbCustomer);
-                CustomerAddress address = addressRepository.save(customerAddress);
+            for(CustomerAddress address : dbCustomer.getAddress()) {
+                address.setCustomer(dbCustomer);
+                CustomerAddress savedAddress = addressRepository.save(address);
                 lstOfAddresses.add(address);
             }
-
-            CustomerCart customerCart = new CustomerCart();
-            customerCart.setCustomer(dbCustomer);
+            CustomerCart customerCart = addInCustomerCart(dbCustomer);
             CustomerCart customerCartDB = cartRepository.save(customerCart);
             customer.setCustomerCart(customerCartDB);
         }
@@ -65,28 +62,28 @@ public class CustomerServiceImpl implements CustomerService {
         return customerResponseDto1;
     }
 
+    private CustomerCart addInCustomerCart(Customer customer) {
+        CustomerCart customerCart = new CustomerCart();
+        customerCart.setCustomer(customer);
+        customerCart.setCreatedBy(customer.getCreatedBy());
+        return customerCart;
+    }
+
     @Override
-    public CustomerRequestDto updateCustomer(Long customerId, CustomerRequestDto customerRequestDto) {
+    public CustomerResponseDto updateCustomer(Long customerId, CustomerRequestDto customerRequestDto) {
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new ResourceNotFoundException("Customer not found with the given ID"));
         customer.setFullName(customerRequestDto.getFullName());
         customer.setMobileNumber(customerRequestDto.getMobileNumber());
         customer.setGender(customerRequestDto.getGender());
-        List<CustomerAddress> lstOfAddresses = new ArrayList<>();
-        for(CustomerAddressRequestDto temp : customerRequestDto.getAddress())
-        {
-            CustomerAddress customerAddress = mapper.map(temp, CustomerAddress.class);
-            lstOfAddresses.add(customerAddress);
-        }
-        customer.setAddress(lstOfAddresses);
-        customer.setCreatedBy(customerRequestDto.getCreatedBy());
-        customer.setCreatedDate(customer.getCreatedDate());
         customer.setModifiedBy(customer.getModifiedBy());
         customer.setModifiedDate(customer.getModifiedDate());
 
-        customerRepository.save(customer);
+        Customer customerDB = customerRepository.save(customer);
 
-        return mapper.map(customer, CustomerRequestDto.class);
+        CustomerResponseDto customerResponseDto = convertEntityToDto(customerDB);
+
+        return customerResponseDto;
 
     }
 
@@ -114,8 +111,31 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerAddressResponseDto addCustomerAddress(CustomerAddressRequestDto addressDto) {
         CustomerAddress customerAddress = mapper.map(addressDto, CustomerAddress.class);
         CustomerAddress customerAddresses = addressRepository.save(customerAddress);
-        CustomerAddressResponseDto addressDto1 = convertEntityToDtoForAddress(addressDto.getCustomer().getId(),customerAddresses);
+        CustomerAddressResponseDto addressDto1 = convertEntityToDtoForAddress(customerAddresses);
         return addressDto1;
+    }
+
+    @Override
+    public List<CustomerResponseDto> getCustomerByMobile(String mobileNumber) {
+        List<Customer> lstCustomer = customerRepository.findByMobileNumberLike("%"+mobileNumber+"%");
+        List<CustomerResponseDto> lstCustomerResponse = new ArrayList<>();
+        if(!lstCustomer.isEmpty()) {
+            for (Customer customer1 : lstCustomer) {
+                CustomerResponseDto customerResponseDto = convertEntityToDto(customer1);
+                lstCustomerResponse.add(customerResponseDto);
+            }
+        }
+        return lstCustomerResponse;
+    }
+
+    @Override
+    public CustomerResponseDto getCustomerById(Long id) {
+        CustomerResponseDto customerResponseDto = new CustomerResponseDto();
+        Optional<Customer> customer = customerRepository.findById(id);
+        if(customer.isPresent()) {
+            customerResponseDto = convertEntityToDto(customer.get());
+        }
+        return customerResponseDto;
     }
 
     private CustomerResponseDto convertEntityToDto(Customer customer) {
@@ -125,7 +145,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerResDto.setGender(customer.getGender());
         List<CustomerAddressResponseDto> addressDtos = new ArrayList<>();
         for(CustomerAddress custAddress : customer.getAddress()) {
-            CustomerAddressResponseDto addressDto = mapper.map(custAddress, CustomerAddressResponseDto.class);
+            CustomerAddressResponseDto addressDto = convertEntityToDtoForAddress(custAddress);
             addressDtos.add(addressDto);
         }
 
@@ -138,11 +158,15 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerCartResponseDto customerCartResponseDto = new CustomerCartResponseDto();
         customerCartResponseDto.setId(customer.getCustomerCart().getId());
         customerCartResponseDto.setCustomerId(customer.getCustomerCart().getCustomer().getId());
+        customerCartResponseDto.setCreatedBy(customer.getCustomerCart().getCreatedBy());
+        customerCartResponseDto.setCreatedAt(customer.getCustomerCart().getCreatedDate());
+        customerCartResponseDto.setModifiedBy(customer.getCustomerCart().getModifiedBy());
+        customerCartResponseDto.setModifiedAt(customer.getCustomerCart().getModifiedDate());
         customerResDto.setCustomerCartResponseDto(customerCartResponseDto);
         return customerResDto;
     }
 
-    public CustomerAddressResponseDto convertEntityToDtoForAddress(Long customerId, CustomerAddress customerAddress) {
+    public CustomerAddressResponseDto convertEntityToDtoForAddress(CustomerAddress customerAddress) {
         CustomerAddressResponseDto customerAddressResponseDto = new CustomerAddressResponseDto();
         customerAddressResponseDto.setHouseNumber(customerAddress.getHouseNumber());
         customerAddressResponseDto.setId(customerAddress.getId());
@@ -150,7 +174,11 @@ public class CustomerServiceImpl implements CustomerService {
         customerAddressResponseDto.setDistrict(customerAddress.getDistrict());
         customerAddressResponseDto.setVillageName(customerAddress.getVillageName());
         customerAddressResponseDto.setState(customerAddress.getState());
-        customerAddressResponseDto.setCustId(customerId);
+        customerAddressResponseDto.setCustomer(customerAddress.getCustomer().getId());
+        customerAddressResponseDto.setCreatedBy(customerAddress.getCreatedBy());
+        customerAddressResponseDto.setCreatedAt(customerAddress.getCreatedAt());
+        customerAddressResponseDto.setModifiedBy(customerAddress.getModifiedBy());
+        customerAddressResponseDto.setModifiedAt(customerAddress.getModifiedAt());
         return customerAddressResponseDto;
     }
 }

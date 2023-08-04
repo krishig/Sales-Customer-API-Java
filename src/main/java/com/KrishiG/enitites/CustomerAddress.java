@@ -3,6 +3,8 @@ package com.KrishiG.enitites;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -41,14 +43,16 @@ public class CustomerAddress {
     private int postalCode;
 
     @Column(name = "crated_by")
-    private int createdBy;
+    private Long createdBy;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private Date createdAt;
 
     @Column(name = "modified_by")
-    private int modifiedBy;
+    private Long modifiedBy;
 
+    @UpdateTimestamp
     @Column(name = "modified_at")
     private Date modifiedAt;
 }

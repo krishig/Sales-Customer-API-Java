@@ -20,11 +20,9 @@ public class CartProductResponseDto {
 
     private int productQuantity;
 
-    private Double actualPrice;
+    private Double discountPrice;
 
     private float discount;
-
-    private Double purchasePrice;
 
     private Long createdBy;
 

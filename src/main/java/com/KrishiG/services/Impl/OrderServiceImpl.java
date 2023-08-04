@@ -58,8 +58,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void removeCartProduct(Customer customer) {
         Optional<CustomerCart> cart = cartRepository.findByCustomer(customer);
-        if(cart.isPresent()) {
-            cartProductRepository.deleteAllByCart(cart.get());
+        List<CartProducts> cartProducts = cartProductRepository.findByCart(cart.get());
+        if(!cartProducts.isEmpty()) {
+            cartProducts.stream().forEach(a->{
+                cartProductRepository.delete(a);
+            });
         }
     }
 

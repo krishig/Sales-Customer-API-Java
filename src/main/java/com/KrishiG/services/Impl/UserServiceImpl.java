@@ -74,4 +74,5 @@ public class UserServiceImpl implements UserService {
         List<UserRequestDto> dtoList = users.stream().map(user -> mapper.map(user, UserRequestDto.class)).collect(Collectors.toList());
         return dtoList;
     }
+
 }

@@ -20,10 +20,6 @@ public class CartProductsRequestDto {
 
     private int productQuantity;
 
-    private Double price;
-
-    private Double totalPrice;
-
     private  Long createdBy;
 
     private Date createdDate;

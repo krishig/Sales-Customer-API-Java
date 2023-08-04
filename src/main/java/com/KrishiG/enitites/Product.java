@@ -29,12 +29,12 @@ public class Product {
     private double actualPrice;
 
     @Column(name = "whole_sale_price")
-    private int wholeSalePrice;
+    private double wholeSalePrice;
 
-    private int quantity;
+    private Long quantity;
 
     @Column(name = "discount")
-    private int discountPrice;
+    private int discount;
 
     @ManyToOne
     @JoinColumn(name = "sub_category_id")

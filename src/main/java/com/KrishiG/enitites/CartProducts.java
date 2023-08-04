@@ -29,15 +29,6 @@ public class CartProducts {
     @Column(name = "quantity")
     private int productQuantity;
 
-    @Column(name = "price")
-    private Double actualPrice;
-
-    @Column(name = "purchase_price")
-    private Double purchasePrice;
-
-    @Column(name = "discount")
-    private float discount;
-
     @Column(name = "created_by")
     private  Long createdBy;
 

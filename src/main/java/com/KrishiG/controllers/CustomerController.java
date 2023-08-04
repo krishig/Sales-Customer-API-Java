@@ -32,8 +32,8 @@ public class CustomerController {
 
     //update
     @PutMapping("/{customerId}")
-    public ResponseEntity<CustomerRequestDto> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId) {
-        CustomerRequestDto updatedCustomer = customerService.updateCustomer(customerId, customerRequestDto);
+    public ResponseEntity<CustomerResponseDto> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId) {
+        CustomerResponseDto updatedCustomer = customerService.updateCustomer(customerId, customerRequestDto);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
@@ -57,6 +57,19 @@ public class CustomerController {
         PageableResponse<CustomerResponseDto> response =  customerService.getAllCustomers(pageNumber,pageSize,sortBy,sortDir);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @GetMapping("/findByMobile/{mobileNumber}")
+    public ResponseEntity<List<CustomerResponseDto>> getCustomerByMobile(@PathVariable String mobileNumber) {
+        List<CustomerResponseDto> lstOfCustomer = customerService.getCustomerByMobile(mobileNumber);
+        return new ResponseEntity<>(lstOfCustomer,HttpStatus.OK);
+    }
+
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<CustomerResponseDto> getCustomerById(@PathVariable Long id) {
+        CustomerResponseDto customer = customerService.getCustomerById(id);
+        return new ResponseEntity<>(customer,HttpStatus.OK);
+    }
+
 
     @PostMapping("/address")
     public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto) {

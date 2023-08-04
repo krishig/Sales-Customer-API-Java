@@ -45,7 +45,6 @@ public class CartProductServiceImpl implements CartProductService {
                 for(CartProducts cartProducts : cartProductByCart) {
                     if(cartProducts.getId().equals(cartProductId)) {
                         cartProducts.setProductQuantity(quantity);
-                        cartProducts.setPurchasePrice(price);
                         cartProductRepository.save(cartProducts);
                     }
                 }
@@ -66,29 +65,43 @@ public class CartProductServiceImpl implements CartProductService {
     private TotalCartProductResponseDto convertEntityToDtoList(List<CartProducts> cartProducts) {
         TotalCartProductResponseDto totalCartProductResponseDto = new TotalCartProductResponseDto();
         List<CartProductResponseDto> cartProductResponseDtoList = new ArrayList<CartProductResponseDto>();
+        Double totalPrice = 0.0;
         for(CartProducts cartProducts1 : cartProducts) {
+            CartProductResponseDto cartProductResponseDto = new CartProductResponseDto();
             ProductResponseDto productResponseDto = new ProductResponseDto();
             Optional<Product> product = productRepository.findById(cartProducts1.getProduct().getId());
             if (!product.isEmpty()) {
                 productResponseDto.setId(product.get().getId());
                 productResponseDto.setProductName(product.get().getProductName());
                 productResponseDto.setProductDescription(product.get().getProductDescription());
+                productResponseDto.setSubCategory(product.get().getSubCategory().getId());
+                productResponseDto.setBrandId(product.get().getBrand().getId());
+                productResponseDto.setPrice(product.get().getActualPrice());
+                productResponseDto.setDiscount(product.get().getDiscount());
+                double discountPrice = calculationDiscountPrice(product.get().getActualPrice());
+                double productsPrice = discountPrice*cartProducts1.getProductQuantity();
+                cartProductResponseDto.setDiscountPrice(productsPrice);
+                totalPrice = totalPrice + discountPrice;
             }
-
-            CartProductResponseDto cartProductResponseDto = new CartProductResponseDto();
+            cartProductResponseDto.setId(cartProducts1.getId());
+            cartProductResponseDto.setCartId(cartProducts1.getCart().getId());
+            cartProductResponseDto.setProductResponseDto(productResponseDto);
             cartProductResponseDto.setProductQuantity(cartProducts1.getProductQuantity());
-            cartProductResponseDto.setActualPrice(cartProducts1.getActualPrice());
-            cartProductResponseDto.setPurchasePrice(cartProducts1.getPurchasePrice());
             cartProductResponseDto.setCreatedBy(cartProducts1.getCreatedBy());
             cartProductResponseDto.setCreatedDate(cartProducts1.getCreatedDate());
             cartProductResponseDto.setModifiedDate(cartProducts1.getModifiedDate());
             cartProductResponseDto.setModifiedBy(cartProducts1.getModifiedBY());
             cartProductResponseDtoList.add(cartProductResponseDto);
         }
-        Double totalPrice = cartProducts.stream().collect(Collectors.summingDouble(CartProducts::getPurchasePrice));
         totalCartProductResponseDto.setCartProductResponseDtoList(cartProductResponseDtoList);
         totalCartProductResponseDto.setTotalPrice(totalPrice);
         return totalCartProductResponseDto;
+    }
+
+
+    private double calculationDiscountPrice(double actualPrice) {
+        double discountPrice = actualPrice - (actualPrice*10)/100;
+        return discountPrice;
     }
 
     private CartProducts convertDtoToEntity(CartProductsRequestDto cartProductsRequestDto) {
@@ -96,6 +109,9 @@ public class CartProductServiceImpl implements CartProductService {
             customerCart.setId(cartProductsRequestDto.getCartId());
             CartProducts cartProducts = new CartProducts();
             cartProducts.setCart(customerCart);
+            Product product = new Product();
+            product.setId(cartProductsRequestDto.getProduct().getId());
+            cartProducts.setProduct(product);
             cartProducts.setProductQuantity(cartProductsRequestDto.getProductQuantity());
             cartProducts.setCreatedBy(cartProductsRequestDto.getCreatedBy());
             cartProducts.setCreatedDate(cartProductsRequestDto.getCreatedDate());

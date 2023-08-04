@@ -15,7 +15,7 @@ public interface CustomerService {
     CustomerResponseDto createCustomer(CustomerRequestDto customerRequestDto);
 
     //update
-    CustomerRequestDto updateCustomer(Long customerId, CustomerRequestDto customerRequestDto);
+    CustomerResponseDto updateCustomer(Long customerId, CustomerRequestDto customerRequestDto);
 
     //getAll
     PageableResponse<CustomerResponseDto> getAllCustomers(int pageNumber, int pageSize,String sortBy, String sortDir);
@@ -24,4 +24,9 @@ public interface CustomerService {
     void deleteCustomer(Long customerId);
 
     public CustomerAddressResponseDto addCustomerAddress(CustomerAddressRequestDto addressDto);
+
+    public List<CustomerResponseDto> getCustomerByMobile(String mobileNumber);
+
+    public CustomerResponseDto getCustomerById(Long id);
+
 }

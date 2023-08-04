@@ -15,10 +15,14 @@ public class ProductResponseDto {
 
     private String productName;
 
-    private int category;
+    private Long subCategory;
 
     private Long brandId;
 
     private String productDescription;
+
+    private Double price;
+
+    private int discount;
 
 }
