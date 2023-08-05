@@ -1,17 +1,17 @@
 package com.KrishiG.services.Impl;
 
 import com.KrishiG.dtos.request.CartProductsRequestDto;
-import com.KrishiG.dtos.response.CartProductResponseDto;
-import com.KrishiG.dtos.response.CustomerCartResponseDto;
-import com.KrishiG.dtos.response.ProductResponseDto;
-import com.KrishiG.dtos.response.TotalCartProductResponseDto;
+import com.KrishiG.dtos.response.*;
 import com.KrishiG.enitites.CartProducts;
 import com.KrishiG.enitites.CustomerCart;
 import com.KrishiG.enitites.Product;
 import com.KrishiG.repositories.CartProductRepository;
 import com.KrishiG.repositories.ProductRepository;
 import com.KrishiG.services.CartProductService;
+import com.KrishiG.util.PriceCalculation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,29 +30,32 @@ public class CartProductServiceImpl implements CartProductService {
 
     @Override
     public TotalCartProductResponseDto addProductToCart(CartProductsRequestDto cartProductsRequestDto) {
-
         CartProducts cartProducts = convertDtoToEntity(cartProductsRequestDto);
-        cartProductRepository.save(cartProducts);
-        List<CartProducts> lstCartProducts = cartProductRepository.findAll();
+        CartProducts SavedCartProduct=null;
+        if(cartProducts.getId()!=null && cartProducts.getCart()!=null) {
+            Optional<CartProducts> getCartProduct = cartProductRepository.findCartProductsByIdAndCart(cartProducts.getId(), cartProducts.getCart());
+            CartProducts cartProducts1 = getCartProduct.get();
+            cartProducts1.setProductQuantity(cartProductsRequestDto.getProductQuantity());
+            SavedCartProduct = cartProductRepository.save(cartProducts1);
+        } else {
+            SavedCartProduct = cartProductRepository.save(cartProducts);
+        }
+        List<CartProducts> lstCartProducts = cartProductRepository.findByCart(SavedCartProduct.getCart());
         TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
         return totalCartProductResponseDto;
     }
 
     @Override
-    public TotalCartProductResponseDto updateQuantityForProduct(Long cartId, Long cartProductId, int quantity, Double price) {
-        List<CartProducts> cartProductByCart = cartProductRepository.getCartProductByCart(cartId);
-            if (!cartProductByCart.isEmpty()) {
-                for(CartProducts cartProducts : cartProductByCart) {
-                    if(cartProducts.getId().equals(cartProductId)) {
-                        cartProducts.setProductQuantity(quantity);
-                        cartProductRepository.save(cartProducts);
-                    }
-                }
-
-            }
-        List<CartProducts> lstCartProducts = cartProductRepository.findAll();
+    public ResponseEntity<Object> deleteProductFromCart(Long cartId, Long cartProductId) {
+        cartProductRepository.deleteById(cartProductId);
+        String deleteMessage = "product is deleted successfully from cart!";
+        CustomerCart customerCart = new CustomerCart();
+        customerCart.setId(cartId);
+        List<CartProducts> lstCartProducts = cartProductRepository.findByCart(customerCart);
         TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
-        return totalCartProductResponseDto;
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(deleteMessage, HttpStatus.OK, totalCartProductResponseDto, false, true);
+        return responseEntity;
+
     }
 
     @Override
@@ -78,10 +81,12 @@ public class CartProductServiceImpl implements CartProductService {
                 productResponseDto.setBrandId(product.get().getBrand().getId());
                 productResponseDto.setPrice(product.get().getActualPrice());
                 productResponseDto.setDiscount(product.get().getDiscount());
-                double discountPrice = calculationDiscountPrice(product.get().getActualPrice());
+                cartProductResponseDto.setDiscount(product.get().getDiscount());
+                double discountPrice = PriceCalculation.calculationDiscountPrice(product.get().getActualPrice());
+                cartProductResponseDto.setDiscountPrice(discountPrice);
                 double productsPrice = discountPrice*cartProducts1.getProductQuantity();
-                cartProductResponseDto.setDiscountPrice(productsPrice);
-                totalPrice = totalPrice + discountPrice;
+                cartProductResponseDto.setTotalProductDiscountPrice(productsPrice);
+                totalPrice = totalPrice + productsPrice;
             }
             cartProductResponseDto.setId(cartProducts1.getId());
             cartProductResponseDto.setCartId(cartProducts1.getCart().getId());
@@ -98,20 +103,16 @@ public class CartProductServiceImpl implements CartProductService {
         return totalCartProductResponseDto;
     }
 
-
-    private double calculationDiscountPrice(double actualPrice) {
-        double discountPrice = actualPrice - (actualPrice*10)/100;
-        return discountPrice;
-    }
-
     private CartProducts convertDtoToEntity(CartProductsRequestDto cartProductsRequestDto) {
             CustomerCart customerCart = new CustomerCart();
             customerCart.setId(cartProductsRequestDto.getCartId());
             CartProducts cartProducts = new CartProducts();
             cartProducts.setCart(customerCart);
-            Product product = new Product();
-            product.setId(cartProductsRequestDto.getProduct().getId());
-            cartProducts.setProduct(product);
+            Optional<Product> product = productRepository.findById(cartProductsRequestDto.getProduct().getId());
+            if(product.isPresent()) {
+                cartProducts.setProduct(product.get());
+            }
+            cartProducts.setId(cartProductsRequestDto.getId());
             cartProducts.setProductQuantity(cartProductsRequestDto.getProductQuantity());
             cartProducts.setCreatedBy(cartProductsRequestDto.getCreatedBy());
             cartProducts.setCreatedDate(cartProductsRequestDto.getCreatedDate());

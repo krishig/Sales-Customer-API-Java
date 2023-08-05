@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.function.DoubleToIntFunction;
 
 @Getter
 @Entity
@@ -27,7 +28,10 @@ public class OrderItems {
     private Product product;
 
     @Column(name = "price_after_discount")
-    private Float priceAfterDiscount;
+    private Double priceAfterDiscount;
+
+    @Column(name="totalProductDiscountPrice")
+    private Double totalDiscountPrice;
 
     private int quantity;
 

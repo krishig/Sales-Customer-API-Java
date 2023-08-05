@@ -12,8 +12,7 @@ import java.util.Optional;
 @Repository
 public interface CartProductRepository extends JpaRepository<CartProducts,Long> {
 
-    @Query(value = "select * from CART_PRODUCTS WHERE id=?1", nativeQuery = true)
-    public List<CartProducts> getCartProductByCart(Long cartId);
+    public Optional<CartProducts> findCartProductsByIdAndCart(Long id, CustomerCart cart);
 
     public List<CartProducts> findByCart(CustomerCart cart);
 

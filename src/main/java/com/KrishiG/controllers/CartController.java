@@ -33,14 +33,12 @@ public class CartController {
     }
 
 
-    @PostMapping("/{cartId}/{cartProductId}/quantity")
-    public ResponseEntity<TotalCartProductResponseDto> updateQuantityForProduct(@PathVariable("cartId") Long cartId,
-                                                                                 @PathVariable("cartProductId") Long cartProductId,
-                                                                                 @PathVariable("quantity") int quantity,
-                                                                                 @PathVariable("price") Double price)
+    @DeleteMapping("/{cartId}/{cartProductId}")
+    public ResponseEntity<Object> deleteProductFromCart(@PathVariable("cartId") Long cartId,
+                                                                                 @PathVariable("cartProductId") Long cartProductId)
     {
-        TotalCartProductResponseDto totalCartProductResponseDto = cartProductService.updateQuantityForProduct(cartId, cartProductId, quantity, price);
-        return new ResponseEntity(totalCartProductResponseDto,HttpStatus.OK);
+        ResponseEntity<Object> responseEntity = cartProductService.deleteProductFromCart(cartId, cartProductId);
+        return responseEntity;
     }
 
     @GetMapping("getCartProduct/{cartId}")

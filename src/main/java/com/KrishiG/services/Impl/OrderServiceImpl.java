@@ -5,6 +5,7 @@ import com.KrishiG.dtos.response.OrderResponseDto;
 import com.KrishiG.enitites.*;
 import com.KrishiG.repositories.*;
 import com.KrishiG.services.OrderService;
+import com.KrishiG.util.PriceCalculation;
 import jakarta.persistence.criteria.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,8 +75,12 @@ public class OrderServiceImpl implements OrderService {
         OrderItems orderItems = new OrderItems();
         orderItems.setOrders(orders);
         orderItems.setProduct(cartProducts.getProduct());
-        orderItems.setPriceAfterDiscount((float) cartProducts.getProduct().getActualPrice());
+        Double discountPrice = PriceCalculation.calculationDiscountPrice(cartProducts.getProduct().getActualPrice());
+        Double totalProductDiscountPrice = discountPrice * cartProducts.getProductQuantity();
+        orderItems.setTotalDiscountPrice(totalProductDiscountPrice);
+        orderItems.setPriceAfterDiscount(discountPrice);
         orderItems.setQuantity(cartProducts.getProductQuantity());
+
         return orderItems;
     }
 
