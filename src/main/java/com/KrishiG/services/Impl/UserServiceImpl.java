@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
         user.setState(userRequestDto.getState());
         user.setRole(userRequestDto.getRole());
         user.setCreatedBy(userRequestDto.getCreatedBy());
-        user.setCreatedAt(userRequestDto.getCreatedAt());
+        user.setCreatedDate(userRequestDto.getCreatedDate());
         user.setModifiedBy(userRequestDto.getModifiedBy());
         user.setLandMark(userRequestDto.getLandMark());
         user.setGender(userRequestDto.getGender());
@@ -74,4 +74,5 @@ public class UserServiceImpl implements UserService {
         List<UserRequestDto> dtoList = users.stream().map(user -> mapper.map(user, UserRequestDto.class)).collect(Collectors.toList());
         return dtoList;
     }
+
 }

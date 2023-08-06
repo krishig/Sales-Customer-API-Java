@@ -16,7 +16,7 @@ public class UserRequestDto {
 
     private Long id;
 
-    @Size(min = 3, max = 15,message = "Invalid userName !!")
+    @Size(min = 3, max = 15, message = "Invalid userName !!")
     private String userName;
 
     @Size(min = 3, max = 15, message = "Invalid fullName !!")
@@ -35,7 +35,7 @@ public class UserRequestDto {
     private String mobileNumber;
 
     @NotBlank(message = "Aadhaar Number is Required")
-    @Size(max = 12,message = "Invalid aadhaar number!!")
+    @Size(max = 12, message = "Invalid aadhaar number!!")
     private String aadhaarNumber;
 
     @NotBlank(message = "HouseNumber Required ")
@@ -58,12 +58,16 @@ public class UserRequestDto {
 
     @NotBlank
     private String landMark;
+
     @NotBlank
     private Long createdBy;
+
     @NotBlank
-    private Date createdAt;
+    private Date createdDate;
+
     @NotBlank
     private Long modifiedBy;
+
     @NotBlank
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

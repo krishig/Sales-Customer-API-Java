@@ -5,6 +5,7 @@ import com.KrishiG.dtos.request.CustomerRequestDto;
 import com.KrishiG.dtos.response.CustomerAddressResponseDto;
 import com.KrishiG.dtos.response.CustomerResponseDto;
 import com.KrishiG.dtos.response.PageableResponse;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,16 +13,20 @@ import java.util.List;
 public interface CustomerService {
 
     //create
-    CustomerResponseDto createCustomer(CustomerRequestDto customerRequestDto);
+    ResponseEntity<Object> createCustomer(CustomerRequestDto customerRequestDto);
 
     //update
-    CustomerRequestDto updateCustomer(Long customerId, CustomerRequestDto customerRequestDto);
+    ResponseEntity<Object> updateCustomer(Long customerId, CustomerRequestDto customerRequestDto);
 
     //getAll
-    PageableResponse<CustomerResponseDto> getAllCustomers(int pageNumber, int pageSize,String sortBy, String sortDir);
+    ResponseEntity<Object>  getAllCustomers(int pageNumber, int pageSize,String sortBy, String sortDir);
 
     //delete
-    void deleteCustomer(Long customerId);
+    ResponseEntity<Object> deleteCustomer(Long customerId);
 
-    public CustomerAddressResponseDto addCustomerAddress(CustomerAddressRequestDto addressDto);
+    ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto);
+
+    ResponseEntity<Object> getCustomerByMobile(String mobileNumber);
+
+    ResponseEntity<Object> getCustomerById(Long id);
 }

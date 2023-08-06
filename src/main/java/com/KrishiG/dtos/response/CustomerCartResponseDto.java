@@ -18,9 +18,9 @@ public class CustomerCartResponseDto {
 
     private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
     private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

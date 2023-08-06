@@ -3,6 +3,7 @@ package com.KrishiG.dtos.request;
 import lombok.*;
 
 import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,11 +15,11 @@ public class OrderStatusRequestDto {
 
     private String type;
 
-    private String createBy;
+    private Long createBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

@@ -2,8 +2,11 @@ package com.KrishiG.enitites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -22,31 +25,24 @@ public class CartProducts {
     @JoinColumn(name = "cart_id")
     private CustomerCart cart;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "quantity")
     private int productQuantity;
 
-    @Column(name = "price")
-    private float actualPrice;
-
-    @Column(name = "purchase_price")
-    private float purchasePrice;
-
-    @Column(name = "discount")
-    private float discount;
-
     @Column(name = "created_by")
     private  Long createdBy;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private Date createdDate;
 
     @Column(name = "modified_by")
     private Long modifiedBY;
 
+    @UpdateTimestamp
     @Column(name = "modified_at")
     private Date modifiedDate;
 }

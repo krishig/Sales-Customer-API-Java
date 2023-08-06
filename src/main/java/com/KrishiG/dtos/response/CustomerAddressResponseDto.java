@@ -14,9 +14,7 @@ public class CustomerAddressResponseDto {
 
     private Long id;
 
-    private Long custId;
-
-    private String address;
+    private Long customer;
 
     private int houseNumber;
 
@@ -30,13 +28,13 @@ public class CustomerAddressResponseDto {
 
     private int postalCode;
 
-    private String createdBy;
+    private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 
     private CustomerCartResponseDto customerCartResponseDto;
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,13 +21,11 @@ public class CartProductResponseDto {
 
     private int productQuantity;
 
-    private float actualPrice;
+    private Double discountPrice;
 
-    private float discount;
+    private int discount;
 
-    private float purchasePrice;
-
-    private float totalAmount;
+    private Double totalProductDiscountPrice;
 
     private Long createdBy;
 

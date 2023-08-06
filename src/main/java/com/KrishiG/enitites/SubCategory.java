@@ -2,6 +2,8 @@ package com.KrishiG.enitites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.List;
@@ -33,15 +35,17 @@ public class SubCategory {
     private String imageUrl;
 
     @Column(name = "created_by")
-    private String createdBy;
+    private Long createdBy;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private Date createdDate;
 
     @Column(name = "modified_by")
-    private String modifiedBy;
+    private Long modifiedBy;
 
+    @UpdateTimestamp
     @Column(name = "modified_at")
-    private Date modifiedAt;
+    private Date modifiedDate;
 
 }

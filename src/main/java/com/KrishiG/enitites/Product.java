@@ -2,6 +2,8 @@ package com.KrishiG.enitites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.List;
@@ -29,12 +31,12 @@ public class Product {
     private double actualPrice;
 
     @Column(name = "whole_sale_price")
-    private int wholeSalePrice;
+    private double wholeSalePrice;
 
-    private int quantity;
+    private Long quantity;
 
     @Column(name = "discount")
-    private int discountPrice;
+    private int discount;
 
     @ManyToOne
     @JoinColumn(name = "sub_category_id")
@@ -50,13 +52,15 @@ public class Product {
     @Column(name = "created_by")
     private Long createdBy;
 
+    @CreationTimestamp
     @Column(name = "created_at")
-    private Date createdAt;
+    private Date createdDate;
 
     @Column(name = "modified_by")
     private Long modifiedBy;
 
+    @UpdateTimestamp
     @Column(name = "modified_at")
-    private Date modifiedAt;
+    private Date modifiedDate;
 
 }

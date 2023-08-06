@@ -1,12 +1,15 @@
 package com.KrishiG.services.Impl;
 
 import com.KrishiG.dtos.request.CustomerCartRequestDto;
+import com.KrishiG.dtos.response.ApiResponse;
 import com.KrishiG.dtos.response.CustomerCartResponseDto;
 import com.KrishiG.enitites.Customer;
 import com.KrishiG.enitites.CustomerCart;
 import com.KrishiG.repositories.CartRepository;
 import com.KrishiG.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,11 +19,13 @@ public class CartServiceImpl implements CartService {
     private CartRepository cartRepository;
 
     @Override
-    public CustomerCartResponseDto addCart(CustomerCartRequestDto customerCartRequestDto) {
+    public ResponseEntity<Object> addCart(CustomerCartRequestDto customerCartRequestDto) {
         CustomerCart customerCart = convertDtoToEntity(customerCartRequestDto);
         CustomerCart customerCartDB = cartRepository.save(customerCart);
         CustomerCartResponseDto response = convertEntityToDto(customerCartRequestDto.getCustomerId(),customerCartDB);
-        return response;
+        String message = "Cart Added !!";
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, response, false, true);
+        return responseEntity;
     }
 
     private CustomerCart convertDtoToEntity(CustomerCartRequestDto customerCartRequestDto) {
@@ -37,9 +42,9 @@ public class CartServiceImpl implements CartService {
         CustomerCartResponseDto customerCartRes = new CustomerCartResponseDto();
         customerCartRes.setId(customerCart.getId());
         customerCartRes.setCustomerId(customerId);
-        customerCartRes.setCreatedAt(customerCart.getCreatedDate());
+        customerCartRes.setCreatedDate(customerCart.getCreatedDate());
         customerCartRes.setCreatedBy(customerCart.getCreatedBy());
-        customerCartRes.setModifiedAt(customerCart.getModifiedDate());
+        customerCartRes.setModifiedDate(customerCart.getModifiedDate());
         customerCartRes.setModifiedBy(customerCart.getModifiedBy());
         return customerCartRes;
     }
