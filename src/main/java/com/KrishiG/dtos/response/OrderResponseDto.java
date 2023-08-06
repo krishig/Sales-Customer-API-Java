@@ -32,13 +32,13 @@ public class OrderResponseDto {
 
     private Long addressId;
 
-    private String createdBy;
+    private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
-    private Date closedAt;
+    private Date closedDate;
 }

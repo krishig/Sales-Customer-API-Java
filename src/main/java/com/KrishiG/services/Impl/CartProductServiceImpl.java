@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CartProductServiceImpl implements CartProductService {
@@ -55,7 +54,6 @@ public class CartProductServiceImpl implements CartProductService {
         TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(deleteMessage, HttpStatus.OK, totalCartProductResponseDto, false, true);
         return responseEntity;
-
     }
 
     @Override
@@ -116,7 +114,7 @@ public class CartProductServiceImpl implements CartProductService {
             cartProducts.setProductQuantity(cartProductsRequestDto.getProductQuantity());
             cartProducts.setCreatedBy(cartProductsRequestDto.getCreatedBy());
             cartProducts.setCreatedDate(cartProductsRequestDto.getCreatedDate());
-            cartProducts.setModifiedBY(cartProductsRequestDto.getModifiedBY());
+            cartProducts.setModifiedBY(cartProductsRequestDto.getModifiedBy());
             cartProducts.setModifiedDate(cartProductsRequestDto.getModifiedDate());
             return cartProducts;
     }

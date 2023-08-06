@@ -30,11 +30,11 @@ public class CustomerAddressResponseDto {
 
     private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
     private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 
     private CustomerCartResponseDto customerCartResponseDto;
 }

@@ -8,6 +8,8 @@ import com.KrishiG.dtos.response.PageableResponse;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.CustomerService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,61 +21,58 @@ import java.util.List;
 @RequestMapping("/customer")
 public class CustomerController {
 
+    Logger logger = LoggerFactory.getLogger(CustomerController.class);
+
     @Autowired
     private CustomerService customerService;
 
-
     //create
     @PostMapping("/addCustomer")
-    public ResponseEntity<CustomerResponseDto> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
-        CustomerResponseDto createdCustomer = customerService.createCustomer(customerRequestDto);
-        return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
+    public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
+        ResponseEntity<Object> responseEntity = customerService.createCustomer(customerRequestDto);
+        return responseEntity;
     }
 
     //update
     @PutMapping("/{customerId}")
-    public ResponseEntity<CustomerResponseDto> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId) {
-        CustomerResponseDto updatedCustomer = customerService.updateCustomer(customerId, customerRequestDto);
-        return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
+    public ResponseEntity<Object> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId) {
+        ResponseEntity<Object> responseEntity = customerService.updateCustomer(customerId, customerRequestDto);
+        return responseEntity;
     }
 
     //delete
     @DeleteMapping("/{customerId}")
-    public ResponseEntity<ApiResponseMessage> deleteCustomer(@PathVariable("customerId") Long customerId) {
-        customerService.deleteCustomer(customerId);
-        ApiResponseMessage message = ApiResponseMessage.builder().message("Customer Deleted Successfully")
-                                                                 .status(HttpStatus.OK).success(true).build();
-
-        return new ResponseEntity<>(message,HttpStatus.OK);
+    public ResponseEntity<Object> deleteCustomer(@PathVariable("customerId") Long customerId) {
+        ResponseEntity<Object> responseEntity = customerService.deleteCustomer(customerId);
+        return responseEntity;
     }
 
     //getAll
     @GetMapping("/")
-    public ResponseEntity<PageableResponse<CustomerResponseDto>> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+    public ResponseEntity<Object> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
                                                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
                                                                                   @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
                                                                                   @RequestParam(value = "sortDir",defaultValue = "desc",required = false) String sortDir)
     {
-        PageableResponse<CustomerResponseDto> response =  customerService.getAllCustomers(pageNumber,pageSize,sortBy,sortDir);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        ResponseEntity<Object> allCustomers = customerService.getAllCustomers(pageNumber, pageSize, sortBy, sortDir);
+        return allCustomers;
     }
 
     @GetMapping("/findByMobile/{mobileNumber}")
-    public ResponseEntity<List<CustomerResponseDto>> getCustomerByMobile(@PathVariable String mobileNumber) {
-        List<CustomerResponseDto> lstOfCustomer = customerService.getCustomerByMobile(mobileNumber);
-        return new ResponseEntity<>(lstOfCustomer,HttpStatus.OK);
+    public ResponseEntity<Object> getCustomerByMobile(@PathVariable String mobileNumber) {
+        ResponseEntity<Object> responseEntity = customerService.getCustomerByMobile(mobileNumber);
+        return responseEntity;
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<CustomerResponseDto> getCustomerById(@PathVariable Long id) {
-        CustomerResponseDto customer = customerService.getCustomerById(id);
-        return new ResponseEntity<>(customer,HttpStatus.OK);
+    public ResponseEntity<Object> getCustomerById(@PathVariable Long id) {
+        ResponseEntity<Object> responseEntity = customerService.getCustomerById(id);
+        return responseEntity;
     }
 
-
     @PostMapping("/address")
-    public ResponseEntity<CustomerAddressResponseDto> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto) {
-        CustomerAddressResponseDto addressDtos = customerService.addCustomerAddress(addressDto);
-        return new ResponseEntity<>(addressDtos, HttpStatus.CREATED);
+    public ResponseEntity<Object> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto) {
+        ResponseEntity<Object> responseEntity = customerService.addCustomerAddress(addressDto);
+        return responseEntity;
     }
 }

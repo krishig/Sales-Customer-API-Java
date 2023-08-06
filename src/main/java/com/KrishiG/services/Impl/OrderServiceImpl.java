@@ -39,9 +39,9 @@ public class OrderServiceImpl implements OrderService {
         PaymentMethod paymentMethod = savePaymentMethod(orderRequestDto);
         Orders orders = convertDtoToEntity(orderRequestDto, paymentMethod);
         Orders savedOrder = orderRepository.save(orders);
-        if(savedOrder!=null) {
+        if (savedOrder != null) {
             Optional<CustomerCart> customerCart = cartRepository.findByCustomer(savedOrder.getCustomerId());
-            if(customerCart.isPresent()) {
+            if (customerCart.isPresent()) {
                 List<CartProducts> cartProducts = cartProductRepository.findByCart(customerCart.get());
                 if (!cartProducts.isEmpty()) {
                     for (CartProducts cartProducts1 : cartProducts) {
@@ -60,8 +60,8 @@ public class OrderServiceImpl implements OrderService {
     public void removeCartProduct(Customer customer) {
         Optional<CustomerCart> cart = cartRepository.findByCustomer(customer);
         List<CartProducts> cartProducts = cartProductRepository.findByCart(cart.get());
-        if(!cartProducts.isEmpty()) {
-            cartProducts.stream().forEach(a->{
+        if (!cartProducts.isEmpty()) {
+            cartProducts.stream().forEach(a -> {
                 cartProductRepository.delete(a);
             });
         }
@@ -105,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
 
     private String generateOrderNumber() {
         Random random = new Random();
-        String s = "OR"+random.nextInt(10000);
+        String s = "OR" + random.nextInt(10000);
         return s;
     }
 }

@@ -25,7 +25,6 @@ public class CustomerRequestDto {
     @Size(min = 10,max = 11,message = "Invalid Number")
     private String mobileNumber;
 
-    @NotBlank(message = "Please provide gender")
     private String gender;
 
     private List<CustomerAddressRequestDto> address;

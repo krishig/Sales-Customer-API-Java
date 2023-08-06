@@ -2,6 +2,8 @@ package com.KrishiG.enitites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.List;
@@ -25,19 +27,21 @@ public class Brands {
     @Column(name = "brand_name")
     private String brandName;
 
-    @Column(name = "brand_image_url",columnDefinition = "TEXT")
+    @Column(name = "brand_image_url", columnDefinition = "TEXT")
     private String brandImageUrl;
 
     @Column(name = "created_by")
     private Long createdBy;
 
+    @CreationTimestamp
     @Column(name = "created_at")
-    private Date createdAt;
+    private Date createdDate;
 
     @Column(name = "modified_by")
     private Long modifiedBy;
 
+    @UpdateTimestamp
     @Column(name = "modified_at")
-    private Date modifiedAt;
+    private Date modifiedDate;
 
 }

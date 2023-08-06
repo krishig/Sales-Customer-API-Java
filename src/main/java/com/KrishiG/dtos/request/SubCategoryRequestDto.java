@@ -14,11 +14,11 @@ public class SubCategoryRequestDto
 
     private String imageUrl;
 
-    private String createdBy;
+    private Long createdBy;
 
     private Date createdDate;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

@@ -4,6 +4,7 @@ import com.KrishiG.enitites.SubCategory;
 import lombok.*;
 
 import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,11 +18,11 @@ public class CategoryRequestDto {
 
     private SubCategory subCategory;
 
-    private String createdBy;
+    private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

@@ -4,6 +4,7 @@ import com.KrishiG.enitites.Customer;
 import lombok.*;
 
 import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,11 +21,11 @@ public class CartProductsRequestDto {
 
     private int productQuantity;
 
-    private  Long createdBy;
+    private Long createdBy;
 
     private Date createdDate;
 
-    private Long modifiedBY;
+    private Long modifiedBy;
 
     private Date modifiedDate;
 }

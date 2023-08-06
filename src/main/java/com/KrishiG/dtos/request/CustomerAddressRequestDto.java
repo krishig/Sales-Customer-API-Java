@@ -26,11 +26,11 @@ public class CustomerAddressRequestDto {
 
     private int postalCode;
 
-    private String createdBy;
+    private Long createdBy;
 
-    private Date createdAt;
+    private Date createdDate;
 
-    private String modifiedBy;
+    private Long modifiedBy;
 
-    private Date modifiedAt;
+    private Date modifiedDate;
 }

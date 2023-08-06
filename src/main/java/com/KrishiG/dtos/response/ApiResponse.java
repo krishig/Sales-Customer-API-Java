@@ -14,7 +14,6 @@ public class ApiResponse {
         map.put("error",error);
         map.put("success", success);
         map.put("data", responseObj);
-
         return new ResponseEntity<Object>(map,status);
     }
 

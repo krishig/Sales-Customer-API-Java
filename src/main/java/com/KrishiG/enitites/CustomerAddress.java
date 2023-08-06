@@ -47,12 +47,12 @@ public class CustomerAddress {
 
     @CreationTimestamp
     @Column(name = "created_at")
-    private Date createdAt;
+    private Date createdDate;
 
     @Column(name = "modified_by")
     private Long modifiedBy;
 
     @UpdateTimestamp
     @Column(name = "modified_at")
-    private Date modifiedAt;
+    private Date modifiedDate;
 }
