@@ -179,14 +179,16 @@ public class CustomerServiceImpl implements CustomerService {
         customerResDto.setCreatedDate(customer.getCreatedDate());
         customerResDto.setModifiedBy(customer.getModifiedBy());
         customerResDto.setModifiedDate(customer.getModifiedDate());
-        CustomerCartResponseDto customerCartResponseDto = new CustomerCartResponseDto();
-        customerCartResponseDto.setId(customer.getCustomerCart().getId());
-        customerCartResponseDto.setCustomerId(customer.getCustomerCart().getCustomer().getId());
-        customerCartResponseDto.setCreatedBy(customer.getCustomerCart().getCreatedBy());
-        customerCartResponseDto.setCreatedDate(customer.getCustomerCart().getCreatedDate());
-        customerCartResponseDto.setModifiedBy(customer.getCustomerCart().getModifiedBy());
-        customerCartResponseDto.setModifiedDate(customer.getCustomerCart().getModifiedDate());
-        customerResDto.setCustomerCartResponseDto(customerCartResponseDto);
+        if(customer.getCustomerCart() != null) {
+            CustomerCartResponseDto customerCartResponseDto = new CustomerCartResponseDto();
+            customerCartResponseDto.setId(customer.getCustomerCart().getId());
+            customerCartResponseDto.setCustomerId(customer.getCustomerCart().getCustomer().getId());
+            customerCartResponseDto.setCreatedBy(customer.getCustomerCart().getCreatedBy());
+            customerCartResponseDto.setCreatedDate(customer.getCustomerCart().getCreatedDate());
+            customerCartResponseDto.setModifiedBy(customer.getCustomerCart().getModifiedBy());
+            customerCartResponseDto.setModifiedDate(customer.getCustomerCart().getModifiedDate());
+            customerResDto.setCustomerCartResponseDto(customerCartResponseDto);
+        }
         return customerResDto;
     }
 
