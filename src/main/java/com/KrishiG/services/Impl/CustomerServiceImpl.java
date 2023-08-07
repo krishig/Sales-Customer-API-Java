@@ -95,6 +95,10 @@ public class CustomerServiceImpl implements CustomerService {
         //pageNumber default starts from 0
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Customer> page = customerRepository.findAll(pageable);
+        if(page.isEmpty())
+        {
+            throw new ResourceNotFoundException("No Customer is available");
+        }
         List<Customer> customers = page.getContent();
 
         List<CustomerResponseDto> dtoList = customers.stream().map(customer -> convertEntityToDto(customer)).collect(Collectors.toList());
