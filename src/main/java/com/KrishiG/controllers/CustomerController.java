@@ -7,6 +7,7 @@ import com.KrishiG.dtos.response.CustomerResponseDto;
 import com.KrishiG.dtos.response.PageableResponse;
 import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.CustomerService;
+import com.KrishiG.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/customer")
@@ -26,9 +28,15 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     //create
     @PostMapping("/addCustomer")
-    public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
+    public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto,
+                                                 @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
+        System.out.println("userId>>>>>>"+userId);
         ResponseEntity<Object> responseEntity = customerService.createCustomer(customerRequestDto);
         return responseEntity;
     }
