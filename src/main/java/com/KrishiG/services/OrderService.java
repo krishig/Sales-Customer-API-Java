@@ -3,8 +3,9 @@ package com.KrishiG.services;
 import com.KrishiG.dtos.request.OrderRequestDto;
 import com.KrishiG.dtos.response.OrderResponseDto;
 import com.KrishiG.enitites.Customer;
+import org.springframework.http.ResponseEntity;
 
 public interface OrderService {
-    public OrderResponseDto bookOrder(OrderRequestDto orderRequestDto);
-    public void removeCartProduct(Customer customer);
+    public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto);
+    public ResponseEntity<Object> removeCartProduct(Customer customer);
 }

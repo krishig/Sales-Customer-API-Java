@@ -20,9 +20,9 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/book")
-    public ResponseEntity<OrderResponseDto> saveOrder(@RequestBody OrderRequestDto orderRequestDto) {
-        OrderResponseDto orderResponseDto = orderService.bookOrder(orderRequestDto);
+    public ResponseEntity<Object> saveOrder(@RequestBody OrderRequestDto orderRequestDto) {
+        ResponseEntity<Object> responseEntity = orderService.bookOrder(orderRequestDto);
         orderService.removeCartProduct(orderRequestDto.getCustomerId());
-        return new ResponseEntity<>(orderResponseDto, HttpStatus.CREATED);
+        return responseEntity;
     }
 }
