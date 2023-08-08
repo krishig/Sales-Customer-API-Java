@@ -1,6 +1,7 @@
 package com.KrishiG.services.Impl;
 
 import com.KrishiG.dtos.request.OrderRequestDto;
+import com.KrishiG.dtos.response.ApiResponse;
 import com.KrishiG.dtos.response.OrderResponseDto;
 import com.KrishiG.enitites.*;
 import com.KrishiG.repositories.*;
@@ -8,6 +9,8 @@ import com.KrishiG.services.OrderService;
 import com.KrishiG.util.PriceCalculation;
 import jakarta.persistence.criteria.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public OrderResponseDto bookOrder(OrderRequestDto orderRequestDto) {
+    public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto) {
         PaymentMethod paymentMethod = savePaymentMethod(orderRequestDto);
         Orders orders = convertDtoToEntity(orderRequestDto, paymentMethod);
         Orders savedOrder = orderRepository.save(orders);
@@ -53,11 +56,13 @@ public class OrderServiceImpl implements OrderService {
         }
 
         OrderResponseDto orderResponseDto = convertEntityToDto(savedOrder);
-        return orderResponseDto;
+        String message = "Order Booked !!";
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, orderResponseDto, false, true);
+        return responseEntity;
     }
 
     @Override
-    public void removeCartProduct(Customer customer) {
+    public ResponseEntity<Object> removeCartProduct(Customer customer) {
         Optional<CustomerCart> cart = cartRepository.findByCustomer(customer);
         List<CartProducts> cartProducts = cartProductRepository.findByCart(cart.get());
         if (!cartProducts.isEmpty()) {
@@ -65,6 +70,8 @@ public class OrderServiceImpl implements OrderService {
                 cartProductRepository.delete(a);
             });
         }
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, null, false, true);
+        return responseEntity;
     }
 
     public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {

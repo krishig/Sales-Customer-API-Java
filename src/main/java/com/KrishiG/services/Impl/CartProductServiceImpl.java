@@ -28,10 +28,10 @@ public class CartProductServiceImpl implements CartProductService {
     private ProductRepository productRepository;
 
     @Override
-    public TotalCartProductResponseDto addProductToCart(CartProductsRequestDto cartProductsRequestDto) {
+    public ResponseEntity<Object> addProductToCart(CartProductsRequestDto cartProductsRequestDto) {
         CartProducts cartProducts = convertDtoToEntity(cartProductsRequestDto);
-        CartProducts SavedCartProduct=null;
-        if(cartProducts.getId()!=null && cartProducts.getCart()!=null) {
+        CartProducts SavedCartProduct = null;
+        if (cartProducts.getId() != null && cartProducts.getCart() != null) {
             Optional<CartProducts> getCartProduct = cartProductRepository.findCartProductsByIdAndCart(cartProducts.getId(), cartProducts.getCart());
             CartProducts cartProducts1 = getCartProduct.get();
             cartProducts1.setProductQuantity(cartProductsRequestDto.getProductQuantity());
@@ -41,7 +41,9 @@ public class CartProductServiceImpl implements CartProductService {
         }
         List<CartProducts> lstCartProducts = cartProductRepository.findByCart(SavedCartProduct.getCart());
         TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
-        return totalCartProductResponseDto;
+        String message = "Product added to cart !!";
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, totalCartProductResponseDto, false, true);
+        return responseEntity;
     }
 
     @Override
@@ -57,17 +59,18 @@ public class CartProductServiceImpl implements CartProductService {
     }
 
     @Override
-    public TotalCartProductResponseDto getCartProducts(Long cartId) {
+    public ResponseEntity<Object> getCartProducts(Long cartId) {
         List<CartProducts> lstCartProducts = cartProductRepository.findAll();
         TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
-        return totalCartProductResponseDto;
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, totalCartProductResponseDto, false, true);
+        return responseEntity;
     }
 
     private TotalCartProductResponseDto convertEntityToDtoList(List<CartProducts> cartProducts) {
         TotalCartProductResponseDto totalCartProductResponseDto = new TotalCartProductResponseDto();
         List<CartProductResponseDto> cartProductResponseDtoList = new ArrayList<CartProductResponseDto>();
         Double totalPrice = 0.0;
-        for(CartProducts cartProducts1 : cartProducts) {
+        for (CartProducts cartProducts1 : cartProducts) {
             CartProductResponseDto cartProductResponseDto = new CartProductResponseDto();
             ProductResponseDto productResponseDto = new ProductResponseDto();
             Optional<Product> product = productRepository.findById(cartProducts1.getProduct().getId());
@@ -82,7 +85,7 @@ public class CartProductServiceImpl implements CartProductService {
                 cartProductResponseDto.setDiscount(product.get().getDiscount());
                 double discountPrice = PriceCalculation.calculationDiscountPrice(product.get().getActualPrice());
                 cartProductResponseDto.setDiscountPrice(discountPrice);
-                double productsPrice = discountPrice*cartProducts1.getProductQuantity();
+                double productsPrice = discountPrice * cartProducts1.getProductQuantity();
                 cartProductResponseDto.setTotalProductDiscountPrice(productsPrice);
                 totalPrice = totalPrice + productsPrice;
             }
@@ -102,21 +105,21 @@ public class CartProductServiceImpl implements CartProductService {
     }
 
     private CartProducts convertDtoToEntity(CartProductsRequestDto cartProductsRequestDto) {
-            CustomerCart customerCart = new CustomerCart();
-            customerCart.setId(cartProductsRequestDto.getCartId());
-            CartProducts cartProducts = new CartProducts();
-            cartProducts.setCart(customerCart);
-            Optional<Product> product = productRepository.findById(cartProductsRequestDto.getProduct().getId());
-            if(product.isPresent()) {
-                cartProducts.setProduct(product.get());
-            }
-            cartProducts.setId(cartProductsRequestDto.getId());
-            cartProducts.setProductQuantity(cartProductsRequestDto.getProductQuantity());
-            cartProducts.setCreatedBy(cartProductsRequestDto.getCreatedBy());
-            cartProducts.setCreatedDate(cartProductsRequestDto.getCreatedDate());
-            cartProducts.setModifiedBY(cartProductsRequestDto.getModifiedBy());
-            cartProducts.setModifiedDate(cartProductsRequestDto.getModifiedDate());
-            return cartProducts;
+        CustomerCart customerCart = new CustomerCart();
+        customerCart.setId(cartProductsRequestDto.getCartId());
+        CartProducts cartProducts = new CartProducts();
+        cartProducts.setCart(customerCart);
+        Optional<Product> product = productRepository.findById(cartProductsRequestDto.getProduct().getId());
+        if (product.isPresent()) {
+            cartProducts.setProduct(product.get());
+        }
+        cartProducts.setId(cartProductsRequestDto.getId());
+        cartProducts.setProductQuantity(cartProductsRequestDto.getProductQuantity());
+        cartProducts.setCreatedBy(cartProductsRequestDto.getCreatedBy());
+        cartProducts.setCreatedDate(cartProductsRequestDto.getCreatedDate());
+        cartProducts.setModifiedBY(cartProductsRequestDto.getModifiedBy());
+        cartProducts.setModifiedDate(cartProductsRequestDto.getModifiedDate());
+        return cartProducts;
     }
 
 }

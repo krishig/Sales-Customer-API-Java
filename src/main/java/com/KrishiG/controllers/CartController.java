@@ -26,12 +26,11 @@ public class CartController {
     private CartProductService cartProductService;
 
     @PostMapping("/addProduct")
-    public ResponseEntity<TotalCartProductResponseDto> addProductToCart(@Valid @RequestBody CartProductsRequestDto cartProductsRequestDto)
+    public ResponseEntity<Object> addProductToCart(@Valid @RequestBody CartProductsRequestDto cartProductsRequestDto)
     {
-        TotalCartProductResponseDto totalCartProductResponseDto = cartProductService.addProductToCart(cartProductsRequestDto);
-        return new ResponseEntity(totalCartProductResponseDto,HttpStatus.OK);
+        ResponseEntity<Object> responseEntity = cartProductService.addProductToCart(cartProductsRequestDto);
+        return responseEntity;
     }
-
 
     @DeleteMapping("/{cartId}/{cartProductId}")
     public ResponseEntity<Object> deleteProductFromCart(@PathVariable("cartId") Long cartId,
@@ -42,10 +41,10 @@ public class CartController {
     }
 
     @GetMapping("getCartProduct/{cartId}")
-    public ResponseEntity<TotalCartProductResponseDto> getCartProducts(@PathVariable("cartId") Long cartId)
+    public ResponseEntity<Object> getCartProducts(@PathVariable("cartId") Long cartId)
     {
-        TotalCartProductResponseDto totalCartProductResponseDto = cartProductService.getCartProducts(cartId);
-        return new ResponseEntity(totalCartProductResponseDto,HttpStatus.OK);
+        ResponseEntity<Object> cartProducts = cartProductService.getCartProducts(cartId);
+        return cartProducts;
     }
 
 }
