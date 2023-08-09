@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/customer")
-@CrossOrigin
 public class CustomerController {
 
     Logger logger = LoggerFactory.getLogger(CustomerController.class);
