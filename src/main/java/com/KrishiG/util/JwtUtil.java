@@ -16,10 +16,10 @@ public class JwtUtil {
 
         String userId = null;
         String jwtToken = token.get("authorization");
-        if (jwtToken != null && jwtToken.startsWith("Bearer")) {
-            String tokenWithoutBearer = jwtToken.substring(7);
+        //if (jwtToken != null && jwtToken.startsWith("Bearer")) {
+            //String tokenWithoutBearer = jwtToken.substring(7);
             try {
-                String[] split_string = tokenWithoutBearer.split("\\.");
+                String[] split_string = jwtToken.split("\\.");
                 String base64EncodedHeader = split_string[0];
                 String base64EncodedBody = split_string[1];
                 String base64EncodedSignature = split_string[2];
@@ -34,9 +34,9 @@ public class JwtUtil {
             } catch (JsonProcessingException jpe) {
                 System.out.println(jpe);
             }
-        } else {
+        /*} else {
             throw new RuntimeException("please pass the token!");
-        }
+        }*/
         return Long.parseLong(userId);
     }
 }
