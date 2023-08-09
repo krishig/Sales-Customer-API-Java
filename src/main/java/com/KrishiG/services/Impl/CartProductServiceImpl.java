@@ -2,9 +2,10 @@ package com.KrishiG.services.Impl;
 
 import com.KrishiG.dtos.request.CartProductsRequestDto;
 import com.KrishiG.dtos.response.*;
-import com.KrishiG.enitites.CartProducts;
-import com.KrishiG.enitites.CustomerCart;
-import com.KrishiG.enitites.Product;
+import com.KrishiG.entities.CartProducts;
+import com.KrishiG.entities.CustomerCart;
+import com.KrishiG.entities.Product;
+import com.KrishiG.exception.ResourceNotFoundException;
 import com.KrishiG.repositories.CartProductRepository;
 import com.KrishiG.repositories.ProductRepository;
 import com.KrishiG.services.CartProductService;
@@ -33,6 +34,9 @@ public class CartProductServiceImpl implements CartProductService {
         CartProducts SavedCartProduct = null;
         if (cartProducts.getId() != null && cartProducts.getCart() != null) {
             Optional<CartProducts> getCartProduct = cartProductRepository.findCartProductsByIdAndCart(cartProducts.getId(), cartProducts.getCart());
+            if (getCartProduct == null) {
+                throw new ResourceNotFoundException("Cart product not found ");
+            }
             CartProducts cartProducts1 = getCartProduct.get();
             cartProducts1.setProductQuantity(cartProductsRequestDto.getProductQuantity());
             SavedCartProduct = cartProductRepository.save(cartProducts1);
@@ -48,22 +52,31 @@ public class CartProductServiceImpl implements CartProductService {
 
     @Override
     public ResponseEntity<Object> deleteProductFromCart(Long cartId, Long cartProductId) {
-        cartProductRepository.deleteById(cartProductId);
-        String deleteMessage = "product is deleted successfully from cart!";
-        CustomerCart customerCart = new CustomerCart();
-        customerCart.setId(cartId);
-        List<CartProducts> lstCartProducts = cartProductRepository.findByCart(customerCart);
-        TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(deleteMessage, HttpStatus.OK, totalCartProductResponseDto, false, true);
-        return responseEntity;
+        Optional<CartProducts> cartProducts = cartProductRepository.findById(cartProductId);
+        if (cartProducts.isPresent()) {
+            cartProductRepository.deleteById(cartProductId);
+            String deleteMessage = "product is deleted successfully from cart!";
+            CustomerCart customerCart = new CustomerCart();
+            customerCart.setId(cartId);
+            List<CartProducts> lstCartProducts = cartProductRepository.findByCart(customerCart);
+            TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(deleteMessage, HttpStatus.OK, totalCartProductResponseDto, false, true);
+            return responseEntity;
+        } else {
+            throw new ResourceNotFoundException("Can't able to delete product from cart");
+        }
     }
 
     @Override
     public ResponseEntity<Object> getCartProducts(Long cartId) {
         List<CartProducts> lstCartProducts = cartProductRepository.findAll();
-        TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, totalCartProductResponseDto, false, true);
-        return responseEntity;
+        if (lstCartProducts.isEmpty()) {
+            throw new ResourceNotFoundException("Not able to get the product from cart");
+        } else {
+            TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, totalCartProductResponseDto, false, true);
+            return responseEntity;
+        }
     }
 
     private TotalCartProductResponseDto convertEntityToDtoList(List<CartProducts> cartProducts) {

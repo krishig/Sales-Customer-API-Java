@@ -1,4 +1,4 @@
-package com.KrishiG.enitites;
+package com.KrishiG.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,20 +10,21 @@ import java.util.Date;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Builder
-@Table(name = "ORDER_STATUS")
-public class OrderStatus {
+@Setter
+@Getter
+@Table(name = "ROLES")
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type;
+    @Column(name = "role_name")
+    private String roleName;
 
     @Column(name = "created_by")
-    private Long createBy;
+    private Long createdBy;
 
     @CreationTimestamp
     @Column(name = "created_at")

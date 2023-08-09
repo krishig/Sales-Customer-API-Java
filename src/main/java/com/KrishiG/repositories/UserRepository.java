@@ -1,6 +1,6 @@
 package com.KrishiG.repositories;
 
-import com.KrishiG.enitites.User;
+import com.KrishiG.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

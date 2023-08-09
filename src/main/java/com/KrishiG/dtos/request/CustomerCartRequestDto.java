@@ -1,7 +1,7 @@
 package com.KrishiG.dtos.request;
 
-import com.KrishiG.enitites.CartProducts;
-import com.KrishiG.enitites.Customer;
+import com.KrishiG.entities.CartProducts;
+import com.KrishiG.entities.Customer;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 

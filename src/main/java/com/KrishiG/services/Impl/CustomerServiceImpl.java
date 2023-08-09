@@ -3,9 +3,9 @@ package com.KrishiG.services.Impl;
 import com.KrishiG.dtos.request.CustomerAddressRequestDto;
 import com.KrishiG.dtos.request.CustomerRequestDto;
 import com.KrishiG.dtos.response.*;
-import com.KrishiG.enitites.Customer;
-import com.KrishiG.enitites.CustomerAddress;
-import com.KrishiG.enitites.CustomerCart;
+import com.KrishiG.entities.Customer;
+import com.KrishiG.entities.CustomerAddress;
+import com.KrishiG.entities.CustomerCart;
 import com.KrishiG.exception.ResourceNotFoundException;
 import com.KrishiG.repositories.AddressRepository;
 import com.KrishiG.repositories.CartRepository;
@@ -54,6 +54,9 @@ public class CustomerServiceImpl implements CustomerService {
             }
             CustomerCart customerCart = addInCustomerCart(dbCustomer);
             CustomerCart customerCartDB = cartRepository.save(customerCart);
+            if (customerCartDB == null) {
+                throw new ResourceNotFoundException();
+            }
             customer.setCustomerCart(customerCartDB);
         }
         customer.setAddress(lstOfAddresses);
@@ -80,6 +83,9 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setModifiedBy(customerRequestDto.getModifiedBy());
         customer.setModifiedDate(customerRequestDto.getModifiedDate());
         Customer customerDB = customerRepository.save(customer);
+        if (customerDB == null) {
+            throw new ResourceNotFoundException("Unable to Update Customer with the given Id " + customerId);
+        }
         CustomerResponseDto customerResponseDto = convertEntityToDto(customerDB);
         String updateMessage = "Customer Updated Successfully";
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(updateMessage, HttpStatus.CREATED, customerResponseDto, false, true);
@@ -95,8 +101,7 @@ public class CustomerServiceImpl implements CustomerService {
         //pageNumber default starts from 0
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Customer> page = customerRepository.findAll(pageable);
-        if(page.isEmpty())
-        {
+        if (page.isEmpty()) {
             throw new ResourceNotFoundException("No Customer is available");
         }
         List<Customer> customers = page.getContent();
@@ -118,7 +123,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public ResponseEntity<Object> deleteCustomer(Long customerId) {
 
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found with the given ID"));
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found with the given ID " + customerId));
         String deleteMessage = "Customer Deleted Successfully !!";
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(deleteMessage, HttpStatus.OK, null, false, true);
         customerRepository.delete(customer);
@@ -129,6 +134,9 @@ public class CustomerServiceImpl implements CustomerService {
     public ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto) {
         CustomerAddress customerAddress = mapper.map(addressDto, CustomerAddress.class);
         CustomerAddress customerAddresses = addressRepository.save(customerAddress);
+        if (customerAddresses == null) {
+            throw new ResourceNotFoundException("Could not able to add address " + addressDto.getCustomer().getAddress());
+        }
         CustomerAddressResponseDto addressDto1 = convertEntityToDtoForAddress(customerAddresses);
         String message = "Customer Address Added !!";
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, addressDto1, false, true);
@@ -138,6 +146,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public ResponseEntity<Object> getCustomerByMobile(String mobileNumber) {
         List<Customer> lstCustomer = customerRepository.findByMobileNumberLike("%" + mobileNumber + "%");
+        if (lstCustomer == null) {
+            throw new ResourceNotFoundException("Customer not found with the given mobile number + " + mobileNumber);
+        }
         List<CustomerResponseDto> lstCustomerResponseDtos = new ArrayList<>();
         if (!lstCustomer.isEmpty()) {
             for (Customer customer1 : lstCustomer) {
@@ -156,10 +167,12 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Customer> customer = customerRepository.findById(id);
         if (customer.isPresent()) {
             customerResponseDto = convertEntityToDto(customer.get());
+            String message = "Customer By Id !!";
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, customerResponseDto, false, true);
+            return responseEntity;
+        } else {
+            throw new ResourceNotFoundException("Customer Not Found with the Given ID " + id);
         }
-        String message = "Customer By Id !!";
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, customerResponseDto, false, true);
-        return responseEntity;
     }
 
     private CustomerResponseDto convertEntityToDto(Customer customer) {
@@ -179,7 +192,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerResDto.setCreatedDate(customer.getCreatedDate());
         customerResDto.setModifiedBy(customer.getModifiedBy());
         customerResDto.setModifiedDate(customer.getModifiedDate());
-        if(customer.getCustomerCart() != null) {
+        if (customer.getCustomerCart() != null) {
             CustomerCartResponseDto customerCartResponseDto = new CustomerCartResponseDto();
             customerCartResponseDto.setId(customer.getCustomerCart().getId());
             customerCartResponseDto.setCustomerId(customer.getCustomerCart().getCustomer().getId());

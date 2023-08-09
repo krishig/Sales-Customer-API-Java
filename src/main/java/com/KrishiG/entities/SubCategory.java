@@ -1,4 +1,4 @@
-package com.KrishiG.enitites;
+package com.KrishiG.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,26 +9,30 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Setter
 @Getter
-@Table(name = "BRANDS")
-public class Brands {
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "SUBCATEGORY")
+public class SubCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "brand")
-    private List<Product> products;
+    @Column(name = "sub_category_name")
+    private String subCategoryName;
 
-    @Column(name = "brand_name")
-    private String brandName;
+    @OneToMany(mappedBy = "subCategory")
+    private List<Product> productList;
 
-    @Column(name = "brand_image_url", columnDefinition = "TEXT")
-    private String brandImageUrl;
+    @ManyToOne
+    @JoinColumn(name = "category_Id")
+    private Category category;
+
+    @Column(name = "image_url",columnDefinition = "TEXT")
+    private String imageUrl;
 
     @Column(name = "created_by")
     private Long createdBy;

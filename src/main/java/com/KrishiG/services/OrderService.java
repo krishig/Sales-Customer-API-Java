@@ -1,8 +1,7 @@
 package com.KrishiG.services;
 
 import com.KrishiG.dtos.request.OrderRequestDto;
-import com.KrishiG.dtos.response.OrderResponseDto;
-import com.KrishiG.enitites.Customer;
+import com.KrishiG.entities.Customer;
 import org.springframework.http.ResponseEntity;
 
 public interface OrderService {

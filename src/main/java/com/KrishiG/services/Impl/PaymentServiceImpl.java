@@ -1,7 +1,7 @@
 package com.KrishiG.services.Impl;
 
 import com.KrishiG.dtos.request.PaymentMethodRequestDto;
-import com.KrishiG.enitites.PaymentMethod;
+import com.KrishiG.entities.PaymentMethod;
 import com.KrishiG.repositories.PaymentRepository;
 import com.KrishiG.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;

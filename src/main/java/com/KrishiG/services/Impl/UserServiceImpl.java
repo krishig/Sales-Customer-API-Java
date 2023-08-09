@@ -1,7 +1,7 @@
 package com.KrishiG.services.Impl;
 
 import com.KrishiG.dtos.request.UserRequestDto;
-import com.KrishiG.enitites.User;
+import com.KrishiG.entities.User;
 import com.KrishiG.exception.ResourceNotFoundException;
 import com.KrishiG.repositories.UserRepository;
 import com.KrishiG.services.UserService;

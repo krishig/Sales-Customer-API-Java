@@ -1,4 +1,4 @@
-package com.KrishiG.enitites;
+package com.KrishiG.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -7,38 +7,42 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "CUSTOMER_DETAILS")
 @Builder
 @Getter
 @Setter
-public class Customer {
+@Table(name = "CUSTOMER_ADDRESS")
+public class CustomerAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "full_name")
-    private String fullName;
-
-    @Column(name = "mobile_number")
-    private String mobileNumber;
-
-    private String gender;
-
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<CustomerAddress> address;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Customer customer;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private CustomerCart customerCart;
+    @Column(name = "house_number")
+    private int houseNumber;
 
-    @Column(name = "created_by")
+    @Column(name = "street_name_or_locality")
+    private String streetName;
+
+    @Column(name = "village_name")
+    private String villageName;
+
+    private String district;
+
+    private String state;
+
+    @Column(name = "postalcode")
+    private int postalCode;
+
+    @Column(name = "crated_by")
     private Long createdBy;
 
     @CreationTimestamp
@@ -51,5 +55,4 @@ public class Customer {
     @UpdateTimestamp
     @Column(name = "modified_at")
     private Date modifiedDate;
-
 }

@@ -1,19 +1,14 @@
 package com.KrishiG.controllers;
 
 import com.KrishiG.dtos.request.CartProductsRequestDto;
-import com.KrishiG.dtos.request.CustomerCartRequestDto;
-import com.KrishiG.dtos.response.CartProductResponseDto;
-import com.KrishiG.dtos.response.CustomerCartResponseDto;
-import com.KrishiG.dtos.response.TotalCartProductResponseDto;
+
 import com.KrishiG.services.CartProductService;
 import com.KrishiG.services.CartService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -47,5 +42,4 @@ public class CartController {
         ResponseEntity<Object> cartProducts = cartProductService.getCartProducts(cartId);
         return cartProducts;
     }
-
 }

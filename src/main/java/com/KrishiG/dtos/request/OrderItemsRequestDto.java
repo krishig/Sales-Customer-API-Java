@@ -1,7 +1,7 @@
 package com.KrishiG.dtos.request;
 
-import com.KrishiG.enitites.Orders;
-import com.KrishiG.enitites.Product;
+import com.KrishiG.entities.Orders;
+import com.KrishiG.entities.Product;
 
 import java.util.Date;
 

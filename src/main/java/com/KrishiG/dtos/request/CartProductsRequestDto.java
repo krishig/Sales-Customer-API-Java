@@ -1,6 +1,5 @@
 package com.KrishiG.dtos.request;
 
-import com.KrishiG.enitites.Customer;
 import lombok.*;
 
 import java.util.Date;
@@ -11,7 +10,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class CartProductsRequestDto {
-
 
     private Long id;
 
