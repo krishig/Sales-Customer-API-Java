@@ -223,6 +223,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerAddressResponseDto.setDistrict(customerAddress.getDistrict());
         customerAddressResponseDto.setVillageName(customerAddress.getVillageName());
         customerAddressResponseDto.setState(customerAddress.getState());
+        customerAddressResponseDto.setPostalCode(customerAddress.getPostalCode());
         customerAddressResponseDto.setCustomer(customerAddress.getCustomer().getId());
         customerAddressResponseDto.setCreatedBy(customerAddress.getCreatedBy());
         customerAddressResponseDto.setCreatedDate(customerAddress.getCreatedDate());
