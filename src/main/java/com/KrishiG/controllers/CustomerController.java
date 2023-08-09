@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
-@CrossOrigin(origins="http://13.200.56.10:9090",allowedHeaders="*")
+
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
@@ -50,7 +50,7 @@ public class CustomerController {
     }
 
     //getAll
-    @CrossOrigin(origins="http://13.200.56.10:9090",allowedHeaders="*")
+    @CrossOrigin(origins="*")
     @GetMapping("/")
     public ResponseEntity<Object> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
                                                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
