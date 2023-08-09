@@ -1,11 +1,13 @@
 package com.KrishiG.util;
 
+import com.KrishiG.exception.JwtTokenException;
 import com.KrishiG.services.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -20,7 +22,7 @@ public class JwtUtil {
 
         Long userId = null;
         String jwtToken = token.get("authorization");
-        if (jwtToken != null) {
+        if (jwtToken != null && jwtToken!="") {
             try {
                 String[] split_string = jwtToken.split("\\.");
                 String base64EncodedHeader = split_string[0];
@@ -38,13 +40,13 @@ public class JwtUtil {
                 if(existingUser) {
                     return userId;
                 } else {
-                    throw new RuntimeException("User not found!");
+                    throw new JwtTokenException("User does not exist!");
                 }
             } catch (JsonProcessingException jpe) {
                 System.out.println(jpe);
             }
         } else {
-            throw new RuntimeException("please pass the token!");
+            throw new JwtTokenException("Please pass the token!");
         }
         return userId;
     }

@@ -102,7 +102,7 @@ public class CustomerServiceImpl implements CustomerService {
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
 
         //pageNumber default starts from 0
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize, sort);
         Page<Customer> page = customerRepository.findAll(pageable);
         if (page.isEmpty()) {
             throw new ResourceNotFoundException("No Customer is available");
@@ -113,7 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         PageableResponse<CustomerResponseDto> response = new PageableResponse<>();
         response.setContent(dtoList);
-        response.setPageNumber(page.getNumber());
+        response.setPageNumber(page.getNumber()+1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
@@ -122,7 +122,6 @@ public class CustomerServiceImpl implements CustomerService {
         return responseEntity;
 
     }
-
     @Override
     public ResponseEntity<Object> deleteCustomer(Long customerId) {
 
