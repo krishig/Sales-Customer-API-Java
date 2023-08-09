@@ -50,6 +50,7 @@ public class CustomerController {
     }
 
     //getAll
+    @CrossOrigin(origins="http://13.200.56.10:9090",allowedHeaders="*")
     @GetMapping("/")
     public ResponseEntity<Object> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
                                                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
