@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/customer")
-@CrossOrigin(origins="*")
+@CrossOrigin(origins={"*"}, maxAge = 4800, allowCredentials = "false" )
 public class CustomerController {
 
     Logger logger = LoggerFactory.getLogger(CustomerController.class);
