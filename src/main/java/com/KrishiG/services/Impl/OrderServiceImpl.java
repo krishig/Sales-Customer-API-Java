@@ -3,11 +3,11 @@ package com.KrishiG.services.Impl;
 import com.KrishiG.dtos.request.OrderRequestDto;
 import com.KrishiG.dtos.response.ApiResponse;
 import com.KrishiG.dtos.response.OrderResponseDto;
-import com.KrishiG.enitites.*;
+import com.KrishiG.entities.*;
+import com.KrishiG.exception.ResourceNotFoundException;
 import com.KrishiG.repositories.*;
 import com.KrishiG.services.OrderService;
 import com.KrishiG.util.PriceCalculation;
-import jakarta.persistence.criteria.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -54,7 +53,9 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
-
+        else{
+            throw new ResourceNotFoundException("Order Booking Fail !!");
+        }
         OrderResponseDto orderResponseDto = convertEntityToDto(savedOrder);
         String message = "Order Booked !!";
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, orderResponseDto, false, true);
@@ -70,14 +71,21 @@ public class OrderServiceImpl implements OrderService {
                 cartProductRepository.delete(a);
             });
         }
+        else{
+            throw new ResourceNotFoundException("Can't Remove Product from cart");
+        }
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, null, false, true);
         return responseEntity;
     }
 
     public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {
-        return paymentMethodRepository.save(orderRequestDto.getPaymentMethod());
+        PaymentMethod save = paymentMethodRepository.save(orderRequestDto.getPaymentMethod());
+        if(save == null){
+            throw new ResourceNotFoundException("Payment Not Saved ");
+        }else {
+            return save;
+        }
     }
-
     private OrderItems setOrderItems(Orders orders, CartProducts cartProducts) {
         OrderItems orderItems = new OrderItems();
         orderItems.setOrders(orders);

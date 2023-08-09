@@ -1,7 +1,7 @@
 package com.KrishiG.repositories;
 
-import com.KrishiG.enitites.Customer;
-import com.KrishiG.enitites.CustomerCart;
+import com.KrishiG.entities.Customer;
+import com.KrishiG.entities.CustomerCart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

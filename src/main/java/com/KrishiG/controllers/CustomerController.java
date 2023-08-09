@@ -2,21 +2,14 @@ package com.KrishiG.controllers;
 
 import com.KrishiG.dtos.request.CustomerAddressRequestDto;
 import com.KrishiG.dtos.request.CustomerRequestDto;
-import com.KrishiG.dtos.response.CustomerAddressResponseDto;
-import com.KrishiG.dtos.response.CustomerResponseDto;
-import com.KrishiG.dtos.response.PageableResponse;
-import com.KrishiG.responsesApiMessages.ApiResponseMessage;
 import com.KrishiG.services.CustomerService;
 import com.KrishiG.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin

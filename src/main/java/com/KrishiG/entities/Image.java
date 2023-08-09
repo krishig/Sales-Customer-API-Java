@@ -1,6 +1,5 @@
-package com.KrishiG.enitites;
+package com.KrishiG.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,40 +8,29 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
-@Setter
-@Table(name = "CUSTOMER_ADDRESS")
-public class CustomerAddress {
+@Table(name = "IMAGES")
+public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Customer customer;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    @Column(name = "house_number")
-    private int houseNumber;
+    @Column(name = "image_name")
+    private String imageName;
 
-    @Column(name = "street_name_or_locality")
-    private String streetName;
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    @Column(name = "village_name")
-    private String villageName;
-
-    private String district;
-
-    private String state;
-
-    @Column(name = "postalcode")
-    private int postalCode;
-
-    @Column(name = "crated_by")
+    @Column(name = "created_by")
     private Long createdBy;
 
     @CreationTimestamp
@@ -55,4 +43,5 @@ public class CustomerAddress {
     @UpdateTimestamp
     @Column(name = "modified_at")
     private Date modifiedDate;
+
 }

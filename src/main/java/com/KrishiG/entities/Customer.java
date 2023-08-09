@@ -1,27 +1,42 @@
-package com.KrishiG.enitites;
+package com.KrishiG.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "CUSTOMER_DETAILS")
 @Builder
-@Setter
 @Getter
-@Table(name = "ROLES")
-public class Role {
+@Setter
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "role_name")
-    private String roleName;
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "mobile_number")
+    private String mobileNumber;
+
+    private String gender;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<CustomerAddress> address;
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private CustomerCart customerCart;
 
     @Column(name = "created_by")
     private Long createdBy;
@@ -36,4 +51,5 @@ public class Role {
     @UpdateTimestamp
     @Column(name = "modified_at")
     private Date modifiedDate;
+
 }

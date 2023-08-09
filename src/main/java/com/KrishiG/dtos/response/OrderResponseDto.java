@@ -1,8 +1,8 @@
 package com.KrishiG.dtos.response;
 
-import com.KrishiG.enitites.Customer;
-import com.KrishiG.enitites.OrderStatus;
-import com.KrishiG.enitites.PaymentMethod;
+import com.KrishiG.entities.Customer;
+import com.KrishiG.entities.OrderStatus;
+import com.KrishiG.entities.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

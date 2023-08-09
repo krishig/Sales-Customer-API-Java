@@ -1,4 +1,4 @@
-package com.KrishiG.enitites;
+package com.KrishiG.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -14,18 +13,17 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-@Table(name = "CATEGORY")
-public class Category {
+@Table(name = "CUSTOMER_CART")
+public class CustomerCart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_id")
     private Long id;
 
-    @OneToMany(mappedBy = "category")
-    private List<SubCategory> subCategory;
-
-    @Column(name = "category_name")
-    private String categoryName;
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @Column(name = "created_by")
     private Long createdBy;
@@ -40,4 +38,5 @@ public class Category {
     @UpdateTimestamp
     @Column(name = "modified_at")
     private Date modifiedDate;
+
 }

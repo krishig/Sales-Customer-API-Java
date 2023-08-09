@@ -12,4 +12,7 @@ public class ApiResponseExceptionMessage {
     private String message;
     private boolean success;
     private HttpStatus httpStatus;
+
+    public ApiResponseExceptionMessage(String message) {
+    }
 }

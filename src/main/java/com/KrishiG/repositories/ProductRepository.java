@@ -1,8 +1,7 @@
 package com.KrishiG.repositories;
 
-import com.KrishiG.enitites.Product;
+import com.KrishiG.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository

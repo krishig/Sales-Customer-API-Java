@@ -1,4 +1,4 @@
-package com.KrishiG.enitites;
+package com.KrishiG.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,24 +6,29 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Getter
 @Setter
-@Table(name = "CUSTOMER_CART")
-public class CustomerCart {
+@Getter
+@Table(name = "BRANDS")
+public class Brands {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @OneToMany(mappedBy = "brand")
+    private List<Product> products;
+
+    @Column(name = "brand_name")
+    private String brandName;
+
+    @Column(name = "brand_image_url", columnDefinition = "TEXT")
+    private String brandImageUrl;
 
     @Column(name = "created_by")
     private Long createdBy;

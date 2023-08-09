@@ -1,6 +1,6 @@
 package com.KrishiG.repositories;
 
-import com.KrishiG.enitites.Orders;
+import com.KrishiG.entities.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

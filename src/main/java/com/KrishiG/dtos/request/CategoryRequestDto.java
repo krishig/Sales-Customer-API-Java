@@ -1,6 +1,6 @@
 package com.KrishiG.dtos.request;
 
-import com.KrishiG.enitites.SubCategory;
+import com.KrishiG.entities.SubCategory;
 import lombok.*;
 
 import java.util.Date;
