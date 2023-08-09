@@ -1,5 +1,6 @@
 package com.KrishiG.util;
 
+import com.KrishiG.services.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -11,6 +12,9 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
+
+    @Autowired
+    private UserService userService;
 
     public Long getUserIdFromToken(Map<String, String> token) {
 
@@ -30,7 +34,12 @@ public class JwtUtil {
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, Object> map = mapper.readValue(body, Map.class);
                 userId =  Long.parseLong(map.get("public_id").toString());
-                return userId;
+                boolean existingUser = userService.getUserById(userId);
+                if(existingUser) {
+                    return userId;
+                } else {
+                    throw new RuntimeException("User not found!");
+                }
             } catch (JsonProcessingException jpe) {
                 System.out.println(jpe);
             }

@@ -13,10 +13,10 @@ import java.util.List;
 public interface CustomerService {
 
     //create
-    ResponseEntity<Object> createCustomer(CustomerRequestDto customerRequestDto);
+    ResponseEntity<Object> createCustomer(CustomerRequestDto customerRequestDto, Long userId);
 
     //update
-    ResponseEntity<Object> updateCustomer(Long customerId, CustomerRequestDto customerRequestDto);
+    ResponseEntity<Object> updateCustomer(Long customerId, CustomerRequestDto customerRequestDto, Long userId);
 
     //getAll
     ResponseEntity<Object>  getAllCustomers(int pageNumber, int pageSize,String sortBy, String sortDir);
@@ -24,7 +24,7 @@ public interface CustomerService {
     //delete
     ResponseEntity<Object> deleteCustomer(Long customerId);
 
-    ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto);
+    ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto, Long userId);
 
     ResponseEntity<Object> getCustomerByMobile(String mobileNumber);
 
