@@ -21,6 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/customer")
+@CrossOrigin
 public class CustomerController {
 
     Logger logger = LoggerFactory.getLogger(CustomerController.class);
