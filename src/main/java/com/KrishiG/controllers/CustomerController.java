@@ -28,10 +28,9 @@ public class CustomerController {
 
     //create
     @PostMapping("/addCustomer")
-    public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto,
-                                                 @RequestHeader Map<String, String> header) {
-        Long userId = jwtUtil.getUserIdFromToken(header);
-        System.out.println("userId>>>>>>"+userId);
+    public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto) {
+        //Long userId = jwtUtil.getUserIdFromToken(header);
+        //System.out.println("userId>>>>>>"+userId);
         ResponseEntity<Object> responseEntity = customerService.createCustomer(customerRequestDto);
         return responseEntity;
     }
