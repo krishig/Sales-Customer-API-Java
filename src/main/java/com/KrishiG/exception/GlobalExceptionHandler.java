@@ -29,7 +29,6 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
     //Handler method for Resource Not Found Exception
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponseExceptionMessage> resourceNotFoundExceptionHandler(ResourceNotFoundException ex) {
@@ -42,7 +41,6 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
     //Handler Method for SQLSyntaxErrorException
     @ExceptionHandler(SQLSyntaxErrorException.class)
     public ResponseEntity<ApiResponseExceptionMessage> resourceNotFoundExceptionHandler(SQLSyntaxErrorException ex) {
@@ -55,15 +53,7 @@ public class GlobalExceptionHandler {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
-    //Handler method for HttpRequestMethodNotSupportedException
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<Object> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, WebRequest request) {
-        String message = "Method not supported";
-        ApiResponseExceptionMessage errorResponse = new ApiResponseExceptionMessage(message,false,true,HttpStatus.METHOD_NOT_ALLOWED);
-        return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
-    }
-
+    //Handler method for JwtTokenException
     @ExceptionHandler(JwtTokenException.class)
     public ResponseEntity<ApiResponseExceptionMessage> jwtTokenNotFountException(JwtTokenException ex) {
         ApiResponseExceptionMessage response = ApiResponseExceptionMessage

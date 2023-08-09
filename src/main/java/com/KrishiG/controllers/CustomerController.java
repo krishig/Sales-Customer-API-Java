@@ -53,8 +53,8 @@ public class CustomerController {
 
     //getAll
 
-    @GetMapping("/")
-    public ResponseEntity<Object> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
+    @GetMapping("/getAll")
+    public ResponseEntity<Object> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
                                                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
                                                                                   @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
                                                                                   @RequestParam(value = "sortDir",defaultValue = "desc",required = false) String sortDir,
