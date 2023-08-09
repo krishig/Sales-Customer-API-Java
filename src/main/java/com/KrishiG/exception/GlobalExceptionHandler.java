@@ -36,10 +36,11 @@ public class GlobalExceptionHandler {
         ApiResponseExceptionMessage response = ApiResponseExceptionMessage
                 .builder()
                 .message(ex.getMessage())
-                .httpStatus(HttpStatus.NOT_FOUND)
-                .success(true)
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .success(false)
+                .error(true)
                 .build();
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     //Handler Method for SQLSyntaxErrorException
@@ -48,17 +49,30 @@ public class GlobalExceptionHandler {
         ApiResponseExceptionMessage response = ApiResponseExceptionMessage
                 .builder()
                 .message(ex.getMessage())
-                .httpStatus(HttpStatus.NOT_FOUND)
-                .success(true)
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .success(false)
+                .error(true)
                 .build();
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     //Handler method for HttpRequestMethodNotSupportedException
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<Object> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, WebRequest request) {
         String message = "Method not supported";
-        ApiResponseExceptionMessage errorResponse = new ApiResponseExceptionMessage(message,false,HttpStatus.METHOD_NOT_ALLOWED);
+        ApiResponseExceptionMessage errorResponse = new ApiResponseExceptionMessage(message,false,true,HttpStatus.METHOD_NOT_ALLOWED);
         return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(JwtTokenException.class)
+    public ResponseEntity<ApiResponseExceptionMessage> jwtTokenNotFountException(JwtTokenException ex) {
+        ApiResponseExceptionMessage response = ApiResponseExceptionMessage
+                .builder()
+                .message(ex.getMessage())
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .success(false)
+                .error(true)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
