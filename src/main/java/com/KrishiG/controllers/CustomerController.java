@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
-@CrossOrigin(origins="*",allowedHeaders="*")
+@CrossOrigin(origins="http://13.200.56.10:9090",allowedHeaders="*")
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
