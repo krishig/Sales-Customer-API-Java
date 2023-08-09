@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
-@CrossOrigin
+@CrossOrigin(origins="*",allowedHeaders="*")
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
