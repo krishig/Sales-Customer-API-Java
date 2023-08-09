@@ -14,12 +14,11 @@ public class JwtUtil {
 
     public Long getUserIdFromToken(Map<String, String> token) {
 
-        String userId = null;
+        Long userId = null;
         String jwtToken = token.get("authorization");
-        if (jwtToken != null && jwtToken.startsWith("Bearer")) {
-            String tokenWithoutBearer = jwtToken.substring(7);
+        if (jwtToken != null) {
             try {
-                String[] split_string = tokenWithoutBearer.split("\\.");
+                String[] split_string = jwtToken.split("\\.");
                 String base64EncodedHeader = split_string[0];
                 String base64EncodedBody = split_string[1];
                 String base64EncodedSignature = split_string[2];
@@ -30,13 +29,14 @@ public class JwtUtil {
                 String body = new String(base64Url.decode(base64EncodedBody));
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, Object> map = mapper.readValue(body, Map.class);
-                userId =  map.get("public_id").toString();
+                userId =  Long.parseLong(map.get("public_id").toString());
+                return userId;
             } catch (JsonProcessingException jpe) {
                 System.out.println(jpe);
             }
         } else {
             throw new RuntimeException("please pass the token!");
         }
-        return Long.parseLong(userId);
+        return userId;
     }
 }

@@ -31,14 +31,15 @@ public class CustomerController {
     public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto,
                                                  @RequestHeader Map<String, String> header) {
         Long userId = jwtUtil.getUserIdFromToken(header);
-        System.out.println("userId>>>>>>"+userId);
         ResponseEntity<Object> responseEntity = customerService.createCustomer(customerRequestDto);
         return responseEntity;
     }
 
     //update
     @PutMapping("/{customerId}")
-    public ResponseEntity<Object> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId) {
+    public ResponseEntity<Object> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId,
+                                                 @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> responseEntity = customerService.updateCustomer(customerId, customerRequestDto);
         return responseEntity;
     }
@@ -56,26 +57,32 @@ public class CustomerController {
     public ResponseEntity<Object> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
                                                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
                                                                                   @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
-                                                                                  @RequestParam(value = "sortDir",defaultValue = "desc",required = false) String sortDir)
+                                                                                  @RequestParam(value = "sortDir",defaultValue = "desc",required = false) String sortDir,
+                                                                                  @RequestHeader Map<String, String> header)
     {
+        Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> allCustomers = customerService.getAllCustomers(pageNumber, pageSize, sortBy, sortDir);
         return allCustomers;
     }
 
     @GetMapping("/findByMobile/{mobileNumber}")
-    public ResponseEntity<Object> getCustomerByMobile(@PathVariable String mobileNumber) {
+    public ResponseEntity<Object> getCustomerByMobile(@PathVariable String mobileNumber,
+                                                      @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> responseEntity = customerService.getCustomerByMobile(mobileNumber);
         return responseEntity;
     }
 
     @GetMapping("/findById/{id}")
-    public ResponseEntity<Object> getCustomerById(@PathVariable Long id) {
+    public ResponseEntity<Object> getCustomerById(@PathVariable Long id, @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> responseEntity = customerService.getCustomerById(id);
         return responseEntity;
     }
 
     @PostMapping("/address")
-    public ResponseEntity<Object> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto) {
+    public ResponseEntity<Object> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto, @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> responseEntity = customerService.addCustomerAddress(addressDto);
         return responseEntity;
     }
