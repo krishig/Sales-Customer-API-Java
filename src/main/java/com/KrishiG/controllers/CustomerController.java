@@ -15,6 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/customer")
+@CrossOrigin(origins="*")
 public class CustomerController {
 
     Logger logger = LoggerFactory.getLogger(CustomerController.class);
@@ -50,7 +51,7 @@ public class CustomerController {
     }
 
     //getAll
-    @CrossOrigin(origins="*")
+
     @GetMapping("/")
     public ResponseEntity<Object> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
                                                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
