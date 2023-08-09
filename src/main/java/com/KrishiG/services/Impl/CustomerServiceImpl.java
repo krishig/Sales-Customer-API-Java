@@ -42,17 +42,20 @@ public class CustomerServiceImpl implements CustomerService {
     private ModelMapper mapper;
 
     @Override
-    public ResponseEntity<Object> createCustomer(CustomerRequestDto customerRequestDto) {
+    public ResponseEntity<Object> createCustomer(CustomerRequestDto customerRequestDto, Long userId) {
         Customer customer = mapper.map(customerRequestDto, Customer.class);
+        customer.setCreatedBy(userId);
         List<CustomerAddress> lstOfAddresses = new ArrayList<>();
         Customer dbCustomer = customerRepository.save(customer);
         if (dbCustomer != null) {
             for (CustomerAddress address : dbCustomer.getAddress()) {
                 address.setCustomer(dbCustomer);
+                address.setCreatedBy(userId);
                 CustomerAddress savedAddress = addressRepository.save(address);
                 lstOfAddresses.add(address);
             }
             CustomerCart customerCart = addInCustomerCart(dbCustomer);
+            customerCart.setCreatedBy(userId);
             CustomerCart customerCartDB = cartRepository.save(customerCart);
             if (customerCartDB == null) {
                 throw new ResourceNotFoundException();
@@ -74,13 +77,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResponseEntity<Object> updateCustomer(Long customerId, CustomerRequestDto customerRequestDto) {
+    public ResponseEntity<Object> updateCustomer(Long customerId, CustomerRequestDto customerRequestDto, Long userId) {
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found with the given ID"));
         customer.setFullName(customerRequestDto.getFullName());
         customer.setMobileNumber(customerRequestDto.getMobileNumber());
         customer.setGender(customerRequestDto.getGender());
-        customer.setModifiedBy(customerRequestDto.getModifiedBy());
+        customer.setModifiedBy(userId);
         customer.setModifiedDate(customerRequestDto.getModifiedDate());
         Customer customerDB = customerRepository.save(customer);
         if (customerDB == null) {
@@ -131,9 +134,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto) {
+    public ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto, Long userId) {
+        CustomerAddress customerAddresses = null;
         CustomerAddress customerAddress = mapper.map(addressDto, CustomerAddress.class);
-        CustomerAddress customerAddresses = addressRepository.save(customerAddress);
+        if(customerAddress.getId()!=null) {
+            customerAddress.setModifiedBy(userId);
+            customerAddresses = addressRepository.save(customerAddress);
+        } else {
+            customerAddress.setCreatedBy(userId);
+            customerAddresses = addressRepository.save(customerAddress);
+        }
         if (customerAddresses == null) {
             throw new ResourceNotFoundException("Could not able to add address " + addressDto.getCustomer().getAddress());
         }

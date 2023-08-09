@@ -37,9 +37,8 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto) {
-        PaymentMethod paymentMethod = savePaymentMethod(orderRequestDto);
-        Orders orders = convertDtoToEntity(orderRequestDto, paymentMethod);
+    public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto, Long userId) {
+        Orders orders = convertDtoToEntity(orderRequestDto, userId);
         Orders savedOrder = orderRepository.save(orders);
         if (savedOrder != null) {
             Optional<CustomerCart> customerCart = cartRepository.findByCustomer(savedOrder.getCustomerId());
@@ -47,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
                 List<CartProducts> cartProducts = cartProductRepository.findByCart(customerCart.get());
                 if (!cartProducts.isEmpty()) {
                     for (CartProducts cartProducts1 : cartProducts) {
-                        OrderItems orderItems = setOrderItems(savedOrder, cartProducts1);
+                        OrderItems orderItems = setOrderItems(savedOrder, cartProducts1, userId);
                         orderItemsRepository.save(orderItems);
                     }
                 }
@@ -86,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
             return save;
         }
     }
-    private OrderItems setOrderItems(Orders orders, CartProducts cartProducts) {
+    private OrderItems setOrderItems(Orders orders, CartProducts cartProducts, Long userId) {
         OrderItems orderItems = new OrderItems();
         orderItems.setOrders(orders);
         orderItems.setProduct(cartProducts.getProduct());
@@ -95,19 +94,22 @@ public class OrderServiceImpl implements OrderService {
         orderItems.setTotalDiscountPrice(totalProductDiscountPrice);
         orderItems.setPriceAfterDiscount(discountPrice);
         orderItems.setQuantity(cartProducts.getProductQuantity());
-
+        orderItems.setCreatedBy(userId);
         return orderItems;
     }
 
-    private Orders convertDtoToEntity(OrderRequestDto orderRequestDto, PaymentMethod paymentMethod) {
+    private Orders convertDtoToEntity(OrderRequestDto orderRequestDto, Long userId) {
         Orders orders = new Orders();
         orders.setOrderId(generateOrderNumber());
         orders.setCustomerId(orderRequestDto.getCustomerId());
+        PaymentMethod paymentMethod = new PaymentMethod();
+        paymentMethod.setId(orderRequestDto.getPaymentMethod().getId());
         orders.setPaymentMethod(paymentMethod);
         orders.setTotalPrice(orderRequestDto.getTotalPrice());
         orders.setStatus(orderRequestDto.getStatus());
         orders.setContactNumber(orderRequestDto.getContactNumber());
         orders.setAddressId(orderRequestDto.getAddressId());
+        orders.setCreatedBy(userId);
         return orders;
     }
 

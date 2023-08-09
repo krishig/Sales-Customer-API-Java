@@ -29,7 +29,7 @@ public class CartProductServiceImpl implements CartProductService {
     private ProductRepository productRepository;
 
     @Override
-    public ResponseEntity<Object> addProductToCart(CartProductsRequestDto cartProductsRequestDto) {
+    public ResponseEntity<Object> addProductToCart(CartProductsRequestDto cartProductsRequestDto, Long userId) {
         CartProducts cartProducts = convertDtoToEntity(cartProductsRequestDto);
         CartProducts SavedCartProduct = null;
         if (cartProducts.getId() != null && cartProducts.getCart() != null) {
@@ -39,8 +39,10 @@ public class CartProductServiceImpl implements CartProductService {
             }
             CartProducts cartProducts1 = getCartProduct.get();
             cartProducts1.setProductQuantity(cartProductsRequestDto.getProductQuantity());
+            cartProducts1.setModifiedBY(userId);
             SavedCartProduct = cartProductRepository.save(cartProducts1);
         } else {
+            cartProducts.setCreatedBy(userId);
             SavedCartProduct = cartProductRepository.save(cartProducts);
         }
         List<CartProducts> lstCartProducts = cartProductRepository.findByCart(SavedCartProduct.getCart());

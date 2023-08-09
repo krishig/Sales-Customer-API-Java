@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,6 +74,15 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.findAll();
         List<UserRequestDto> dtoList = users.stream().map(user -> mapper.map(user, UserRequestDto.class)).collect(Collectors.toList());
         return dtoList;
+    }
+
+    public boolean getUserById(Long userId) {
+        boolean existingUser = false;
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent()) {
+            existingUser = true;
+        }
+        return existingUser;
     }
 
 }

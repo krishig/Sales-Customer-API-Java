@@ -31,7 +31,7 @@ public class CustomerController {
     public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto,
                                                  @RequestHeader Map<String, String> header) {
         Long userId = jwtUtil.getUserIdFromToken(header);
-        ResponseEntity<Object> responseEntity = customerService.createCustomer(customerRequestDto);
+        ResponseEntity<Object> responseEntity = customerService.createCustomer(customerRequestDto, userId);
         return responseEntity;
     }
 
@@ -40,7 +40,7 @@ public class CustomerController {
     public ResponseEntity<Object> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId,
                                                  @RequestHeader Map<String, String> header) {
         Long userId = jwtUtil.getUserIdFromToken(header);
-        ResponseEntity<Object> responseEntity = customerService.updateCustomer(customerId, customerRequestDto);
+        ResponseEntity<Object> responseEntity = customerService.updateCustomer(customerId, customerRequestDto, userId);
         return responseEntity;
     }
 
@@ -83,7 +83,7 @@ public class CustomerController {
     @PostMapping("/address")
     public ResponseEntity<Object> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto, @RequestHeader Map<String, String> header) {
         Long userId = jwtUtil.getUserIdFromToken(header);
-        ResponseEntity<Object> responseEntity = customerService.addCustomerAddress(addressDto);
+        ResponseEntity<Object> responseEntity = customerService.addCustomerAddress(addressDto, userId);
         return responseEntity;
     }
 }
