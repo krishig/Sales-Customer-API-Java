@@ -1,5 +1,6 @@
 package com.KrishiG.repositories;
 
+import com.KrishiG.entities.Customer;
 import com.KrishiG.entities.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,4 +12,6 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Long> {
+    List<Orders> findByCustomerId(Customer customer);
+
 }

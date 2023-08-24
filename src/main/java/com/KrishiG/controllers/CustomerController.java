@@ -5,6 +5,7 @@ import com.KrishiG.dtos.request.CustomerRequestDto;
 import com.KrishiG.services.CustomerService;
 import com.KrishiG.util.JwtUtil;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,12 +76,16 @@ public class CustomerController {
         }
         return allCustomers;
     }
-    @GetMapping("/findByMobile/{mobileNumber}")
-    public ResponseEntity<Object> getCustomerByMobile(@PathVariable String mobileNumber,
+    @GetMapping("/findByMobile")
+    public ResponseEntity<Object> getCustomerByMobile(@PathParam("mobileNumber") String mobileNumber,
+                                                      @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
+                                                      @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
+                                                      @RequestParam(value = "sortBy",defaultValue = "mobileNumber",required = false) String sortBy,
+                                                      @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
                                                       @RequestHeader Map<String, String> header) {
         logger.info("Inside Customer Controller of FindByMobile Number");
         Long userId = jwtUtil.getUserIdFromToken(header);
-        ResponseEntity<Object> responseEntity = customerService.getCustomerByMobile(mobileNumber);
+        ResponseEntity<Object> responseEntity = customerService.getCustomerByMobile(pageNumber, pageSize, sortBy, sortDir,mobileNumber);
         if(responseEntity != null){
             logger.info("sent all customer corresponding to the given number");
         }else{

@@ -1,6 +1,7 @@
 package com.KrishiG.services.Impl;
 
 import com.KrishiG.dtos.request.OrderRequestDto;
+import com.KrishiG.dtos.request.StatusRequestDto;
 import com.KrishiG.dtos.response.ApiResponse;
 import com.KrishiG.dtos.response.OrderResponseDto;
 import com.KrishiG.dtos.response.PageableResponse;
@@ -9,6 +10,7 @@ import com.KrishiG.exception.ResourceNotFoundException;
 import com.KrishiG.repositories.*;
 import com.KrishiG.services.OrderService;
 import com.KrishiG.util.PriceCalculation;
+import com.KrishiG.util.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -44,6 +47,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
 
     @Override
@@ -115,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.CREATED, response, false, true);
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         logger.info("Sent all the Orders");
         return responseEntity;
     }
@@ -124,11 +130,38 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<Object> getOrderById(Long orderId) {
         Orders orders = orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order is not available with the given Id"));
         OrderResponseDto orderResponseDto = convertEntityToDto(orders);
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.CREATED, orderResponseDto, false, true);
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, orderResponseDto, false, true);
         return responseEntity;
     }
 
-    public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {
+    @Override
+    public ResponseEntity<Object> updateStatusByOrderId(Long orderId, StatusRequestDto status) {
+        ResponseEntity<Object> responseEntity = null;
+        Optional<Orders> dbOrders = orderRepository.findById(orderId);
+        if(dbOrders.isPresent()) {
+           Orders order = dbOrders.get();
+           order.setStatus(status.getStatus());
+           Orders updatedOrder = orderRepository.save(order);
+           OrderResponseDto orderResponseDto = convertEntityToDto(updatedOrder);
+            responseEntity = ApiResponse.generateResponse(null, HttpStatus.CREATED, orderResponseDto, false, true);
+        }
+
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<Object> getOrderByCustomerId(Long customerId) {
+        List<Orders> orders = new ArrayList<>();
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if(customer.isPresent()) {
+            orders = orderRepository.findByCustomerId(customer.get());
+        }
+        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, dtoList, false, true);
+        return responseEntity;
+    }
+
+   /* public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {
         logger.info("Inside savePaymentMethod");
         PaymentMethod save = paymentMethodRepository.save(orderRequestDto.getPaymentMethod());
         if (save == null) {
@@ -138,7 +171,7 @@ public class OrderServiceImpl implements OrderService {
             logger.info("Exiting from savePaymentMethod");
             return save;
         }
-    }
+    }*/
 
     private OrderItems setOrderItems(Orders orders, CartProducts cartProducts, Long userId) {
         logger.info("Inside setOrderItems");
@@ -160,9 +193,7 @@ public class OrderServiceImpl implements OrderService {
         Orders orders = new Orders();
         orders.setOrderId(generateOrderNumber());
         orders.setCustomerId(orderRequestDto.getCustomerId());
-        PaymentMethod paymentMethod = new PaymentMethod();
-        paymentMethod.setId(orderRequestDto.getPaymentMethod().getId());
-        orders.setPaymentMethod(paymentMethod);
+        orders.setPaymentMethod(orderRequestDto.getPaymentMethod());
         orders.setTotalPrice(orderRequestDto.getTotalPrice());
         orders.setStatus(orderRequestDto.getStatus());
         orders.setContactNumber(orderRequestDto.getContactNumber());
@@ -177,6 +208,17 @@ public class OrderServiceImpl implements OrderService {
         OrderResponseDto orderResponseDto = new OrderResponseDto();
         orderResponseDto.setId(orders.getId());
         orderResponseDto.setOrderId(orders.getOrderId());
+        orderResponseDto.setCustomerId(orders.getCustomerId());
+        orderResponseDto.setPaymentMethod(orders.getPaymentMethod());
+        orderResponseDto.setStatus(orders.getStatus());
+        orderResponseDto.setTotalPrice(orders.getTotalPrice());
+        orderResponseDto.setContactNumber(orders.getContactNumber());
+        orderResponseDto.setAddressId(orders.getAddressId());
+        orderResponseDto.setCreatedBy(orders.getCreatedBy());
+        orderResponseDto.setClosedDate(orders.getCreatedDate());
+        orderResponseDto.setClosedDate(orders.getClosedDate());
+        orderResponseDto.setModifiedBy(orders.getModifiedBy());
+        orderResponseDto.setModifiedDate(orders.getModifiedDate());
         logger.info("Exiting from convertDtoToEntity");
         return orderResponseDto;
     }

@@ -26,7 +26,7 @@ public interface CustomerService {
 
     ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto, Long userId);
 
-    ResponseEntity<Object> getCustomerByMobile(String mobileNumber);
+    ResponseEntity<Object> getCustomerByMobile(int pageNumber, int pageSize,String sortBy, String sortDir,String mobileNumber);
 
     ResponseEntity<Object> getCustomerById(Long id);
 }

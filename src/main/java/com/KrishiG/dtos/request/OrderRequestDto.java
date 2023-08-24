@@ -3,6 +3,7 @@ package com.KrishiG.dtos.request;
 import com.KrishiG.entities.Customer;
 import com.KrishiG.entities.OrderStatus;
 import com.KrishiG.entities.PaymentMethod;
+import com.KrishiG.util.Status;
 import lombok.*;
 
 import java.util.Date;
@@ -21,9 +22,9 @@ public class OrderRequestDto {
 
     private float totalPrice;
 
-    private OrderStatus status;
+    private Status status;
 
-    private PaymentMethod paymentMethod;
+    private Long paymentMethod;
 
     private String contactNumber;
 

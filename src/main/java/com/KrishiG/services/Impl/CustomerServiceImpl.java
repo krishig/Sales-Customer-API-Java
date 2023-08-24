@@ -138,7 +138,7 @@ public class CustomerServiceImpl implements CustomerService {
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.CREATED, response, false, true);
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         logger.info("Sent all the customer from getAllCustomer ServiceImpl");
         return responseEntity;
 
@@ -181,26 +181,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResponseEntity<Object> getCustomerByMobile(String mobileNumber) {
-        List<Customer> lstCustomer = customerRepository.findByMobileNumberLike("%" + mobileNumber + "%");
-        if (lstCustomer == null) {
-            logger.info("Message from  getCustomerByMobile serviceImpl");
-            throw new ResourceNotFoundException("Customer not found with the given mobile number + " + mobileNumber);
+    public ResponseEntity<Object> getCustomerByMobile(int pageNumber, int pageSize, String sortBy, String sortDir,String mobileNumber) {
+        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        Page<Customer> page = customerRepository.findByMobileNumberLike("%" + mobileNumber + "%", pageable);
+        if (page.isEmpty()) {
+            logger.info("No Customer is available");
+            throw new ResourceNotFoundException("No Customer is available");
         }
-        List<CustomerResponseDto> lstCustomerResponseDtos = new ArrayList<>();
-        if (!lstCustomer.isEmpty()) {
-            for (Customer customer1 : lstCustomer) {
-                CustomerResponseDto customerResponseDto = convertEntityToDto(customer1);
-                lstCustomerResponseDtos.add(customerResponseDto);
-            }
-        }
-        String message = "Customer Details By Mobile Number !!";
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, lstCustomerResponseDtos, false, true);
-        if(responseEntity != null) {
-            logger.info("Sent response successfully for getCustomerByMobile");
-        }else {
-            logger.info("Something went wrong in Service!!");
-        }
+        List<Customer> customers = page.getContent();
+
+        List<CustomerResponseDto> dtoList = customers.stream().map(customer -> convertEntityToDto(customer)).collect(Collectors.toList());
+
+        PageableResponse<CustomerResponseDto> response = new PageableResponse<>();
+        response.setContent(dtoList);
+        response.setPageNumber(page.getNumber() + 1);
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLastPage(page.isLast());
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+        logger.info("Sent all the customer from getAllCustomer ServiceImpl");
         return responseEntity;
     }
 
