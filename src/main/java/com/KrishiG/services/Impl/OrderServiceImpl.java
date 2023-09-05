@@ -22,6 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyy HH:mm:ss");
 
     Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
@@ -191,7 +195,7 @@ public class OrderServiceImpl implements OrderService {
     private Orders convertDtoToEntity(OrderRequestDto orderRequestDto, Long userId) {
         logger.info("Inside convertDtoToEntity");
         Orders orders = new Orders();
-        orders.setOrderId(generateOrderNumber());
+        orders.setOrderId(generateOrderNumber(userId));
         orders.setCustomerId(orderRequestDto.getCustomerId());
         orders.setPaymentMethod(orderRequestDto.getPaymentMethod());
         orders.setTotalPrice(orderRequestDto.getTotalPrice());
@@ -223,9 +227,17 @@ public class OrderServiceImpl implements OrderService {
         return orderResponseDto;
     }
 
-    private String generateOrderNumber() {
+    private String generateOrderNumber(Long userId) {
         Random random = new Random();
-        String s = "OR" + random.nextInt(10000);
+        LocalDateTime now = LocalDateTime.now();
+        String date = now.format(dtf);
+        String currentDateAndTime = getExtractNumberFromDate(date);
+        String s = "ORD" + random.nextInt(1000) + currentDateAndTime + userId;
         return s;
+    }
+
+    public static String getExtractNumberFromDate(String date) {
+        String dateStr = date.replaceAll("[/:\\W]","");
+        return dateStr;
     }
 }

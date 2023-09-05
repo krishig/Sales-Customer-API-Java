@@ -62,4 +62,8 @@ public class Orders {
     @Column(name = "closed_at")
     private Date closedDate;
 
+    @UpdateTimestamp
+    @Column(name = "out_of_delivered_at")
+    private Date outOfDeliveryDate;
+
 }
