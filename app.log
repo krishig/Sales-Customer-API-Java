@@ -1,0 +1,28 @@
+2023-09-05T11:45:37.575+05:30  INFO 5068 --- [restartedMain] com.KrishiG.KrishiGApplication           : Starting KrishiGApplication using Java 17.0.6 with PID 5068 (D:\New_Krishig_Backend\KrishG-Backend\Sales-Customer-API-Java\target\classes started by lokha in D:\New_Krishig_Backend\KrishG-Backend\Sales-Customer-API-Java)
+2023-09-05T11:45:37.591+05:30  INFO 5068 --- [restartedMain] com.KrishiG.KrishiGApplication           : No active profile set, falling back to 1 default profile: "default"
+2023-09-05T11:45:37.743+05:30  INFO 5068 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-09-05T11:45:37.743+05:30  INFO 5068 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-09-05T11:45:39.118+05:30  INFO 5068 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-09-05T11:45:39.263+05:30  INFO 5068 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 127 ms. Found 10 JPA repository interfaces.
+2023-09-05T11:45:40.366+05:30  INFO 5068 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9090 (http)
+2023-09-05T11:45:40.375+05:30  INFO 5068 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-09-05T11:45:40.382+05:30  INFO 5068 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.8]
+2023-09-05T11:45:40.473+05:30  INFO 5068 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-09-05T11:45:40.477+05:30  INFO 5068 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2734 ms
+2023-09-05T11:45:40.722+05:30  INFO 5068 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-09-05T11:45:40.794+05:30  INFO 5068 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.2.Final
+2023-09-05T11:45:40.794+05:30  INFO 5068 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-09-05T11:45:41.116+05:30  INFO 5068 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-09-05T11:45:41.348+05:30  INFO 5068 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-09-05T11:45:41.375+05:30  INFO 5068 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-09-05T11:45:41.881+05:30  INFO 5068 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7ba2f8f0
+2023-09-05T11:45:41.881+05:30  INFO 5068 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-09-05T11:45:41.984+05:30  INFO 5068 --- [restartedMain] org.hibernate.orm.dialect                : HHH035001: Using dialect: org.hibernate.dialect.MySQL8Dialect, version: 8.0
+2023-09-05T11:45:41.986+05:30  WARN 5068 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2023-09-05T11:45:42.593+05:30  INFO 5068 --- [restartedMain] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-09-05T11:45:43.829+05:30  INFO 5068 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-09-05T11:45:44.829+05:30  INFO 5068 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-09-05T11:45:45.593+05:30  WARN 5068 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-09-05T11:45:45.952+05:30  INFO 5068 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-09-05T11:45:46.030+05:30  INFO 5068 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9090 (http) with context path ''
+2023-09-05T11:45:46.044+05:30  INFO 5068 --- [restartedMain] com.KrishiG.KrishiGApplication           : Started KrishiGApplication in 9.223 seconds (process running for 10.576)
