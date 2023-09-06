@@ -182,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
         OrderItems orderItems = new OrderItems();
         orderItems.setOrders(orders);
         orderItems.setProduct(cartProducts.getProduct());
-        Double discountPrice = PriceCalculation.calculationDiscountPrice(cartProducts.getProduct().getActualPrice());
+        Double discountPrice = PriceCalculation.calculationDiscountPrice(cartProducts.getProduct().getActualPrice(), cartProducts.getProduct().getDiscount());
         Double totalProductDiscountPrice = discountPrice * cartProducts.getProductQuantity();
         orderItems.setTotalDiscountPrice(totalProductDiscountPrice);
         orderItems.setPriceAfterDiscount(discountPrice);

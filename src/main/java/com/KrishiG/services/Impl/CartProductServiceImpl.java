@@ -4,9 +4,11 @@ import com.KrishiG.dtos.request.CartProductsRequestDto;
 import com.KrishiG.dtos.response.*;
 import com.KrishiG.entities.CartProducts;
 import com.KrishiG.entities.CustomerCart;
+import com.KrishiG.entities.Image;
 import com.KrishiG.entities.Product;
 import com.KrishiG.exception.ResourceNotFoundException;
 import com.KrishiG.repositories.CartProductRepository;
+import com.KrishiG.repositories.ProductImageRepository;
 import com.KrishiG.repositories.ProductRepository;
 import com.KrishiG.services.CartProductService;
 import com.KrishiG.util.PriceCalculation;
@@ -27,6 +29,9 @@ public class CartProductServiceImpl implements CartProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductImageRepository productImageRepository;
 
     @Override
     public ResponseEntity<Object> addProductToCart(CartProductsRequestDto cartProductsRequestDto, Long userId) {
@@ -71,7 +76,9 @@ public class CartProductServiceImpl implements CartProductService {
 
     @Override
     public ResponseEntity<Object> getCartProducts(Long cartId) {
-        List<CartProducts> lstCartProducts = cartProductRepository.findAll();
+        CustomerCart cart = new CustomerCart();
+        cart.setId(cartId);
+        List<CartProducts> lstCartProducts = cartProductRepository.findByCart(cart);
         if (lstCartProducts.isEmpty()) {
             throw new ResourceNotFoundException("Not able to get the product from cart");
         } else {
@@ -98,11 +105,13 @@ public class CartProductServiceImpl implements CartProductService {
                 productResponseDto.setPrice(product.get().getActualPrice());
                 productResponseDto.setDiscount(product.get().getDiscount());
                 cartProductResponseDto.setDiscount(product.get().getDiscount());
-                double discountPrice = PriceCalculation.calculationDiscountPrice(product.get().getActualPrice());
+                double discountPrice = PriceCalculation.calculationDiscountPrice(product.get().getActualPrice(), product.get().getDiscount());
                 cartProductResponseDto.setDiscountPrice(discountPrice);
                 double productsPrice = discountPrice * cartProducts1.getProductQuantity();
                 cartProductResponseDto.setTotalProductDiscountPrice(productsPrice);
                 totalPrice = totalPrice + productsPrice;
+                ProductImageResponse productImageResponse = getImageForProduct(product.get());
+                productResponseDto.setProductImageResponse(productImageResponse);
             }
             cartProductResponseDto.setId(cartProducts1.getId());
             cartProductResponseDto.setCartId(cartProducts1.getCart().getId());
@@ -135,6 +144,14 @@ public class CartProductServiceImpl implements CartProductService {
         cartProducts.setModifiedBY(cartProductsRequestDto.getModifiedBy());
         cartProducts.setModifiedDate(cartProductsRequestDto.getModifiedDate());
         return cartProducts;
+    }
+
+    public ProductImageResponse getImageForProduct(Product product){
+        List<Image> image = productImageRepository.findByProduct(product);
+        ProductImageResponse productImage = new ProductImageResponse();
+        productImage.setImageName(image.get(0).getImageName());
+        productImage.setImageUrl(image.get(0).getImageUrl());
+        return productImage;
     }
 
 }
