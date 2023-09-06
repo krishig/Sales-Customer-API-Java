@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "IMAGES")
+@Table(name = "PRODUCT_IMAGE")
 public class Image {
 
     @Id
