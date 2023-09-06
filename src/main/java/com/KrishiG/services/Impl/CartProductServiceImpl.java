@@ -79,13 +79,9 @@ public class CartProductServiceImpl implements CartProductService {
         CustomerCart cart = new CustomerCart();
         cart.setId(cartId);
         List<CartProducts> lstCartProducts = cartProductRepository.findByCart(cart);
-        if (lstCartProducts.isEmpty()) {
-            throw new ResourceNotFoundException("Not able to get the product from cart");
-        } else {
-            TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
-            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, totalCartProductResponseDto, false, true);
-            return responseEntity;
-        }
+        TotalCartProductResponseDto totalCartProductResponseDto = convertEntityToDtoList(lstCartProducts);
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, totalCartProductResponseDto, false, true);
+        return responseEntity;
     }
 
     private TotalCartProductResponseDto convertEntityToDtoList(List<CartProducts> cartProducts) {
