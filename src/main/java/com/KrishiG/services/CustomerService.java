@@ -29,4 +29,6 @@ public interface CustomerService {
     ResponseEntity<Object> getCustomerByMobile(int pageNumber, int pageSize,String sortBy, String sortDir,String mobileNumber);
 
     ResponseEntity<Object> getCustomerById(Long id);
+
+    ResponseEntity<Object> deleteAddress(Long id);
 }
