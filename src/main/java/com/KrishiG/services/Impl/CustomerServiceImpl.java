@@ -221,6 +221,14 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    @Override
+    public ResponseEntity<Object> deleteAddress(Long id) {
+        addressRepository.deleteById(id);
+        String deleteMessage = "Customer Deleted Successfully !!";
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(deleteMessage, HttpStatus.OK, null, false, true);
+        return responseEntity;
+    }
+
     private CustomerResponseDto convertEntityToDto(Customer customer) {
         logger.info("Inside convertEntityToDto");
         CustomerResponseDto customerResDto = new CustomerResponseDto();

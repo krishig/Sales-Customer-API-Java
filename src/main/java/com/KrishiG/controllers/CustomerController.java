@@ -119,4 +119,12 @@ public class CustomerController {
         }
         return responseEntity;
     }
+
+    @DeleteMapping("/address/{addressId}")
+    public ResponseEntity<Object> deleteAddress(@PathVariable Long addressId, @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
+        logger.info("delete Address for Customer");
+        ResponseEntity<Object> responseEntity = customerService.deleteAddress(addressId);
+        return responseEntity;
+    }
 }
