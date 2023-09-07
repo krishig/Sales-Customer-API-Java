@@ -145,8 +145,10 @@ public class CartProductServiceImpl implements CartProductService {
     public ProductImageResponse getImageForProduct(Product product){
         List<Image> image = productImageRepository.findByProduct(product);
         ProductImageResponse productImage = new ProductImageResponse();
-        productImage.setImageName(image.get(0).getImageName());
-        productImage.setImageUrl(image.get(0).getImageUrl());
+        if(!image.isEmpty()) {
+            productImage.setImageName(image.get(0).getImageName());
+            productImage.setImageUrl(image.get(0).getImageUrl());
+        }
         return productImage;
     }
 
