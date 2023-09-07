@@ -12,6 +12,8 @@ import com.KrishiG.repositories.CartRepository;
 import com.KrishiG.repositories.CustomerRepository;
 import com.KrishiG.services.CustomerService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
+    Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
+
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -42,24 +46,36 @@ public class CustomerServiceImpl implements CustomerService {
     private ModelMapper mapper;
 
     @Override
-    public ResponseEntity<Object> createCustomer(CustomerRequestDto customerRequestDto) {
+    public ResponseEntity<Object> createCustomer(CustomerRequestDto customerRequestDto, Long userId) {
+
+        logger.info("Inside CreateCustomer ServiceImpl");
+
         Customer customer = mapper.map(customerRequestDto, Customer.class);
+        customer.setCreatedBy(userId);
         List<CustomerAddress> lstOfAddresses = new ArrayList<>();
         Customer dbCustomer = customerRepository.save(customer);
         if (dbCustomer != null) {
+            logger.info("Setting the address for the Customers");
             for (CustomerAddress address : dbCustomer.getAddress()) {
                 address.setCustomer(dbCustomer);
+                address.setCreatedBy(userId);
                 CustomerAddress savedAddress = addressRepository.save(address);
                 lstOfAddresses.add(address);
+                logger.info("Set address successfully!! ");
             }
             CustomerCart customerCart = addInCustomerCart(dbCustomer);
+            logger.info("Created CustomerCart !!");
+            customerCart.setCreatedBy(userId);
             CustomerCart customerCartDB = cartRepository.save(customerCart);
             if (customerCartDB == null) {
+                logger.info("Cart is not available for the customer ");
                 throw new ResourceNotFoundException();
             }
             customer.setCustomerCart(customerCartDB);
+            logger.info("Cart created Successfully for the Customer!!");
         }
         customer.setAddress(lstOfAddresses);
+        logger.info("Address set for the customer");
         CustomerResponseDto customerResponseDto1 = convertEntityToDto(customer);
         String createMessage = "Customer is created Successfully";
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(createMessage, HttpStatus.CREATED, customerResponseDto1, false, true);
@@ -74,21 +90,25 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResponseEntity<Object> updateCustomer(Long customerId, CustomerRequestDto customerRequestDto) {
+    public ResponseEntity<Object> updateCustomer(Long customerId, CustomerRequestDto customerRequestDto, Long userId) {
+
+        logger.info("Inside updateCustomer ServiceImpl");
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found with the given ID"));
         customer.setFullName(customerRequestDto.getFullName());
         customer.setMobileNumber(customerRequestDto.getMobileNumber());
         customer.setGender(customerRequestDto.getGender());
-        customer.setModifiedBy(customerRequestDto.getModifiedBy());
+        customer.setModifiedBy(userId);
         customer.setModifiedDate(customerRequestDto.getModifiedDate());
         Customer customerDB = customerRepository.save(customer);
         if (customerDB == null) {
+            logger.info("Customer Not Found with the given ID {} ", customerId);
             throw new ResourceNotFoundException("Unable to Update Customer with the given Id " + customerId);
         }
         CustomerResponseDto customerResponseDto = convertEntityToDto(customerDB);
         String updateMessage = "Customer Updated Successfully";
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(updateMessage, HttpStatus.CREATED, customerResponseDto, false, true);
+        logger.info("Customer Updated Successfully!!");
         return responseEntity;
 
     }
@@ -96,12 +116,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public ResponseEntity<Object> getAllCustomers(int pageNumber, int pageSize, String sortBy, String sortDir) {
 
+        logger.info("Inside getAllCustomers ServiceImpl !!");
+
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
 
-        //pageNumber default starts from 0
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        //pageNumber starts from 1
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Customer> page = customerRepository.findAll(pageable);
         if (page.isEmpty()) {
+            logger.info("No Customer is available");
             throw new ResourceNotFoundException("No Customer is available");
         }
         List<Customer> customers = page.getContent();
@@ -110,18 +133,21 @@ public class CustomerServiceImpl implements CustomerService {
 
         PageableResponse<CustomerResponseDto> response = new PageableResponse<>();
         response.setContent(dtoList);
-        response.setPageNumber(page.getNumber());
+        response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.CREATED, response, false, true);
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+        logger.info("Sent all the customer from getAllCustomer ServiceImpl");
         return responseEntity;
 
     }
 
     @Override
     public ResponseEntity<Object> deleteCustomer(Long customerId) {
+
+        logger.info("Inside deleteCustomer ServiceImpl");
 
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer not found with the given ID " + customerId));
         String deleteMessage = "Customer Deleted Successfully !!";
@@ -131,38 +157,57 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto) {
+    public ResponseEntity<Object> addCustomerAddress(CustomerAddressRequestDto addressDto, Long userId) {
+        CustomerAddress customerAddresses = null;
         CustomerAddress customerAddress = mapper.map(addressDto, CustomerAddress.class);
-        CustomerAddress customerAddresses = addressRepository.save(customerAddress);
+        if (customerAddress.getId() != null) {
+            customerAddress.setModifiedBy(userId);
+        } else {
+            customerAddress.setCreatedBy(userId);
+        }
+        customerAddresses = addressRepository.save(customerAddress);
         if (customerAddresses == null) {
             throw new ResourceNotFoundException("Could not able to add address " + addressDto.getCustomer().getAddress());
         }
         CustomerAddressResponseDto addressDto1 = convertEntityToDtoForAddress(customerAddresses);
         String message = "Customer Address Added !!";
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, addressDto1, false, true);
+        if(responseEntity != null) {
+            logger.info("Sent response successfully for addCustomerAddress");
+        }else {
+            logger.info("Something went wrong in Service!!");
+        }
         return responseEntity;
     }
 
     @Override
-    public ResponseEntity<Object> getCustomerByMobile(String mobileNumber) {
-        List<Customer> lstCustomer = customerRepository.findByMobileNumberLike("%" + mobileNumber + "%");
-        if (lstCustomer == null) {
-            throw new ResourceNotFoundException("Customer not found with the given mobile number + " + mobileNumber);
+    public ResponseEntity<Object> getCustomerByMobile(int pageNumber, int pageSize, String sortBy, String sortDir,String mobileNumber) {
+        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        Page<Customer> page = customerRepository.findByMobileNumberLike("%" + mobileNumber + "%", pageable);
+        if (page.isEmpty()) {
+            logger.info("No Customer is available");
+            throw new ResourceNotFoundException("No Customer is available");
         }
-        List<CustomerResponseDto> lstCustomerResponseDtos = new ArrayList<>();
-        if (!lstCustomer.isEmpty()) {
-            for (Customer customer1 : lstCustomer) {
-                CustomerResponseDto customerResponseDto = convertEntityToDto(customer1);
-                lstCustomerResponseDtos.add(customerResponseDto);
-            }
-        }
-        String message = "Customer Details By Mobile Number !!";
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, lstCustomerResponseDtos, false, true);
+        List<Customer> customers = page.getContent();
+
+        List<CustomerResponseDto> dtoList = customers.stream().map(customer -> convertEntityToDto(customer)).collect(Collectors.toList());
+
+        PageableResponse<CustomerResponseDto> response = new PageableResponse<>();
+        response.setContent(dtoList);
+        response.setPageNumber(page.getNumber() + 1);
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLastPage(page.isLast());
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+        logger.info("Sent all the customer from getAllCustomer ServiceImpl");
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Object> getCustomerById(Long id) {
+        logger.info("Inside getCustomerById serviceImpl");
         CustomerResponseDto customerResponseDto = new CustomerResponseDto();
         Optional<Customer> customer = customerRepository.findById(id);
         if (customer.isPresent()) {
@@ -171,11 +216,21 @@ public class CustomerServiceImpl implements CustomerService {
             ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(message, HttpStatus.OK, customerResponseDto, false, true);
             return responseEntity;
         } else {
+            logger.info("Customer Not Found with the Given ID");
             throw new ResourceNotFoundException("Customer Not Found with the Given ID " + id);
         }
     }
 
+    @Override
+    public ResponseEntity<Object> deleteAddress(Long id) {
+        addressRepository.deleteById(id);
+        String deleteMessage = "Customer Deleted Successfully !!";
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(deleteMessage, HttpStatus.OK, null, false, true);
+        return responseEntity;
+    }
+
     private CustomerResponseDto convertEntityToDto(Customer customer) {
+        logger.info("Inside convertEntityToDto");
         CustomerResponseDto customerResDto = new CustomerResponseDto();
         customerResDto.setId(customer.getId());
         customerResDto.setFullName(customer.getFullName());
@@ -202,10 +257,12 @@ public class CustomerServiceImpl implements CustomerService {
             customerCartResponseDto.setModifiedDate(customer.getCustomerCart().getModifiedDate());
             customerResDto.setCustomerCartResponseDto(customerCartResponseDto);
         }
+        logger.info("Exiting from convertEntityToDto");
         return customerResDto;
     }
 
     public CustomerAddressResponseDto convertEntityToDtoForAddress(CustomerAddress customerAddress) {
+        logger.info("Inside convertEntityToDtoForAddress");
         CustomerAddressResponseDto customerAddressResponseDto = new CustomerAddressResponseDto();
         customerAddressResponseDto.setHouseNumber(customerAddress.getHouseNumber());
         customerAddressResponseDto.setId(customerAddress.getId());
@@ -213,11 +270,13 @@ public class CustomerServiceImpl implements CustomerService {
         customerAddressResponseDto.setDistrict(customerAddress.getDistrict());
         customerAddressResponseDto.setVillageName(customerAddress.getVillageName());
         customerAddressResponseDto.setState(customerAddress.getState());
+        customerAddressResponseDto.setPostalCode(customerAddress.getPostalCode());
         customerAddressResponseDto.setCustomer(customerAddress.getCustomer().getId());
         customerAddressResponseDto.setCreatedBy(customerAddress.getCreatedBy());
         customerAddressResponseDto.setCreatedDate(customerAddress.getCreatedDate());
         customerAddressResponseDto.setModifiedBy(customerAddress.getModifiedBy());
         customerAddressResponseDto.setModifiedDate(customerAddress.getModifiedDate());
+        logger.info("Exiting from convertEntityToDtoForAddress");
         return customerAddressResponseDto;
     }
 }

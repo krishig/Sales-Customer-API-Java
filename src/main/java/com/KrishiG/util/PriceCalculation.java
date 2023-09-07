@@ -2,8 +2,8 @@ package com.KrishiG.util;
 
 public class PriceCalculation {
 
-    public static double calculationDiscountPrice(double actualPrice) {
-        double discountPrice = actualPrice - (actualPrice * 10) / 100;
+    public static double calculationDiscountPrice(double actualPrice, int discount) {
+        double discountPrice = actualPrice - (actualPrice * discount) / 100;
         return discountPrice;
     }
 }

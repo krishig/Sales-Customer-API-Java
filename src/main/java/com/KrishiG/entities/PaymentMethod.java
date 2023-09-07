@@ -17,4 +17,5 @@ public class PaymentMethod {
 
     @Column(name = "payment_type")
     private String PaymentType;
+
 }

@@ -3,6 +3,7 @@ package com.KrishiG.dtos.response;
 import com.KrishiG.entities.Customer;
 import com.KrishiG.entities.OrderStatus;
 import com.KrishiG.entities.PaymentMethod;
+import com.KrishiG.util.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,9 @@ public class OrderResponseDto {
 
     private float totalPrice;
 
-    private OrderStatus status;
+    private Status status;
 
-    private PaymentMethod paymentMethod;
+    private Long paymentMethod;
 
     private String contactNumber;
 

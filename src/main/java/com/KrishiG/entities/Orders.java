@@ -1,11 +1,13 @@
 package com.KrishiG.entities;
 
+import com.KrishiG.util.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -30,13 +32,11 @@ public class Orders {
     @Column(name = "total_price")
     private float totalPrice;
 
-    @OneToOne
     @JoinColumn(name = "status")
-    private OrderStatus status;
+    private Status status;
 
-    @OneToOne
     @JoinColumn(name = "payment_method")
-    private PaymentMethod paymentMethod;
+    private Long paymentMethod;
 
     @Column(name = "contact_number")
     private String contactNumber;
@@ -61,5 +61,9 @@ public class Orders {
     @UpdateTimestamp
     @Column(name = "closed_at")
     private Date closedDate;
+
+    @UpdateTimestamp
+    @Column(name = "out_of_delivered_at")
+    private Date outOfDeliveryDate;
 
 }

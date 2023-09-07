@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CartProductService {
 
-    public ResponseEntity<Object> addProductToCart(CartProductsRequestDto cartProductsRequestDto);
+    public ResponseEntity<Object> addProductToCart(CartProductsRequestDto cartProductsRequestDto, Long userId);
 
     public ResponseEntity<Object> deleteProductFromCart(Long cartId, Long productCartId);
 

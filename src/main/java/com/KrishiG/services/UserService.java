@@ -17,4 +17,6 @@ public interface UserService {
 
     //get all users
     List<UserRequestDto> getAllUsers();
+
+    public boolean getUserById(Long userId);
 }

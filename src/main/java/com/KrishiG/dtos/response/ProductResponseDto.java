@@ -1,5 +1,6 @@
 package com.KrishiG.dtos.response;
 
+import com.KrishiG.entities.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,7 @@ public class ProductResponseDto {
     private Double price;
 
     private int discount;
+
+    private ProductImageResponse productImageResponse;
 
 }

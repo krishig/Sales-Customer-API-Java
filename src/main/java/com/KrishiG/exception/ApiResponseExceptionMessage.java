@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 public class ApiResponseExceptionMessage {
     private String message;
     private boolean success;
+    private boolean error;
     private HttpStatus httpStatus;
 
     public ApiResponseExceptionMessage(String message) {
