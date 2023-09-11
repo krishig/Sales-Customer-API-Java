@@ -2,9 +2,7 @@ package com.KrishiG.services.Impl;
 
 import com.KrishiG.dtos.request.OrderRequestDto;
 import com.KrishiG.dtos.request.StatusRequestDto;
-import com.KrishiG.dtos.response.ApiResponse;
-import com.KrishiG.dtos.response.OrderResponseDto;
-import com.KrishiG.dtos.response.PageableResponse;
+import com.KrishiG.dtos.response.*;
 import com.KrishiG.entities.*;
 import com.KrishiG.exception.ResourceNotFoundException;
 import com.KrishiG.repositories.*;
@@ -24,10 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -144,6 +139,12 @@ public class OrderServiceImpl implements OrderService {
         Optional<Orders> dbOrders = orderRepository.findById(orderId);
         if(dbOrders.isPresent()) {
            Orders order = dbOrders.get();
+           switch (status.getStatus()) {
+               case OUT_OF_DELIVERED : order.setOutOfDeliveryDate(new Date());
+                                        break;
+               case DELIVERED: order.setClosedDate(new Date());
+                                break;
+           }
            order.setStatus(status.getStatus());
            Orders updatedOrder = orderRepository.save(order);
            OrderResponseDto orderResponseDto = convertEntityToDto(updatedOrder);
@@ -165,6 +166,71 @@ public class OrderServiceImpl implements OrderService {
         return responseEntity;
     }
 
+    @Override
+    public ResponseEntity<Object> getAllOrdersDetails(LocalDateTime dateTime, Status status, int pageNumber, int pageSize,String sortBy, String sortDir) {
+        OrderDetailsAndCountResponseDto orderDetailsAndCountResponseDto = new OrderDetailsAndCountResponseDto();
+        /*Page<Orders> page = null;
+        int outOfDeliveryCount = 0;
+        int deliveredCount = 0;
+        int orderCount = 0;
+        int pendingDeliveryCount = 0;
+        outOfDeliveryCount = getCountForOutOfDelivery(dateTime);
+        deliveredCount = getCountForDelivered(dateTime);
+        orderCount = getCountForOrder(dateTime);
+        pendingDeliveryCount = getCountForPendingDelivery(dateTime);
+        orderDetailsAndCountResponseDto.setOutOfDeliveryCount(outOfDeliveryCount);
+        orderDetailsAndCountResponseDto.setDeliveredCount(deliveredCount);
+        orderDetailsAndCountResponseDto.setTotalOrderCount(orderCount);
+
+        switch (status) {
+            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(dateTime, status);
+                break;
+            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(dateTime, status);
+                break;
+            case OPEN: page = orderRepository.findByCreatedDateAndStatus(dateTime, status);
+            default: page = orderRepository.findByPendingDeliveredByDate(dateTime);
+        }
+        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+
+        //pageNumber starts from 1
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        List<Orders> ordersList = page.getContent();
+        List<OrderResponseDto> dtoList = ordersList.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        PageableResponse<OrderResponseDto> response = new PageableResponse<>();
+        response.setContent(dtoList);
+        response.setPageNumber(page.getNumber() + 1);
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLastPage(page.isLast());
+        orderDetailsAndCountResponseDto.setOrderResponseDto(response);*/
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, orderDetailsAndCountResponseDto, false, true);
+        logger.info("Sent all the customer from getAllCustomer ServiceImpl");
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<Object> getOrderDetailsBySalesUserId(Long userId) {
+        List<Orders> lstOfOrders =  orderRepository.findByCreatedBy(userId);
+        List<OrderResponseDto> dtoList = lstOfOrders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, dtoList, false, true);
+        return responseEntity;
+    }
+
+    /*private int getCountForOutOfDelivery(LocalDateTime dateTime) {
+        return orderRepository.getCountForOutOfDeliveryByDateAndStatus(dateTime, Status.OUT_OF_DELIVERED);
+    }
+    private int getCountForDelivered(LocalDateTime dateTime) {
+        return orderRepository.getCountForDeliveredByDateAndStatus(dateTime, Status.DELIVERED);
+    }
+
+    private int getCountForOrder(LocalDateTime dateTime) {
+        return orderRepository.getCountForDeliveredByDateAndStatus(dateTime, Status.OPEN);
+    }
+
+    private int getCountForPendingDelivery(LocalDateTime dateTime) {
+        return orderRepository.getCountForPendingDeliveredByDate(dateTime);
+    }*/
    /* public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {
         logger.info("Inside savePaymentMethod");
         PaymentMethod save = paymentMethodRepository.save(orderRequestDto.getPaymentMethod());
@@ -181,6 +247,8 @@ public class OrderServiceImpl implements OrderService {
         logger.info("Inside setOrderItems");
         OrderItems orderItems = new OrderItems();
         orderItems.setOrders(orders);
+        List<Product> lstProducts = new ArrayList<>(1);
+        lstProducts.add(cartProducts.getProduct());
         orderItems.setProduct(cartProducts.getProduct());
         Double discountPrice = PriceCalculation.calculationDiscountPrice(cartProducts.getProduct().getActualPrice(), cartProducts.getProduct().getDiscount());
         Double totalProductDiscountPrice = discountPrice * cartProducts.getProductQuantity();

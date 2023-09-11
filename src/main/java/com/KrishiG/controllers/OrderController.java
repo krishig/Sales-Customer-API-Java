@@ -8,9 +8,12 @@ import com.KrishiG.util.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @CrossOrigin
@@ -76,5 +79,25 @@ public class OrderController {
         Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> order = orderService.updateStatusByOrderId(orderId, status);
         return order;
+    }
+
+    @GetMapping("/getDetails/all/{currentDate}/{status}")
+    public ResponseEntity<Object> getOrderDetails(@PathVariable("currentDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime date,
+                                                  @PathVariable("status") @DefaultValue("OUT_OF_DELIVERED") Status status,
+                                                  @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
+                                                  @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
+                                                  @RequestParam(value = "sortBy",defaultValue = "mobileNumber",required = false) String sortBy,
+                                                  @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
+                                                  @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
+        ResponseEntity<Object> orders = orderService.getAllOrdersDetails(date, status, pageNumber, pageSize, sortBy, sortDir);
+        return orders;
+    }
+
+    @GetMapping("/getAllOrder")
+    public ResponseEntity<Object> getOrderDetails(@RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
+        ResponseEntity<Object> response = orderService.getOrderDetailsBySalesUserId(userId);
+        return response;
     }
 }

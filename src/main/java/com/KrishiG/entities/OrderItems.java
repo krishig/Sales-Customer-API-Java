@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Entity
@@ -14,6 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "ORDER_ITEMS")
 public class OrderItems {
 
     @Id
@@ -24,7 +26,7 @@ public class OrderItems {
     @JoinColumn(name = "order_id")
     private Orders orders;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -36,18 +38,18 @@ public class OrderItems {
 
     private int quantity;
 
-    @CreationTimestamp
     @Column(name = "created_by")
     private Long createdBy;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private Date createdDate;
 
-    @Column(name = "modified_at")
-    private Date modifiedAt;
-
     @UpdateTimestamp
+    @Column(name = "modified_at")
+    private Date modifiedDate;
+
     @Column(name = "modified_by")
-    private Long modifiedDate;
+    private Long modifiedBy;
 
 }
