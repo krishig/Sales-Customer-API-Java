@@ -6,6 +6,8 @@ import com.KrishiG.entities.Customer;
 import com.KrishiG.util.Status;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
+
 public interface OrderService {
     public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto, Long userId);
 
@@ -19,4 +21,7 @@ public interface OrderService {
 
     public ResponseEntity<Object> getOrderByCustomerId(Long customerId);
 
+    public ResponseEntity<Object> getAllOrdersDetails(LocalDateTime dateTime, Status status, int pageNumber, int pageSize,String sortBy, String sortDir);
+
+    public ResponseEntity<Object> getOrderDetailsBySalesUserId(Long userId);
 }
