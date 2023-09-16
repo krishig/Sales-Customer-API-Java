@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -167,33 +168,34 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<Object> getAllOrdersDetails(LocalDateTime dateTime, Status status, int pageNumber, int pageSize,String sortBy, String sortDir) {
+    public ResponseEntity<Object> getAllOrdersDetails(Date date, Status status, int pageNumber, int pageSize, String sortBy, String sortDir) {
         OrderDetailsAndCountResponseDto orderDetailsAndCountResponseDto = new OrderDetailsAndCountResponseDto();
-        /*Page<Orders> page = null;
+        Page<Orders> page = null;
         int outOfDeliveryCount = 0;
         int deliveredCount = 0;
         int orderCount = 0;
         int pendingDeliveryCount = 0;
-        outOfDeliveryCount = getCountForOutOfDelivery(dateTime);
-        deliveredCount = getCountForDelivered(dateTime);
-        orderCount = getCountForOrder(dateTime);
-        pendingDeliveryCount = getCountForPendingDelivery(dateTime);
+        outOfDeliveryCount = getCountForOutOfDelivery(date);
+        deliveredCount = getCountForDelivered(date);
+        orderCount = getCountForOrder(date);
+        pendingDeliveryCount = getCountForPendingDelivery(date);
         orderDetailsAndCountResponseDto.setOutOfDeliveryCount(outOfDeliveryCount);
         orderDetailsAndCountResponseDto.setDeliveredCount(deliveredCount);
         orderDetailsAndCountResponseDto.setTotalOrderCount(orderCount);
 
-        switch (status) {
-            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(dateTime, status);
-                break;
-            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(dateTime, status);
-                break;
-            case OPEN: page = orderRepository.findByCreatedDateAndStatus(dateTime, status);
-            default: page = orderRepository.findByPendingDeliveredByDate(dateTime);
-        }
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
-
-        //pageNumber starts from 1
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        switch (status) {
+            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(date, status, pageable);
+                break;
+            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(date, status, pageable);
+                break;
+            case OPEN: page = orderRepository.findByCreatedDateAndStatus(date, status, pageable);
+            break;
+            default: page = orderRepository.findByPendingDeliveredByDate(date, pageable);
+        }
+        //pageNumber starts from 1
+
         List<Orders> ordersList = page.getContent();
         List<OrderResponseDto> dtoList = ordersList.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
@@ -203,7 +205,7 @@ public class OrderServiceImpl implements OrderService {
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
-        orderDetailsAndCountResponseDto.setOrderResponseDto(response);*/
+        orderDetailsAndCountResponseDto.setOrderResponseDto(response);
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, orderDetailsAndCountResponseDto, false, true);
         logger.info("Sent all the customer from getAllCustomer ServiceImpl");
         return responseEntity;
@@ -217,20 +219,44 @@ public class OrderServiceImpl implements OrderService {
         return responseEntity;
     }
 
-    /*private int getCountForOutOfDelivery(LocalDateTime dateTime) {
-        return orderRepository.getCountForOutOfDeliveryByDateAndStatus(dateTime, Status.OUT_OF_DELIVERED);
-    }
-    private int getCountForDelivered(LocalDateTime dateTime) {
-        return orderRepository.getCountForDeliveredByDateAndStatus(dateTime, Status.DELIVERED);
+    @Override
+    public ResponseEntity<Object> getOrderByOrderNumber(int pageNumber, int pageSize, String sortBy, String sortDir,String orderId) {
+        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        Page<Orders> page = orderRepository.findByOrderIdLike("%" + orderId + "%", pageable);
+        if (page.isEmpty()) {
+            logger.info("Order is not available with the given Order No");
+            throw new ResourceNotFoundException("Order is not available with the given Order No");
+        }
+        List<Orders> orders = page.getContent();
+
+        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+
+        PageableResponse<OrderResponseDto> response = new PageableResponse<>();
+        response.setContent(dtoList);
+        response.setPageNumber(page.getNumber() + 1);
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLastPage(page.isLast());
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+        return responseEntity;
     }
 
-    private int getCountForOrder(LocalDateTime dateTime) {
-        return orderRepository.getCountForDeliveredByDateAndStatus(dateTime, Status.OPEN);
+    private int getCountForOutOfDelivery(Date date) {
+        return orderRepository.getCountForOutOfDeliveryByDateAndStatus(date, Status.OUT_OF_DELIVERED.toString());
+    }
+    private int getCountForDelivered(Date date) {
+        return orderRepository.getCountForDeliveredByDateAndStatus(date, Status.DELIVERED.toString());
     }
 
-    private int getCountForPendingDelivery(LocalDateTime dateTime) {
-        return orderRepository.getCountForPendingDeliveredByDate(dateTime);
-    }*/
+    private int getCountForOrder(Date date) {
+        return orderRepository.getCountForOrderByDateAndStatus(date, Status.OPEN.toString());
+    }
+
+    private int getCountForPendingDelivery(Date date) {
+        return orderRepository.getCountForPendingDeliveredByDate(date);
+    }
    /* public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {
         logger.info("Inside savePaymentMethod");
         PaymentMethod save = paymentMethodRepository.save(orderRequestDto.getPaymentMethod());

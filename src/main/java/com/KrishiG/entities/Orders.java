@@ -32,7 +32,8 @@ public class Orders {
     @Column(name = "total_price")
     private float totalPrice;
 
-    @JoinColumn(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     @JoinColumn(name = "payment_method")
