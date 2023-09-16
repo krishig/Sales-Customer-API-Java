@@ -212,10 +212,26 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<Object> getOrderDetailsBySalesUserId(Long userId) {
-        List<Orders> lstOfOrders =  orderRepository.findByCreatedBy(userId);
-        List<OrderResponseDto> dtoList = lstOfOrders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, dtoList, false, true);
+    public ResponseEntity<Object> getOrderDetailsBySalesUserId(int pageNumber, int pageSize, String sortBy, String sortDir, Long userId) {
+        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        Page<Orders> page =  orderRepository.findByCreatedBy(userId, pageable);
+        if (page.isEmpty()) {
+            logger.info("Order is not available for userId");
+            throw new ResourceNotFoundException("Order is not available for userId");
+        }
+        List<Orders> orders = page.getContent();
+
+        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+
+        PageableResponse<OrderResponseDto> response = new PageableResponse<>();
+        response.setContent(dtoList);
+        response.setPageNumber(page.getNumber() + 1);
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLastPage(page.isLast());
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         return responseEntity;
     }
 
@@ -317,8 +333,29 @@ public class OrderServiceImpl implements OrderService {
         orderResponseDto.setClosedDate(orders.getClosedDate());
         orderResponseDto.setModifiedBy(orders.getModifiedBy());
         orderResponseDto.setModifiedDate(orders.getModifiedDate());
+        List<OrderItems> orderItems = orderItemsRepository.findByOrders(orders);
+        if(!orderItems.isEmpty()) {
+            List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+            for(OrderItems ordersItem : orderItems) {
+                ProductResponseDto productResponseDto = convertEntityToDTOForProduct(ordersItem);
+                productResponseDtos.add(productResponseDto);
+            }
+            orderResponseDto.setProductResponseDtos(productResponseDtos);
+        }
         logger.info("Exiting from convertDtoToEntity");
         return orderResponseDto;
+    }
+
+    private ProductResponseDto convertEntityToDTOForProduct(OrderItems orderItems) {
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setId(orderItems.getProduct().getId());
+        productResponseDto.setProductName(orderItems.getProduct().getProductName());
+        productResponseDto.setProductDescription(orderItems.getProduct().getProductDescription());
+        productResponseDto.setSubCategory(orderItems.getProduct().getSubCategory().getId());
+        productResponseDto.setBrandId(orderItems.getProduct().getBrand().getId());
+        ProductImageResponse productImageResponse = getImageForProduct(orderItems.getProduct().getImages());
+        productResponseDto.setProductImageResponse(productImageResponse);
+        return productResponseDto;
     }
 
     private String generateOrderNumber(Long userId) {
@@ -333,5 +370,14 @@ public class OrderServiceImpl implements OrderService {
     public static String getExtractNumberFromDate(String date) {
         String dateStr = date.replaceAll("[/:\\W]","");
         return dateStr;
+    }
+
+    private ProductImageResponse getImageForProduct(List<Image> images){
+        ProductImageResponse productImage = new ProductImageResponse();
+        if(!images.isEmpty()) {
+            productImage.setImageName(images.get(0).getImageName());
+            productImage.setImageUrl(images.get(0).getImageUrl());
+        }
+        return productImage;
     }
 }
