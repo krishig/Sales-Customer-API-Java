@@ -110,9 +110,13 @@ public class OrderController {
     }
 
     @GetMapping("/getAllOrder")
-    public ResponseEntity<Object> getOrderDetails(@RequestHeader Map<String, String> header) {
+    public ResponseEntity<Object> getOrderDetails(@RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
+                                                  @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
+                                                  @RequestParam(value = "sortBy",defaultValue = "orderId",required = false) String sortBy,
+                                                  @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
+                                                  @RequestHeader Map<String, String> header) {
         Long userId = jwtUtil.getUserIdFromToken(header);
-        ResponseEntity<Object> response = orderService.getOrderDetailsBySalesUserId(userId);
+        ResponseEntity<Object> response = orderService.getOrderDetailsBySalesUserId(pageNumber, pageSize, sortBy, sortDir, userId);
         return response;
     }
 }

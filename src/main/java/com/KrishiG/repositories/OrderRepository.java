@@ -19,7 +19,7 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Orders, Long> {
     List<Orders> findByCustomerId(Customer customer);
 
-    List<Orders> findByCreatedBy(Long userId);
+    Page<Orders> findByCreatedBy(Long userId, Pageable pageable);
 
     Page<Orders> findByOrderIdLike(String orderId, Pageable pageable);
 
