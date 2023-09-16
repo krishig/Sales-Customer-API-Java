@@ -5,6 +5,7 @@ import com.KrishiG.dtos.request.StatusRequestDto;
 import com.KrishiG.services.OrderService;
 import com.KrishiG.util.JwtUtil;
 import com.KrishiG.util.Status;
+import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 
 @CrossOrigin
@@ -65,6 +68,18 @@ public class OrderController {
         return order;
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<Object> getOrderById(@PathParam("orderNo") String orderId,
+                                               @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
+                                               @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
+                                               @RequestParam(value = "sortBy",defaultValue = "orderId",required = false) String sortBy,
+                                               @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
+                                               @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
+        ResponseEntity<Object> order = orderService.getOrderByOrderNumber(pageNumber, pageSize, sortBy, sortDir, orderId);
+        return order;
+    }
+
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<Object> getOrderByCustomerId(@PathVariable("customerId") Long customerId,
                                                @RequestHeader Map<String, String> header) {
@@ -82,11 +97,11 @@ public class OrderController {
     }
 
     @GetMapping("/getDetails/all/{currentDate}/{status}")
-    public ResponseEntity<Object> getOrderDetails(@PathVariable("currentDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDateTime date,
+    public ResponseEntity<Object> getOrderDetails(@PathVariable("currentDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
                                                   @PathVariable("status") @DefaultValue("OUT_OF_DELIVERED") Status status,
                                                   @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
-                                                  @RequestParam(value = "sortBy",defaultValue = "mobileNumber",required = false) String sortBy,
+                                                  @RequestParam(value = "sortBy",defaultValue = "orderId",required = false) String sortBy,
                                                   @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir,
                                                   @RequestHeader Map<String, String> header) {
         Long userId = jwtUtil.getUserIdFromToken(header);
