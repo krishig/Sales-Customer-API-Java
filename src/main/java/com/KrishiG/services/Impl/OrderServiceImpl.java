@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyy HH:mm:ss");
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
@@ -51,6 +54,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private CustomerServiceImpl customerService;
 
     @Override
     public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto, Long userId) {
@@ -170,29 +178,35 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<Object> getAllOrdersDetails(Date date, Status status, int pageNumber, int pageSize, String sortBy, String sortDir) {
         OrderDetailsAndCountResponseDto orderDetailsAndCountResponseDto = new OrderDetailsAndCountResponseDto();
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String currentDate = simpleDateFormat.format(date);
         Page<Orders> page = null;
         int outOfDeliveryCount = 0;
         int deliveredCount = 0;
         int orderCount = 0;
         int pendingDeliveryCount = 0;
-        outOfDeliveryCount = getCountForOutOfDelivery(date);
-        deliveredCount = getCountForDelivered(date);
-        orderCount = getCountForOrder(date);
-        pendingDeliveryCount = getCountForPendingDelivery(date);
+        outOfDeliveryCount = getCountForOutOfDelivery(currentDate);
+        deliveredCount = getCountForDelivered(currentDate);
+        orderCount = getCountForOrder(currentDate);
+        pendingDeliveryCount = getCountForPendingDelivery(currentDate);
+        Double totalPrice = orderRepository.getTotalPrice(currentDate, Status.DELIVERED.toString());
         orderDetailsAndCountResponseDto.setOutOfDeliveryCount(outOfDeliveryCount);
         orderDetailsAndCountResponseDto.setDeliveredCount(deliveredCount);
         orderDetailsAndCountResponseDto.setTotalOrderCount(orderCount);
+        orderDetailsAndCountResponseDto.setPendingDeliveryCount(pendingDeliveryCount);
+        orderDetailsAndCountResponseDto.setTotalCash(Math.round(totalPrice));
 
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         switch (status) {
-            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(date, status, pageable);
+            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(currentDate, status.toString(), pageable);
                 break;
-            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(date, status, pageable);
+            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(currentDate, status.toString(), pageable);
                 break;
-            case OPEN: page = orderRepository.findByCreatedDateAndStatus(date, status, pageable);
+            case OPEN: page = orderRepository.findByCreatedDateAndStatus(currentDate, status.toString(), pageable);
             break;
-            default: page = orderRepository.findByPendingDeliveredByDate(date, pageable);
+            default: page = orderRepository.findByPendingDeliveredByDate(currentDate, Status.OUT_OF_DELIVERED.toString(), pageable);
         }
         //pageNumber starts from 1
 
@@ -259,19 +273,54 @@ public class OrderServiceImpl implements OrderService {
         return responseEntity;
     }
 
-    private int getCountForOutOfDelivery(Date date) {
+    @Override
+    public ResponseEntity<Object> getSearchOrderDetails(int pageNumber,
+                                                        int pageSize, String sortBy,
+                                                        String sortDir,
+                                                        String orderId,
+                                                        Date createdDate,
+                                                        Date outOfDeliveryDate,
+                                                        Date deliveredDate, String status) {
+        String orderId1 = orderId != "" ? "%" + orderId+ "%" : null;
+        String status1 = status != "" ? status : null;
+        String createdDate1 = createdDate != null ? "%" + simpleDateFormat.format(createdDate) + "%" : null;
+        String outOfDeliveryDate1 = outOfDeliveryDate != null ? "%" + simpleDateFormat.format(outOfDeliveryDate) + "%" : null;
+        String deliveredDate1 = deliveredDate != null ? "%" + simpleDateFormat.format(deliveredDate) + "%" : null;
+        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        Page<Orders> page = orderRepository.getOrderDetailsByKeyword(orderId1, createdDate1, outOfDeliveryDate1, deliveredDate1, status1, pageable);
+        if (page.isEmpty()) {
+            logger.info("Order is not available with the given Order No");
+            throw new ResourceNotFoundException("Order is not available with the given Order No");
+        }
+        List<Orders> orders = page.getContent();
+
+        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+
+        PageableResponse<OrderResponseDto> response = new PageableResponse<>();
+        response.setContent(dtoList);
+        response.setPageNumber(page.getNumber() + 1);
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLastPage(page.isLast());
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+        return responseEntity;
+    }
+
+    private int getCountForOutOfDelivery(String date) {
         return orderRepository.getCountForOutOfDeliveryByDateAndStatus(date, Status.OUT_OF_DELIVERED.toString());
     }
-    private int getCountForDelivered(Date date) {
+    private int getCountForDelivered(String date) {
         return orderRepository.getCountForDeliveredByDateAndStatus(date, Status.DELIVERED.toString());
     }
 
-    private int getCountForOrder(Date date) {
+    private int getCountForOrder(String date) {
         return orderRepository.getCountForOrderByDateAndStatus(date, Status.OPEN.toString());
     }
 
-    private int getCountForPendingDelivery(Date date) {
-        return orderRepository.getCountForPendingDeliveredByDate(date);
+    private int getCountForPendingDelivery(String  date) {
+        return orderRepository.getCountForPendingDeliveredByDate(date, Status.OUT_OF_DELIVERED.toString());
     }
    /* public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {
         logger.info("Inside savePaymentMethod");
@@ -296,6 +345,8 @@ public class OrderServiceImpl implements OrderService {
         Double totalProductDiscountPrice = discountPrice * cartProducts.getProductQuantity();
         orderItems.setTotalDiscountPrice(totalProductDiscountPrice);
         orderItems.setPriceAfterDiscount(discountPrice);
+        orderItems.setDiscount(cartProducts.getProduct().getDiscount());
+        orderItems.setActualPrice(cartProducts.getProduct().getActualPrice());
         orderItems.setQuantity(cartProducts.getProductQuantity());
         orderItems.setCreatedBy(userId);
         logger.info("Exiting from setOrderItems");
@@ -327,26 +378,34 @@ public class OrderServiceImpl implements OrderService {
         orderResponseDto.setStatus(orders.getStatus());
         orderResponseDto.setTotalPrice(orders.getTotalPrice());
         orderResponseDto.setContactNumber(orders.getContactNumber());
-        orderResponseDto.setAddressId(orders.getAddressId());
+        Optional<CustomerAddress> address = addressRepository.findById(orders.getAddressId());
+        if(address.isPresent()) {
+            CustomerAddressResponseDto customerAddressResponseDto = customerService.convertEntityToDtoForAddress(address.get());
+            orderResponseDto.setAddressResponseDto(customerAddressResponseDto);
+        }
+
         orderResponseDto.setCreatedBy(orders.getCreatedBy());
+        orderResponseDto.setCreatedDate(orders.getCreatedDate());
         orderResponseDto.setClosedDate(orders.getCreatedDate());
         orderResponseDto.setClosedDate(orders.getClosedDate());
         orderResponseDto.setModifiedBy(orders.getModifiedBy());
         orderResponseDto.setModifiedDate(orders.getModifiedDate());
         List<OrderItems> orderItems = orderItemsRepository.findByOrders(orders);
         if(!orderItems.isEmpty()) {
-            List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+            List<OrderItemsRes> dtoList = orderItems.stream().map(orderItem -> convertEntityToDTOForOrderItems(orderItem)).collect(Collectors.toList());
+            /*List<ProductResponseDto> productResponseDtos = new ArrayList<>();
             for(OrderItems ordersItem : orderItems) {
                 ProductResponseDto productResponseDto = convertEntityToDTOForProduct(ordersItem);
                 productResponseDtos.add(productResponseDto);
-            }
-            orderResponseDto.setProductResponseDtos(productResponseDtos);
+            }*/
+            orderResponseDto.setOrderItemsRes(dtoList);
         }
         logger.info("Exiting from convertDtoToEntity");
         return orderResponseDto;
     }
 
-    private ProductResponseDto convertEntityToDTOForProduct(OrderItems orderItems) {
+    private OrderItemsRes convertEntityToDTOForOrderItems(OrderItems orderItems) {
+        OrderItemsRes orderItemsRes = new OrderItemsRes();
         ProductResponseDto productResponseDto = new ProductResponseDto();
         productResponseDto.setId(orderItems.getProduct().getId());
         productResponseDto.setProductName(orderItems.getProduct().getProductName());
@@ -355,7 +414,13 @@ public class OrderServiceImpl implements OrderService {
         productResponseDto.setBrandId(orderItems.getProduct().getBrand().getId());
         ProductImageResponse productImageResponse = getImageForProduct(orderItems.getProduct().getImages());
         productResponseDto.setProductImageResponse(productImageResponse);
-        return productResponseDto;
+        orderItemsRes.setProduct(productResponseDto);
+        orderItemsRes.setQuantity(orderItems.getQuantity());
+        orderItemsRes.setActualPrice(orderItems.getActualPrice());
+        orderItemsRes.setDiscount(orderItems.getDiscount());
+        orderItemsRes.setTotalDiscountPrice(orderItems.getTotalDiscountPrice());
+        orderItemsRes.setPriceAfterDiscount(orderItems.getPriceAfterDiscount());
+        return orderItemsRes;
     }
 
     private String generateOrderNumber(Long userId) {

@@ -14,6 +14,7 @@ public class OrderItemsRes {
     private ProductResponseDto product;
     private Double priceAfterDiscount;
     private Double totalDiscountPrice;
+    private int discount;
+    private Double actualPrice;
     private int quantity;
-
 }
