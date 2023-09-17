@@ -26,6 +26,12 @@ public class ProductResponseDto {
 
     private int discount;
 
+    private int quantity;
+
+    private Double discountPrice;
+
+    private Double totalPrice;
+
     private ProductImageResponse productImageResponse;
 
 }
