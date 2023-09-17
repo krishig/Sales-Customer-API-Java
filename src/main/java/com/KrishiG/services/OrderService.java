@@ -28,4 +28,12 @@ public interface OrderService {
     public ResponseEntity<Object> getOrderDetailsBySalesUserId(int pageNumber, int pageSize, String sortBy, String sortDir, Long userId);
 
     public ResponseEntity<Object> getOrderByOrderNumber(int pageNumber, int pageSize, String sortBy, String sortDir, String orderNo);
+
+    public ResponseEntity<Object> getSearchOrderDetails(int pageNumber,
+                                                        int pageSize, String sortBy,
+                                                        String sortDir,
+                                                        String orderId,
+                                                        Date createdDate,
+                                                        Date outOfDeliveryDate,
+                                                        Date deliveredDate, String status);
 }

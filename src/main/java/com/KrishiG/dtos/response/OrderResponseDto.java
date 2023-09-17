@@ -33,9 +33,9 @@ public class OrderResponseDto {
 
     private String contactNumber;
 
-    private Long addressId;
+    private  CustomerAddressResponseDto addressResponseDto;
 
-    private List<ProductResponseDto> productResponseDtos;
+    private List<OrderItemsRes> orderItemsRes;
 
     private Long createdBy;
 

@@ -59,11 +59,9 @@ public class Orders {
     @Column(name = "modified_by")
     private Long modifiedBy;
 
-    @UpdateTimestamp
     @Column(name = "closed_at")
     private Date closedDate;
 
-    @UpdateTimestamp
     @Column(name = "out_of_delivered_at")
     private Date outOfDeliveryDate;
 

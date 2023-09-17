@@ -36,6 +36,12 @@ public class OrderItems {
     @Column(name = "totalProductDiscountPrice")
     private Double totalDiscountPrice;
 
+    @Column(name="discount")
+    private int discount;
+
+    @Column(name = "actual_price")
+    private Double actualPrice;
+
     private int quantity;
 
     @Column(name = "created_by")
