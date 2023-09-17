@@ -392,20 +392,19 @@ public class OrderServiceImpl implements OrderService {
         orderResponseDto.setModifiedDate(orders.getModifiedDate());
         List<OrderItems> orderItems = orderItemsRepository.findByOrders(orders);
         if(!orderItems.isEmpty()) {
-            List<OrderItemsRes> dtoList = orderItems.stream().map(orderItem -> convertEntityToDTOForOrderItems(orderItem)).collect(Collectors.toList());
-            /*List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+            //List<OrderItemsRes> dtoList = orderItems.stream().map(orderItem -> convertEntityToDTOForOrderItems(orderItem)).collect(Collectors.toList());
+            List<ProductResponseDto> productResponseDtos = new ArrayList<>();
             for(OrderItems ordersItem : orderItems) {
                 ProductResponseDto productResponseDto = convertEntityToDTOForProduct(ordersItem);
                 productResponseDtos.add(productResponseDto);
-            }*/
-            orderResponseDto.setOrderItemsRes(dtoList);
+            }
+            orderResponseDto.setProductResponseDtos(productResponseDtos);
         }
         logger.info("Exiting from convertDtoToEntity");
         return orderResponseDto;
     }
 
-    private OrderItemsRes convertEntityToDTOForOrderItems(OrderItems orderItems) {
-        OrderItemsRes orderItemsRes = new OrderItemsRes();
+    private ProductResponseDto convertEntityToDTOForProduct(OrderItems orderItems) {
         ProductResponseDto productResponseDto = new ProductResponseDto();
         productResponseDto.setId(orderItems.getProduct().getId());
         productResponseDto.setProductName(orderItems.getProduct().getProductName());
@@ -414,13 +413,12 @@ public class OrderServiceImpl implements OrderService {
         productResponseDto.setBrandId(orderItems.getProduct().getBrand().getId());
         ProductImageResponse productImageResponse = getImageForProduct(orderItems.getProduct().getImages());
         productResponseDto.setProductImageResponse(productImageResponse);
-        orderItemsRes.setProduct(productResponseDto);
-        orderItemsRes.setQuantity(orderItems.getQuantity());
-        orderItemsRes.setActualPrice(orderItems.getActualPrice());
-        orderItemsRes.setDiscount(orderItems.getDiscount());
-        orderItemsRes.setTotalDiscountPrice(orderItems.getTotalDiscountPrice());
-        orderItemsRes.setPriceAfterDiscount(orderItems.getPriceAfterDiscount());
-        return orderItemsRes;
+        productResponseDto.setQuantity(orderItems.getQuantity());
+        productResponseDto.setPrice(orderItems.getActualPrice());
+        productResponseDto.setDiscount(orderItems.getDiscount());
+        productResponseDto.setTotalPrice(orderItems.getTotalDiscountPrice());
+        productResponseDto.setDiscountPrice(orderItems.getPriceAfterDiscount());
+        return productResponseDto;
     }
 
     private String generateOrderNumber(Long userId) {
