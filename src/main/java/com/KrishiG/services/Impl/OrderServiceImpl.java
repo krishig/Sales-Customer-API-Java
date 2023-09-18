@@ -62,11 +62,18 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CustomerServiceImpl customerService;
 
+    @Autowired
+    private DeliveryAddressRepository deliveryAddressRepository;
+
     @Override
     public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto, Long userId) {
 
         logger.info("Inside BookOrder");
-
+        Optional<CustomerAddress> address = addressRepository.findById(orderRequestDto.getAddressId());
+        if(address.isPresent()) {
+            DeliveryAddress deliveryAddress = saveDeliveryAddress(address.get());
+            orderRequestDto.setAddressId(deliveryAddress.getId());
+        }
         Orders orders = convertDtoToEntity(orderRequestDto, userId);
         Orders savedOrder = orderRepository.save(orders);
         if (savedOrder != null) {
@@ -410,6 +417,18 @@ public class OrderServiceImpl implements OrderService {
         }
         logger.info("Exiting from convertDtoToEntity");
         return orderResponseDto;
+    }
+
+    public DeliveryAddress saveDeliveryAddress(CustomerAddress address) {
+        DeliveryAddress deliveryAddress = new DeliveryAddress();
+        deliveryAddress.setHouseNumber(address.getHouseNumber());
+        deliveryAddress.setStreetName(address.getStreetName());
+        deliveryAddress.setVillageName(address.getVillageName());
+        deliveryAddress.setDistrict(address.getDistrict());
+        deliveryAddress.setState(address.getState());
+        deliveryAddress.setPostalCode(address.getPostalCode());
+        DeliveryAddress deliveryAddressDB = deliveryAddressRepository.save(deliveryAddress);
+        return deliveryAddressDB;
     }
 
     private ProductResponseDto convertEntityToDTOForProduct(OrderItems orderItems) {
