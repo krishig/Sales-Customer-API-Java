@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+    private static final DecimalFormat disFormat = new DecimalFormat("#.##");
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyy HH:mm:ss");
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -149,12 +151,18 @@ public class OrderServiceImpl implements OrderService {
         if(dbOrders.isPresent()) {
            Orders order = dbOrders.get();
            switch (status.getStatus()) {
-               case OUT_OF_DELIVERED : order.setOutOfDeliveryDate(new Date());
+               case OPEN : order.setStatus(Status.PACKAGING);
+                           break;
+               case PACKAGING: order.setStatus(Status.READY_TO_DISPATCH);
+                               break;
+               case READY_TO_DISPATCH: order.setStatus(Status.OUT_OF_DELIVERED);
+                                       order.setOutOfDeliveryDate(new Date());
+                                       break;
+               case OUT_OF_DELIVERED :  order.setStatus(Status.DELIVERED);
+                                        order.setClosedDate(new Date());
                                         break;
-               case DELIVERED: order.setClosedDate(new Date());
-                                break;
            }
-           order.setStatus(status.getStatus());
+
            Orders updatedOrder = orderRepository.save(order);
            OrderResponseDto orderResponseDto = convertEntityToDto(updatedOrder);
             responseEntity = ApiResponse.generateResponse(null, HttpStatus.CREATED, orderResponseDto, false, true);
@@ -284,8 +292,8 @@ public class OrderServiceImpl implements OrderService {
         String orderId1 = orderId != "" ? "%" + orderId+ "%" : null;
         String status1 = status != "" ? status : null;
         String createdDate1 = createdDate != null ? "%" + simpleDateFormat.format(createdDate) + "%" : null;
-        String outOfDeliveryDate1 = outOfDeliveryDate != null ? "%" + simpleDateFormat.format(outOfDeliveryDate) + "%" : null;
-        String deliveredDate1 = deliveredDate != null ? "%" + simpleDateFormat.format(deliveredDate) + "%" : null;
+        String outOfDeliveryDate1 = outOfDeliveryDate != null ? simpleDateFormat.format(outOfDeliveryDate) : null;
+        String deliveredDate1 = deliveredDate != null ? simpleDateFormat.format(deliveredDate) : null;
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page = orderRepository.getOrderDetailsByKeyword(orderId1, createdDate1, outOfDeliveryDate1, deliveredDate1, status1, pageable);
@@ -416,8 +424,10 @@ public class OrderServiceImpl implements OrderService {
         productResponseDto.setQuantity(orderItems.getQuantity());
         productResponseDto.setPrice(orderItems.getActualPrice());
         productResponseDto.setDiscount(orderItems.getDiscount());
-        productResponseDto.setTotalPrice(orderItems.getTotalDiscountPrice());
-        productResponseDto.setDiscountPrice(orderItems.getPriceAfterDiscount());
+        Double tempTotalDiscountPrice= Double.valueOf(disFormat.format(orderItems.getTotalDiscountPrice()));
+        productResponseDto.setTotalPrice(tempTotalDiscountPrice);
+        Double tempPriceAfterDiscount= Double.valueOf(disFormat.format(orderItems.getTotalDiscountPrice()));
+        productResponseDto.setDiscountPrice(tempPriceAfterDiscount);
         return productResponseDto;
     }
 
