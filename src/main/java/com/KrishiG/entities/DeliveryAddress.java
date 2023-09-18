@@ -17,7 +17,7 @@ import java.util.Date;
 @Table(name = "DELIVERY_ADDRESS")
 public class DeliveryAddress {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "house_number")
