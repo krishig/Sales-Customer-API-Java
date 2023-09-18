@@ -17,12 +17,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CartProductServiceImpl implements CartProductService {
+
+    private static final DecimalFormat disFormat = new DecimalFormat("#.##");
 
     @Autowired
     private CartProductRepository cartProductRepository;
@@ -102,9 +105,11 @@ public class CartProductServiceImpl implements CartProductService {
                 productResponseDto.setDiscount(product.get().getDiscount());
                 cartProductResponseDto.setDiscount(product.get().getDiscount());
                 double discountPrice = PriceCalculation.calculationDiscountPrice(product.get().getActualPrice(), product.get().getDiscount());
-                cartProductResponseDto.setDiscountPrice(discountPrice);
+                Double tempDiscountPrice= Double.valueOf(disFormat.format(discountPrice));
+                cartProductResponseDto.setDiscountPrice(tempDiscountPrice);
                 double productsPrice = discountPrice * cartProducts1.getProductQuantity();
-                cartProductResponseDto.setTotalProductDiscountPrice(productsPrice);
+                Double tempProductPrice = Double.valueOf(disFormat.format(productsPrice));
+                cartProductResponseDto.setTotalProductDiscountPrice(tempProductPrice);
                 totalPrice = totalPrice + productsPrice;
                 ProductImageResponse productImageResponse = getImageForProduct(product.get());
                 productResponseDto.setProductImageResponse(productImageResponse);
@@ -120,7 +125,9 @@ public class CartProductServiceImpl implements CartProductService {
             cartProductResponseDtoList.add(cartProductResponseDto);
         }
         totalCartProductResponseDto.setCartProductResponseDtoList(cartProductResponseDtoList);
-        totalCartProductResponseDto.setTotalPrice(totalPrice);
+
+        Double tempTotalPrice= Double.valueOf(disFormat.format(totalPrice));
+        totalCartProductResponseDto.setTotalPrice(tempTotalPrice);
         return totalCartProductResponseDto;
     }
 
