@@ -393,9 +393,9 @@ public class OrderServiceImpl implements OrderService {
         orderResponseDto.setStatus(orders.getStatus());
         orderResponseDto.setTotalPrice(orders.getTotalPrice());
         orderResponseDto.setContactNumber(orders.getContactNumber());
-        Optional<CustomerAddress> address = addressRepository.findById(orders.getAddressId());
+        Optional<DeliveryAddress> address = deliveryAddressRepository.findById(orders.getAddressId());
         if(address.isPresent()) {
-            CustomerAddressResponseDto customerAddressResponseDto = customerService.convertEntityToDtoForAddress(address.get());
+            CustomerAddressResponseDto customerAddressResponseDto = convertEntityToDtoForAddress(address.get());
             orderResponseDto.setAddressResponseDto(customerAddressResponseDto);
         }
 
@@ -462,6 +462,24 @@ public class OrderServiceImpl implements OrderService {
     public static String getExtractNumberFromDate(String date) {
         String dateStr = date.replaceAll("[/:\\W]","");
         return dateStr;
+    }
+
+    private CustomerAddressResponseDto convertEntityToDtoForAddress(DeliveryAddress address) {
+        logger.info("Inside convertEntityToDtoForAddress");
+        CustomerAddressResponseDto customerAddressResponseDto = new CustomerAddressResponseDto();
+        customerAddressResponseDto.setHouseNumber(address.getHouseNumber());
+        customerAddressResponseDto.setId(address.getId());
+        customerAddressResponseDto.setStreetName(address.getStreetName());
+        customerAddressResponseDto.setDistrict(address.getDistrict());
+        customerAddressResponseDto.setVillageName(address.getVillageName());
+        customerAddressResponseDto.setState(address.getState());
+        customerAddressResponseDto.setPostalCode(address.getPostalCode());
+        customerAddressResponseDto.setCreatedBy(address.getCreatedBy());
+        customerAddressResponseDto.setCreatedDate(address.getCreatedDate());
+        customerAddressResponseDto.setModifiedBy(address.getModifiedBy());
+        customerAddressResponseDto.setModifiedDate(address.getModifiedDate());
+        logger.info("Exiting from convertEntityToDtoForAddress");
+        return customerAddressResponseDto;
     }
 
     private ProductImageResponse getImageForProduct(List<Image> images){
