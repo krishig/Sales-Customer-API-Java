@@ -49,9 +49,9 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
 
     @Query(value = "with order_date as (SELECT SUM(o.TOTAL_PRICE) as sum_amount from krishig_db.orders o group by o.closed_at, o.status having o.closed_at like %?1% and o.status=?2)\n" +
             "select sum(sum_amount) from order_date", nativeQuery = true)
-    public double getTotalPrice(String Date, String status);
+    public Double getTotalPrice(String Date, String status);
 
-    @Query(value = "select * from krishig_db.orders o where o.order_id LIKE ?1 AND o.created_at = ?2 AND o.out_of_delivered_at = ?3 AND o.closed_at = ?4 AND o.status = ?5", nativeQuery = true)
+    @Query(value = "select * from krishig_db.orders o where o.order_id LIKE ?1 OR o.created_at LIKE ?2 OR o.out_of_delivered_at OR ?3 OR o.closed_at LIKE ?4 OR o.status = ?5", nativeQuery = true)
     public Page<Orders> getOrderDetailsByKeyword(String orderId, String createdDate, String outOfDeliveryDate, String deliveredDate, String status, Pageable pageable);
 
 }

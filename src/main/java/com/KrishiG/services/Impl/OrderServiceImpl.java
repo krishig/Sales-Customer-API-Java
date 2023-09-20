@@ -201,16 +201,20 @@ public class OrderServiceImpl implements OrderService {
         int deliveredCount = 0;
         int orderCount = 0;
         int pendingDeliveryCount = 0;
+
         outOfDeliveryCount = getCountForOutOfDelivery(currentDate);
         deliveredCount = getCountForDelivered(currentDate);
         orderCount = getCountForOrder(currentDate);
         pendingDeliveryCount = getCountForPendingDelivery(currentDate);
         Double totalPrice = orderRepository.getTotalPrice(currentDate, Status.DELIVERED.toString());
+        if(totalPrice==null) {
+            totalPrice = 0.0;
+        }
         orderDetailsAndCountResponseDto.setOutOfDeliveryCount(outOfDeliveryCount);
         orderDetailsAndCountResponseDto.setDeliveredCount(deliveredCount);
         orderDetailsAndCountResponseDto.setTotalOrderCount(orderCount);
         orderDetailsAndCountResponseDto.setPendingDeliveryCount(pendingDeliveryCount);
-        orderDetailsAndCountResponseDto.setTotalCash(Math.round(totalPrice));
+        orderDetailsAndCountResponseDto.setTotalCash(Double.valueOf(disFormat.format(totalPrice)));
 
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
@@ -299,8 +303,8 @@ public class OrderServiceImpl implements OrderService {
         String orderId1 = orderId != "" ? "%" + orderId+ "%" : null;
         String status1 = status != "" ? status : null;
         String createdDate1 = createdDate != null ? "%" + simpleDateFormat.format(createdDate) + "%" : null;
-        String outOfDeliveryDate1 = outOfDeliveryDate != null ? simpleDateFormat.format(outOfDeliveryDate) : null;
-        String deliveredDate1 = deliveredDate != null ? simpleDateFormat.format(deliveredDate) : null;
+        String outOfDeliveryDate1 = outOfDeliveryDate != null ? "%" + simpleDateFormat.format(outOfDeliveryDate) + "%" : null;
+        String deliveredDate1 = deliveredDate != null ? "%" + simpleDateFormat.format(deliveredDate) + "%" : null;
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page = orderRepository.getOrderDetailsByKeyword(orderId1, createdDate1, outOfDeliveryDate1, deliveredDate1, status1, pageable);
