@@ -23,11 +23,11 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
 
     Page<Orders> findByOrderIdLike(String orderId, Pageable pageable);
 
-    @Query(value = "select count(*) from krishig_db.orders o where o.out_of_delivered_at LIKE %?1% ", nativeQuery = true)
-    public int getCountForOutOfDeliveryByDateAndStatus(String date);
+    @Query(value = "select count(*) from krishig_db.orders o where o.out_of_delivered_at LIKE %?1% AND o.status=?2", nativeQuery = true)
+    public int getCountForOutOfDeliveryByDateAndStatus(String date, String status);
 
-    @Query(value = "select count(*) from krishig_db.orders o where o.closed_at LIKE %?1%", nativeQuery = true)
-    public int getCountForDeliveredByDateAndStatus(String date);
+    @Query(value = "select count(*) from krishig_db.orders o where o.closed_at LIKE %?1% AND o.status=?2", nativeQuery = true)
+    public int getCountForDeliveredByDateAndStatus(String date, String status);
 
     @Query(value = "select count(*) from krishig_db.orders o where o.created_at LIKE %?1%", nativeQuery = true)
     public int getCountForOrderByDateAndStatus(String date);
@@ -35,11 +35,11 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
     @Query(value = "select count(*) from krishig_db.orders o where DATE(o.out_of_delivered_at)< ?1", nativeQuery = true)
     public int getCountForPendingDeliveredByDate(String date);
 
-    @Query(value = "select * from krishig_db.orders o where o.out_of_delivered_at LIKE %?1%", nativeQuery = true)
-    public Page<Orders> findByOutOfDeliveryDateAndStatus(String date, Pageable pageable);
+    @Query(value = "select * from krishig_db.orders o where o.out_of_delivered_at LIKE %?1% AND o.status=?2", nativeQuery = true)
+    public Page<Orders> findByOutOfDeliveryDateAndStatus(String date, String status, Pageable pageable);
 
-    @Query(value = "select * from krishig_db.orders o where o.closed_at LIKE %?1%", nativeQuery = true)
-    public Page<Orders> findByClosedDateAndStatus(String date, Pageable pageable);
+    @Query(value = "select * from krishig_db.orders o where o.closed_at LIKE %?1%, o.status=?2", nativeQuery = true)
+    public Page<Orders> findByClosedDateAndStatus(String date, String status, Pageable pageable);
 
     @Query(value = "select * from krishig_db.orders o where o.created_at LIKE %?1%", nativeQuery = true)
     public Page<Orders> findByCreatedDateAndStatus(String date, Pageable pageable);
@@ -51,7 +51,7 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
             "select sum(sum_amount) from order_date", nativeQuery = true)
     public Double getTotalPrice(String Date, String status);
 
-    @Query(value = "select * from krishig_db.orders o where o.order_id LIKE ?1 OR o.created_at LIKE ?2 OR o.out_of_delivered_at OR ?3 OR o.closed_at LIKE ?4 OR o.status = ?5", nativeQuery = true)
+    @Query(value = "select * from krishig_db.orders o where o.order_id LIKE ?1 OR o.created_at LIKE ?2 OR o.out_of_delivered_at LIKE ?3 OR o.closed_at LIKE ?4 OR o.status = ?5", nativeQuery = true)
     public Page<Orders> getOrderDetailsByKeyword(String orderId, String createdDate, String outOfDeliveryDate, String deliveredDate, String status, Pageable pageable);
 
 }

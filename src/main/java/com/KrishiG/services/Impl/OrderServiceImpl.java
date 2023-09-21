@@ -219,9 +219,9 @@ public class OrderServiceImpl implements OrderService {
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         switch (status) {
-            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(currentDate, pageable);
+            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(currentDate, status.toString(), pageable);
                 break;
-            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(currentDate, pageable);
+            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(currentDate, status.toString(), pageable);
                 break;
             case OPEN: page = orderRepository.findByCreatedDateAndStatus(currentDate, pageable);
             break;
@@ -328,10 +328,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private int getCountForOutOfDelivery(String date) {
-        return orderRepository.getCountForOutOfDeliveryByDateAndStatus(date);
+        return orderRepository.getCountForOutOfDeliveryByDateAndStatus(date, Status.OUT_OF_DELIVERED.toString());
     }
     private int getCountForDelivered(String date) {
-        return orderRepository.getCountForDeliveredByDateAndStatus(date);
+        return orderRepository.getCountForDeliveredByDateAndStatus(date, Status.DELIVERED.toString());
     }
 
     private int getCountForOrder(String date) {
