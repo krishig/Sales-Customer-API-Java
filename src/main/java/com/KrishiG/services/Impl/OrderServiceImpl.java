@@ -302,9 +302,9 @@ public class OrderServiceImpl implements OrderService {
                                                         Date deliveredDate, String status) {
         String orderId1 = orderId != "" ? "%" + orderId+ "%" : null;
         String status1 = status != "" ? status : null;
-        String createdDate1 = createdDate != null ? "%" + simpleDateFormat.format(createdDate) + "%" : null;
-        String outOfDeliveryDate1 = outOfDeliveryDate != null ? "%" + simpleDateFormat.format(outOfDeliveryDate) + "%" : null;
-        String deliveredDate1 = deliveredDate != null ? "%" + simpleDateFormat.format(deliveredDate) + "%" : null;
+        String createdDate1 = createdDate != null ? "%" + simpleDateFormat.format(createdDate) + "%" : "%%";
+        String outOfDeliveryDate1 = outOfDeliveryDate != null ? "%" + simpleDateFormat.format(outOfDeliveryDate) + "%" : "%%";
+        String deliveredDate1 = deliveredDate != null ? "%" + simpleDateFormat.format(deliveredDate) + "%" : "%%";
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page = orderRepository.getOrderDetailsByKeyword(orderId1, createdDate1, outOfDeliveryDate1, deliveredDate1, status1, pageable);
