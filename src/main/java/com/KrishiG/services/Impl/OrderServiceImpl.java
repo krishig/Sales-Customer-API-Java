@@ -219,13 +219,13 @@ public class OrderServiceImpl implements OrderService {
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         switch (status) {
-            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(currentDate, status.toString(), pageable);
+            case OUT_OF_DELIVERED : page = orderRepository.findByOutOfDeliveryDateAndStatus(currentDate, pageable);
                 break;
-            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(currentDate, status.toString(), pageable);
+            case DELIVERED: page = orderRepository.findByClosedDateAndStatus(currentDate, pageable);
                 break;
-            case OPEN: page = orderRepository.findByCreatedDateAndStatus(currentDate, status.toString(), pageable);
+            case OPEN: page = orderRepository.findByCreatedDateAndStatus(currentDate, pageable);
             break;
-            default: page = orderRepository.findByPendingDeliveredByDate(currentDate, Status.OUT_OF_DELIVERED.toString(), pageable);
+            default: page = orderRepository.findByPendingDeliveredByDate(currentDate, pageable);
         }
         //pageNumber starts from 1
 
@@ -328,18 +328,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private int getCountForOutOfDelivery(String date) {
-        return orderRepository.getCountForOutOfDeliveryByDateAndStatus(date, Status.OUT_OF_DELIVERED.toString());
+        return orderRepository.getCountForOutOfDeliveryByDateAndStatus(date);
     }
     private int getCountForDelivered(String date) {
-        return orderRepository.getCountForDeliveredByDateAndStatus(date, Status.DELIVERED.toString());
+        return orderRepository.getCountForDeliveredByDateAndStatus(date);
     }
 
     private int getCountForOrder(String date) {
-        return orderRepository.getCountForOrderByDateAndStatus(date, Status.OPEN.toString());
+        return orderRepository.getCountForOrderByDateAndStatus(date);
     }
 
     private int getCountForPendingDelivery(String  date) {
-        return orderRepository.getCountForPendingDeliveredByDate(date, Status.OUT_OF_DELIVERED.toString());
+        return orderRepository.getCountForPendingDeliveredByDate(date);
     }
    /* public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {
         logger.info("Inside savePaymentMethod");
