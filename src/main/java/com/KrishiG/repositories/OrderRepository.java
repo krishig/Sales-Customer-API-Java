@@ -38,7 +38,7 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
     @Query(value = "select * from krishig_db.orders o where o.out_of_delivered_at LIKE %?1% AND o.status=?2", nativeQuery = true)
     public Page<Orders> findByOutOfDeliveryDateAndStatus(String date, String status, Pageable pageable);
 
-    @Query(value = "select * from krishig_db.orders o where o.closed_at LIKE %?1%, o.status=?2", nativeQuery = true)
+    @Query(value = "select * from krishig_db.orders o where o.closed_at LIKE %?1% AND o.status=?2", nativeQuery = true)
     public Page<Orders> findByClosedDateAndStatus(String date, String status, Pageable pageable);
 
     @Query(value = "select * from krishig_db.orders o where o.created_at LIKE %?1%", nativeQuery = true)
