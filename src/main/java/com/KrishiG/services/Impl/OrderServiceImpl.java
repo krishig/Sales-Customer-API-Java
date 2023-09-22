@@ -9,13 +9,13 @@ import com.KrishiG.repositories.*;
 import com.KrishiG.services.OrderService;
 import com.KrishiG.util.PriceCalculation;
 import com.KrishiG.util.Status;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -64,6 +64,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private DeliveryAddressRepository deliveryAddressRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto, Long userId) {
@@ -292,6 +295,7 @@ public class OrderServiceImpl implements OrderService {
         return responseEntity;
     }
 
+
     @Override
     public ResponseEntity<Object> getSearchOrderDetails(int pageNumber,
                                                         int pageSize, String sortBy,
@@ -300,14 +304,32 @@ public class OrderServiceImpl implements OrderService {
                                                         Date createdDate,
                                                         Date outOfDeliveryDate,
                                                         Date deliveredDate, String status) {
-        String orderId1 = orderId != "" ? "%" + orderId+ "%" : null;
-        String status1 = status != "" ? status : null;
-        String createdDate1 = createdDate != null ? "%" + simpleDateFormat.format(createdDate) + "%" : "%%";
-        String outOfDeliveryDate1 = outOfDeliveryDate != null ? "%" + simpleDateFormat.format(outOfDeliveryDate) + "%" : "%%";
-        String deliveredDate1 = deliveredDate != null ? "%" + simpleDateFormat.format(deliveredDate) + "%" : "%%";
-        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Sort sort = Sort.by("id").descending();
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
-        Page<Orders> page = orderRepository.getOrderDetailsByKeyword(orderId1, createdDate1, outOfDeliveryDate1, deliveredDate1, status1, pageable);
+        Page<Orders> page = orderRepository.findAll((root,criteriaQuery,criteriaBuilder) -> {
+
+            List<Predicate> predicates = new ArrayList<>();
+            if(orderId != null && orderId != "") {
+                predicates.add(criteriaBuilder.equal(root.get("orderId"), "%"+orderId+"%"));
+            }
+            if(createdDate != null) {
+                String createdDateStr = simpleDateFormat.format(createdDate);
+                predicates.add(criteriaBuilder.like(root.get("createdDate"), "%"+createdDateStr+"%"));
+            }
+            if(outOfDeliveryDate != null) {
+                String outOfDeliveryDateStr = simpleDateFormat.format(outOfDeliveryDate);
+                predicates.add(criteriaBuilder.like(root.get("outOfDeliveryDate"), "%" + outOfDeliveryDateStr + "%"));
+            }
+            if(deliveredDate != null) {
+                String deliveredDateStr = simpleDateFormat.format(deliveredDate);
+                predicates.add(criteriaBuilder.like(root.get("closedDate"), "%" + deliveredDateStr + "%"));
+            }
+            if(status != null && status != "") {
+                predicates.add(criteriaBuilder.equal(root.get("status"), Status.valueOf(status)));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+        }, pageable);
+
         if (page.isEmpty()) {
             logger.info("Order is not available with the given Order No");
             throw new ResourceNotFoundException("Order is not available with the given Order No");

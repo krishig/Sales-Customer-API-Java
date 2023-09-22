@@ -6,6 +6,7 @@ import com.KrishiG.util.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Orders, Long> {
+public interface OrderRepository extends JpaRepository<Orders, Long>, JpaSpecificationExecutor<Orders> {
     List<Orders> findByCustomerId(Customer customer);
 
     Page<Orders> findByCreatedBy(Long userId, Pageable pageable);
@@ -51,7 +52,8 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
             "select sum(sum_amount) from order_date", nativeQuery = true)
     public Double getTotalPrice(String Date, String status);
 
-    @Query(value = "select * from krishig_db.orders o where o.order_id LIKE ?1 AND o.created_at LIKE ?2 AND o.out_of_delivered_at LIKE ?3 AND o.closed_at LIKE ?4 AND o.status = ?5", nativeQuery = true)
-    public Page<Orders> getOrderDetailsByKeyword(String orderId, String createdDate, String outOfDeliveryDate, String deliveredDate, String status, Pageable pageable);
+    @Query(value = "select * from krishig_db.orders o " +
+            "where (:createdDate is null or o.created_at like '%:createdDate%') AND (:status is null or o.status = status)", nativeQuery = true)
+    public Page<Orders> getOrderDetailsByKeyword(@Param("createdDate") String createdDate, @Param("status") String status, Pageable pageable);
 
 }
