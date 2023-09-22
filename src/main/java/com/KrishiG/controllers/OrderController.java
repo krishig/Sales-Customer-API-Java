@@ -98,7 +98,7 @@ public class OrderController {
 
     @GetMapping("/getDetails/all/{currentDate}")
     public ResponseEntity<Object> getOrderDetails(@PathVariable("currentDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
-                                                  @PathParam("status") @DefaultValue("OUT_OF_DELIVERED") Status status,
+                                                  @RequestParam(value = "status", required = false, defaultValue = "OUT_OF_DELIVERED") Status status,
                                                   @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
                                                   @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
