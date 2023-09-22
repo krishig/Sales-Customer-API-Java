@@ -196,8 +196,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<Object> getAllOrdersDetails(Date date, Status status, int pageNumber, int pageSize, String sortBy, String sortDir) {
         OrderDetailsAndCountResponseDto orderDetailsAndCountResponseDto = new OrderDetailsAndCountResponseDto();
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String currentDate = simpleDateFormat.format(date);
         Page<Orders> page = null;
         int outOfDeliveryCount = 0;
@@ -228,7 +226,7 @@ public class OrderServiceImpl implements OrderService {
                 break;
             case OPEN: page = orderRepository.findByCreatedDateAndStatus(currentDate, pageable);
             break;
-            default: page = orderRepository.findByPendingDeliveredByDate(currentDate, pageable);
+            default: page = orderRepository.findByPendingDeliveredByDate(currentDate, Status.OUT_OF_DELIVERED.toString(), pageable);
         }
         //pageNumber starts from 1
 
@@ -361,7 +359,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private int getCountForPendingDelivery(String  date) {
-        return orderRepository.getCountForPendingDeliveredByDate(date);
+        return orderRepository.getCountForPendingDeliveredByDate(date, Status.OUT_OF_DELIVERED.toString());
     }
    /* public PaymentMethod savePaymentMethod(OrderRequestDto orderRequestDto) {
         logger.info("Inside savePaymentMethod");
