@@ -328,21 +328,24 @@ public class OrderServiceImpl implements OrderService {
             return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
         }, pageable);
 
-        if (page.isEmpty()) {
-            logger.info("Order is not available with the given Order No");
-            throw new ResourceNotFoundException("Order is not available with the given Order No");
-        }
-        List<Orders> orders = page.getContent();
-
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-
+        List<OrderResponseDto> dtoList = new ArrayList<>();
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
+
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
+
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         return responseEntity;
     }
