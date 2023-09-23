@@ -308,7 +308,7 @@ public class OrderServiceImpl implements OrderService {
 
             List<Predicate> predicates = new ArrayList<>();
             if(orderId != null && orderId != "") {
-                predicates.add(criteriaBuilder.equal(root.get("orderId"), "%"+orderId+"%"));
+                predicates.add(criteriaBuilder.like(root.get("orderId"), "%"+orderId+"%"));
             }
             if(createdDate != null) {
                 String createdDateStr = simpleDateFormat.format(createdDate);
