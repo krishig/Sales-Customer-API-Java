@@ -59,10 +59,10 @@ public class GlobalExceptionHandler {
         ApiResponseExceptionMessage response = ApiResponseExceptionMessage
                 .builder()
                 .message(ex.getMessage())
-                .httpStatus(HttpStatus.BAD_REQUEST)
+                .httpStatus(HttpStatus.OK)
                 .success(false)
                 .error(true)
                 .build();
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

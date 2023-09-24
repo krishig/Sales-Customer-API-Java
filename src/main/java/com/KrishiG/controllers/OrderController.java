@@ -130,7 +130,9 @@ public class OrderController {
                                                     @PathParam("createdDate")  @DateTimeFormat(pattern = "yyyy-MM-dd") Date createdDate,
                                                     @PathParam("outOfDeliveryDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date outOfDeliveryDate,
                                                     @PathParam("deliveredDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date deliveredDate,
-                                                    @PathParam("status") String status) {
+                                                    @PathParam("status") String status,
+                                                    @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> response = orderService.getSearchOrderDetails(pageNumber, pageSize, sortBy, sortDir, orderId, createdDate, outOfDeliveryDate, deliveredDate, status);
         return response;
     }
