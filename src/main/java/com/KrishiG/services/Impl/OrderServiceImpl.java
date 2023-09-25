@@ -9,13 +9,13 @@ import com.KrishiG.repositories.*;
 import com.KrishiG.services.OrderService;
 import com.KrishiG.util.PriceCalculation;
 import com.KrishiG.util.Status;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -64,6 +64,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private DeliveryAddressRepository deliveryAddressRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Override
     public ResponseEntity<Object> bookOrder(OrderRequestDto orderRequestDto, Long userId) {
@@ -122,22 +125,23 @@ public class OrderServiceImpl implements OrderService {
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
 
         //pageNumber starts from 1
+        List<OrderResponseDto> dtoList = new ArrayList<>();
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page = orderRepository.findAll(pageable);
-        if (page.isEmpty()) {
-            logger.info("Order is not available");
-            throw new ResourceNotFoundException("Order is not available");
-        }
-        List<Orders> orders = page.getContent();
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         logger.info("Sent all the Orders");
         return responseEntity;
@@ -193,8 +197,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<Object> getAllOrdersDetails(Date date, Status status, int pageNumber, int pageSize, String sortBy, String sortDir) {
         OrderDetailsAndCountResponseDto orderDetailsAndCountResponseDto = new OrderDetailsAndCountResponseDto();
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String currentDate = simpleDateFormat.format(date);
         Page<Orders> page = null;
         int outOfDeliveryCount = 0;
@@ -223,7 +225,7 @@ public class OrderServiceImpl implements OrderService {
                 break;
             case DELIVERED: page = orderRepository.findByClosedDateAndStatus(currentDate, status.toString(), pageable);
                 break;
-            case OPEN: page = orderRepository.findByCreatedDateAndStatus(currentDate, status.toString(), pageable);
+            case OPEN: page = orderRepository.findByCreatedDateAndStatus(currentDate, pageable);
             break;
             default: page = orderRepository.findByPendingDeliveredByDate(currentDate, Status.OUT_OF_DELIVERED.toString(), pageable);
         }
@@ -246,51 +248,56 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<Object> getOrderDetailsBySalesUserId(int pageNumber, int pageSize, String sortBy, String sortDir, Long userId) {
+        List<OrderResponseDto> dtoList = new ArrayList<>();
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page =  orderRepository.findByCreatedBy(userId, pageable);
-        if (page.isEmpty()) {
-            logger.info("Order is not available for userId");
-            throw new ResourceNotFoundException("Order is not available for userId");
-        }
-        List<Orders> orders = page.getContent();
-
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
+
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Object> getOrderByOrderNumber(int pageNumber, int pageSize, String sortBy, String sortDir,String orderId) {
+        List<OrderResponseDto> dtoList = new ArrayList<>();
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page = orderRepository.findByOrderIdLike("%" + orderId + "%", pageable);
-        if (page.isEmpty()) {
-            logger.info("Order is not available with the given Order No");
-            throw new ResourceNotFoundException("Order is not available with the given Order No");
-        }
-        List<Orders> orders = page.getContent();
-
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
+
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         return responseEntity;
     }
+
 
     @Override
     public ResponseEntity<Object> getSearchOrderDetails(int pageNumber,
@@ -300,29 +307,50 @@ public class OrderServiceImpl implements OrderService {
                                                         Date createdDate,
                                                         Date outOfDeliveryDate,
                                                         Date deliveredDate, String status) {
-        String orderId1 = orderId != "" ? "%" + orderId+ "%" : null;
-        String status1 = status != "" ? status : null;
-        String createdDate1 = createdDate != null ? "%" + simpleDateFormat.format(createdDate) + "%" : null;
-        String outOfDeliveryDate1 = outOfDeliveryDate != null ? "%" + simpleDateFormat.format(outOfDeliveryDate) + "%" : null;
-        String deliveredDate1 = deliveredDate != null ? "%" + simpleDateFormat.format(deliveredDate) + "%" : null;
-        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Sort sort = Sort.by("id").descending();
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
-        Page<Orders> page = orderRepository.getOrderDetailsByKeyword(orderId1, createdDate1, outOfDeliveryDate1, deliveredDate1, status1, pageable);
-        if (page.isEmpty()) {
-            logger.info("Order is not available with the given Order No");
-            throw new ResourceNotFoundException("Order is not available with the given Order No");
-        }
-        List<Orders> orders = page.getContent();
+        Page<Orders> page = orderRepository.findAll((root,criteriaQuery,criteriaBuilder) -> {
 
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+            List<Predicate> predicates = new ArrayList<>();
+            if(orderId != null && orderId != "") {
+                predicates.add(criteriaBuilder.like(root.get("orderId"), "%"+orderId+"%"));
+            }
+            if(createdDate != null) {
+                String createdDateStr = simpleDateFormat.format(createdDate);
+                predicates.add(criteriaBuilder.like(root.get("createdDate"), "%"+createdDateStr+"%"));
+            }
+            if(outOfDeliveryDate != null) {
+                String outOfDeliveryDateStr = simpleDateFormat.format(outOfDeliveryDate);
+                predicates.add(criteriaBuilder.like(root.get("outOfDeliveryDate"), "%" + outOfDeliveryDateStr + "%"));
+            }
+            if(deliveredDate != null) {
+                String deliveredDateStr = simpleDateFormat.format(deliveredDate);
+                predicates.add(criteriaBuilder.like(root.get("closedDate"), "%" + deliveredDateStr + "%"));
+            }
+            if(status != null && status != "") {
+                predicates.add(criteriaBuilder.equal(root.get("status"), Status.valueOf(status)));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+        }, pageable);
 
+        List<OrderResponseDto> dtoList = new ArrayList<>();
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
+
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
+
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         return responseEntity;
     }
@@ -335,7 +363,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private int getCountForOrder(String date) {
-        return orderRepository.getCountForOrderByDateAndStatus(date, Status.OPEN.toString());
+        return orderRepository.getCountForOrderByDateAndStatus(date);
     }
 
     private int getCountForPendingDelivery(String  date) {

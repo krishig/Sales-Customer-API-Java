@@ -98,7 +98,7 @@ public class OrderController {
 
     @GetMapping("/getDetails/all/{currentDate}")
     public ResponseEntity<Object> getOrderDetails(@PathVariable("currentDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
-                                                  @PathParam("status") @DefaultValue("OUT_OF_DELIVERED") Status status,
+                                                  @RequestParam(value = "status", required = false, defaultValue = "OUT_OF_DELIVERED") Status status,
                                                   @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
                                                   @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
@@ -130,7 +130,9 @@ public class OrderController {
                                                     @PathParam("createdDate")  @DateTimeFormat(pattern = "yyyy-MM-dd") Date createdDate,
                                                     @PathParam("outOfDeliveryDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date outOfDeliveryDate,
                                                     @PathParam("deliveredDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date deliveredDate,
-                                                    @PathParam("status") String status) {
+                                                    @PathParam("status") String status,
+                                                    @RequestHeader Map<String, String> header) {
+        Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> response = orderService.getSearchOrderDetails(pageNumber, pageSize, sortBy, sortDir, orderId, createdDate, outOfDeliveryDate, deliveredDate, status);
         return response;
     }
