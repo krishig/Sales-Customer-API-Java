@@ -125,22 +125,23 @@ public class OrderServiceImpl implements OrderService {
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
 
         //pageNumber starts from 1
+        List<OrderResponseDto> dtoList = new ArrayList<>();
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page = orderRepository.findAll(pageable);
-        if (page.isEmpty()) {
-            logger.info("Order is not available");
-            throw new ResourceNotFoundException("Order is not available");
-        }
-        List<Orders> orders = page.getContent();
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         logger.info("Sent all the Orders");
         return responseEntity;
@@ -247,48 +248,52 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<Object> getOrderDetailsBySalesUserId(int pageNumber, int pageSize, String sortBy, String sortDir, Long userId) {
+        List<OrderResponseDto> dtoList = new ArrayList<>();
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page =  orderRepository.findByCreatedBy(userId, pageable);
-        if (page.isEmpty()) {
-            logger.info("Order is not available for userId");
-            throw new ResourceNotFoundException("Order is not available for userId");
-        }
-        List<Orders> orders = page.getContent();
-
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
+
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Object> getOrderByOrderNumber(int pageNumber, int pageSize, String sortBy, String sortDir,String orderId) {
+        List<OrderResponseDto> dtoList = new ArrayList<>();
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
         Page<Orders> page = orderRepository.findByOrderIdLike("%" + orderId + "%", pageable);
-        if (page.isEmpty()) {
-            logger.info("Order is not available with the given Order No");
-            throw new ResourceNotFoundException("Order is not available with the given Order No");
-        }
-        List<Orders> orders = page.getContent();
-
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
-        response.setContent(dtoList);
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
         response.setTotalElements(page.getTotalElements());
         response.setTotalPages(page.getTotalPages());
         response.setLastPage(page.isLast());
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
+
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         return responseEntity;
     }
