@@ -35,6 +35,8 @@ public class CustomerAddress {
     @Column(name = "village_name")
     private String villageName;
 
+    private String block;
+
     private String district;
 
     private String state;

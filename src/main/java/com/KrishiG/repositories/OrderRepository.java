@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Long>, JpaSpecificationExecutor<Orders> {
-    List<Orders> findByCustomerId(Customer customer);
+    Page<Orders> findByCustomerId(Customer customer, Pageable pageable);
 
     Page<Orders> findByCreatedBy(Long userId, Pageable pageable);
 
