@@ -1,0 +1,517 @@
+[33mcommit b5810c4e0363654d872acd263d66b8dd754f3d7b[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Merge: 57072a2 0eef15c
+Author: sanil <sanilguptagpt18@gmail.com>
+Date:   Sun Nov 5 16:10:57 2023 +0530
+
+    Merge branch 'Development' of https://github.com/krishig/Sales-Customer-API-Java
+
+[33mcommit 0eef15c2051d5cb0a70ab0e9f3549f70834bafc4[m
+Merge: 14a4181 5f35a42
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Sun Nov 5 16:07:28 2023 +0530
+
+    Merge pull request #40 from krishig/master
+    
+    merging request for master to development
+
+[33mcommit 57072a28c5d5ad7c6d5bc98b73ff8af2c2826446[m
+Author: sanil <sanilguptagpt18@gmail.com>
+Date:   Sun Nov 5 15:55:12 2023 +0530
+
+    Added Swagger Documentation
+
+[33mcommit 5f35a422e6b4a34351abfb40279f9b0d4b2f0714[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Oct 16 11:51:24 2023 +0530
+
+    changes in time in JWT token
+
+[33mcommit 1c3d6dcc07125795035033210e5ca30fcf0b74ad[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Tue Oct 3 22:14:36 2023 +0530
+
+    change in jwt token util file
+
+[33mcommit 6a9990a63fbdf99d197c59462207a0ca10dc3be3[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Oct 2 13:52:43 2023 +0530
+
+    changes for testing
+
+[33mcommit c996719d112c42e9d639e77f277463b091b3f223[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Tue Sep 26 19:51:34 2023 +0530
+
+    add logger for api and block in address and search order by customer id issues
+
+[33mcommit 14a418108200b61fce742a167e4fa9b31d24bc16[m[33m ([m[1;31morigin/Development[m[33m, [m[1;32mDevelopment[m[33m)[m
+Merge: fa8e091 62504bb
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Tue Sep 26 00:34:36 2023 +0530
+
+    Merge pull request #39 from krishig/master
+    
+    merge
+
+[33mcommit 62504bb379f4f03e3a93055003f08c860854c31b[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Sep 25 23:12:24 2023 +0530
+
+    changes in order in all fetch functionility
+
+[33mcommit 69944f44c54c28d1fae8b7cb9f69665bf920aed4[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sun Sep 24 21:45:35 2023 +0530
+
+    changes for JWT Token
+
+[33mcommit efcd4ec449cbd4d2059db4891015f0b794a39325[m
+Merge: 436064d fa8e091
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Sun Sep 24 21:37:29 2023 +0530
+
+    Merge pull request #38 from krishig/Development
+    
+    Development
+
+[33mcommit 436064d468f24bf7a20e58034d8145c6f3848ad2[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sun Sep 24 21:20:53 2023 +0530
+
+    changes for token expire of JWT token
+
+[33mcommit 603ee3ef3725855c8f5c6623ee788e56615c23bc[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sun Sep 24 20:47:38 2023 +0530
+
+    Revert "changes for expired date of jwt token"
+    
+    This reverts commit 1257ed28f87a041d14c2ee338fe98afc2e5d6ce9.
+
+[33mcommit 1257ed28f87a041d14c2ee338fe98afc2e5d6ce9[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sun Sep 24 20:33:40 2023 +0530
+
+    changes for expired date of jwt token
+
+[33mcommit 793224f4ce3f7f987fa5b80e533660b91a18af46[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sat Sep 23 12:54:31 2023 +0530
+
+    changes in filter for order of admin
+
+[33mcommit 9e7c3e5a4f9effa784fbe14f98fc08d6d8a9a509[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sat Sep 23 11:25:23 2023 +0530
+
+    changes for filter in order page of admin
+
+[33mcommit 64f36b13a62503539fb92fb6c2a3e3f233e814d6[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sat Sep 23 00:55:24 2023 +0530
+
+    changes in home page
+
+[33mcommit f73315272c55ad4ad3cd006a0205774fc23fd1ec[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sat Sep 23 00:29:19 2023 +0530
+
+    changes in order filter for admin app
+
+[33mcommit 9d91de4e7602c7796915bec7a08c784b77733212[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Fri Sep 22 13:44:02 2023 +0530
+
+    Changes in home page for Admin
+
+[33mcommit caf0bec83da7ae3530f95d7f4f5849c0fcd19132[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Fri Sep 22 11:56:43 2023 +0530
+
+    changes in home page for admin
+
+[33mcommit 7749e39ca908545198ca6085c4cd027d954d27d4[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Fri Sep 22 00:22:30 2023 +0530
+
+    Changes in order page of admin
+
+[33mcommit 6010f35d75a35890b181bb94b64d2af03d6d598d[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Fri Sep 22 00:05:10 2023 +0530
+
+    changes in order page
+
+[33mcommit fd2e192eda9a8a66cc393e96f48962ded0aecea4[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Thu Sep 21 22:52:11 2023 +0530
+
+    changes for admin home page
+
+[33mcommit fa8e0914ba3b4fc3393b25943eb98c2f59663d1e[m
+Merge: c6cb760 c3be3d1
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Wed Sep 20 21:01:36 2023 +0530
+
+    Merge pull request #37 from krishig/master
+    
+    merge master to development
+
+[33mcommit c3be3d1f663e43943e00cc0432f4aecd571c240f[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Sep 20 20:54:59 2023 +0530
+
+    issue resolved for 500 internal server error for admin home page
+
+[33mcommit 99d4d0c8bf4dfb1f5ded083a8a2b529e778c0836[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Tue Sep 19 13:48:06 2023 +0530
+
+    changes in customer address
+
+[33mcommit c6cb76058ead538d3773c98764f71dcb14a8870d[m
+Merge: 51357fd 6d276b6
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Mon Sep 18 23:36:50 2023 +0530
+
+    Merge pull request #36 from krishig/master
+    
+    merge master to development
+
+[33mcommit 6d276b664e7877d554c4ab9f8917cb9b65a7f8c3[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Sep 18 23:35:44 2023 +0530
+
+    changes in delivery address
+
+[33mcommit 39c94153b7570ddb520ae6c5afe4b35bc4686d73[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Sep 18 23:27:37 2023 +0530
+
+    changes in delivery address
+
+[33mcommit 51357fd40f140e12e31d661025bf88e87e90f6fe[m
+Merge: 75f03ee 1b90919
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Mon Sep 18 23:03:20 2023 +0530
+
+    Merge pull request #35 from krishig/master
+    
+    added new entity class for Delivery Address
+
+[33mcommit 1b90919cc065685532f4826cc624d72f493cc366[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Sep 18 23:02:21 2023 +0530
+
+    added new entity class for Delivery Address
+
+[33mcommit 75f03eee26a7c7ed7ecbc1dded6e50b2c2bf435a[m
+Merge: 8cfe930 8bdf2b9
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Mon Sep 18 20:20:29 2023 +0530
+
+    Merge pull request #34 from krishig/master
+    
+    changes related only two digit dicimal should come
+
+[33mcommit 8bdf2b95c11b08763eda0fe256d6cafcaa5dbd4f[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Sep 18 20:18:47 2023 +0530
+
+    changes related decimal for Order details
+
+[33mcommit 95a27c9d8a5dc5cee326513ff86064175f807ba0[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Sep 18 12:11:28 2023 +0530
+
+    changes related only two digit dicimal should come
+
+[33mcommit 8cfe930de0fe29ecdb80eb2289eb34b13e74ef29[m
+Merge: 9743e9b c2f690f
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Sun Sep 17 15:45:23 2023 +0530
+
+    Merge pull request #33 from krishig/master
+    
+    changes in order module
+
+[33mcommit c2f690f598e607a7642a9d3425621ebcd35b55cb[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sun Sep 17 15:38:41 2023 +0530
+
+    changes in order module
+
+[33mcommit 9743e9b20c49e512212fbcd93a47372c708a2a6d[m
+Merge: ac05c45 b8545a2
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Sun Sep 17 15:16:45 2023 +0530
+
+    Merge pull request #32 from krishig/master
+    
+    changes in order module
+
+[33mcommit b8545a2716fbe66f6076869d9d62236c1426d3b4[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sun Sep 17 15:12:48 2023 +0530
+
+    changes in order module
+
+[33mcommit ac05c4544b43b3854beb0af692635949e6557e6e[m
+Merge: bfe2559 c8bb1e1
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Sat Sep 16 21:26:17 2023 +0530
+
+    Merge pull request #31 from krishig/master
+    
+    merge master to development
+
+[33mcommit c8bb1e12361a7c156121b954beb578d64a3846d4[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sat Sep 16 17:11:48 2023 +0530
+
+    changes for order module
+
+[33mcommit eefcdb8dd58c2881bc0bffbbd3ecb842bb04808f[m
+Merge: 9f3e5a8 bfe2559
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Sat Sep 16 13:43:13 2023 +0530
+
+    Merge pull request #30 from krishig/Development
+    
+    changes in orders module
+
+[33mcommit bfe2559898dc30e5ade332bf5fb15054af40b5ff[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Sat Sep 16 13:34:50 2023 +0530
+
+    changes in orders module
+
+[33mcommit 9f3e5a814961f5a4ec59b55a528a5d78d8331a5b[m
+Merge: b384590 5c7aeed
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Mon Sep 11 20:01:26 2023 +0530
+
+    Merge pull request #29 from krishig/Development
+    
+    Development
+
+[33mcommit 5c7aeed6292094834e8578d0a77e0e67eb2b6620[m
+Merge: 3ad35d6 06df989
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Sep 11 19:59:15 2023 +0530
+
+    Merge branch 'Development' of https://github.com/krishig/Sales-Customer-API-Java into Development
+
+[33mcommit 3ad35d6b39dabcc0be038a57e67a6d9af0c357fd[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Mon Sep 11 19:57:58 2023 +0530
+
+    Orders related changes
+
+[33mcommit b384590c7d6454f20a03985c3038b8dab954138f[m
+Merge: e82e813 06df989
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Thu Sep 7 19:05:25 2023 +0530
+
+    Merge pull request #28 from krishig/Development
+    
+    Development
+
+[33mcommit 06df9895a86a0a222011e8d8411c3af0c88bad2e[m
+Author: 07gaura <gouravlok@gmail.com>
+Date:   Thu Sep 7 19:03:32 2023 +0530
+
+    added java agent to track the app
+
+[33mcommit 4fdf488b3fc7a9f502fc33038082c2b89853adb2[m
+Merge: 0f9bb9c e82e813
+Author: 07gaura <gouravlok@gmail.com>
+Date:   Thu Sep 7 19:02:50 2023 +0530
+
+    Merge branch 'master' of https://github.com/krishig/Sales-Customer-API-Java
+
+[33mcommit 0f9bb9cbf9ae18faa5f5a8bc5d4421bba163af18[m
+Author: 07gaura <gouravlok@gmail.com>
+Date:   Thu Sep 7 19:02:17 2023 +0530
+
+    added java agent to track the app
+
+[33mcommit e82e813b2d642308850c1bb2bca760ea834f7468[m
+Merge: 49c7a05 6e3d2a3
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Thu Sep 7 18:17:48 2023 +0530
+
+    Merge pull request #27 from krishig/Development
+    
+    Development
+
+[33mcommit 6e3d2a392fa190d21e540a5f3b138a583bea6642[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Thu Sep 7 18:02:19 2023 +0530
+
+    changes in address
+
+[33mcommit bc7fb839eb8a1e9aebfcfee9ad0b1b535576f758[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Thu Sep 7 14:05:03 2023 +0530
+
+    changes according to mobile team
+
+[33mcommit 49c7a058dbde17f071e2afe45fa6cf46df21e26f[m
+Merge: 30ec8fe 924fbbf
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Wed Sep 6 21:33:39 2023 +0530
+
+    Merge pull request #26 from krishig/Development
+    
+    Development
+
+[33mcommit 924fbbf25da87f2ea0211e8f40460fc25887bc53[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Sep 6 20:51:52 2023 +0530
+
+    changes response for get cart products
+
+[33mcommit ca08f71c362fc2930a019772c7db3b1a9514fd71[m
+Merge: 8b5481e 30ec8fe
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Wed Sep 6 17:32:20 2023 +0530
+
+    Merge pull request #25 from krishig/master
+    
+    Merge master to Development
+
+[33mcommit 30ec8fe05a7c80ad501f2db4b3885c3274be6671[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Sep 6 17:29:43 2023 +0530
+
+    deleted app.log
+
+[33mcommit 5098734a595f89a0c44f2c8dc3800149eda867b0[m
+Merge: ee3d356 ed25e42
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Sep 6 17:27:13 2023 +0530
+
+    Merge branch 'master' of https://github.com/krishig/Sales-Customer-API-Java
+
+[33mcommit ee3d3560b440035b7da5859481227dd1d30c3eca[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Sep 6 17:26:53 2023 +0530
+
+    changes according to the mobile team
+
+[33mcommit ed25e42c6cf0cf7c512d673d9cdcc88c4364b952[m
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Tue Sep 5 15:32:13 2023 +0530
+
+    Update SubCategory.java
+    
+    changed the table name
+
+[33mcommit 56573a1455a3ced5dfa711849390afba703cf97e[m
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Tue Sep 5 15:19:27 2023 +0530
+
+    Update application.properties
+    
+    changed the db config in application.properties
+
+[33mcommit 2e4081b5ad0efda1849bcd3883dec9fda0445330[m
+Merge: 28b287f b30f64e
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Tue Sep 5 12:03:46 2023 +0530
+
+    Merge branch 'master' of https://github.com/krishig/Sales-Customer-API-Java
+
+[33mcommit 28b287fa92709da99fec6c9ae8d48bd541f11b8f[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Tue Sep 5 12:02:18 2023 +0530
+
+    merge in master
+
+[33mcommit 8b5481e152c471d08a426314c66fce448f9d8906[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Tue Sep 5 11:44:14 2023 +0530
+
+    changes in order status
+
+[33mcommit 29c686acb990b049e1dc91b17bad72af94c290ff[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Fri Aug 25 00:34:57 2023 +0530
+
+    changes in orders and customer
+
+[33mcommit 4bd36c6f900d00fda46cfbc28d6be7aae50915a8[m
+Author: sanil <sanilguptagpt18@gmail.com>
+Date:   Fri Aug 18 16:11:26 2023 +0530
+
+    implemented GetAllOrder and GetSpecific Order method and Controller
+
+[33mcommit b30f64ee44c3577cdec91795c6f2f9b2efb32bf6[m
+Merge: 9d58be8 b7a416d
+Author: Sanil Gupta <67214757+sanil-gupta@users.noreply.github.com>
+Date:   Thu Aug 10 01:20:10 2023 +0530
+
+    Merge pull request #24 from krishig/Development
+    
+    Development
+
+[33mcommit b7a416d4897cfd2dfe5a1461638cf9d0cad27003[m
+Author: sanil <sanilguptagpt18@gmail.com>
+Date:   Thu Aug 10 01:18:04 2023 +0530
+
+    Refecto code in CustomerController
+
+[33mcommit 75db85b8a7e940c53661af1354c1b654a1e2a022[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Thu Aug 10 00:39:36 2023 +0530
+
+    jwt token error response changes
+
+[33mcommit 9d58be87ed20f82eec23ac76860f428691a5ac4b[m
+Merge: 43d2a09 713351d
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Wed Aug 9 23:52:21 2023 +0530
+
+    Merge pull request #23 from krishig/Development
+    
+    Development
+
+[33mcommit 713351d7be95bcdbeb6e208258d146b669738482[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Aug 9 22:56:57 2023 +0530
+
+    resolved issue for zero is coming in postal code
+
+[33mcommit 2e7dbccf2d57549023ac795f104344dd39b975e9[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Aug 9 22:45:13 2023 +0530
+
+    changes for jwt token
+
+[33mcommit 43d2a098af883c35a801f55e7f8423cb0b5ee95d[m
+Merge: 74123ca e3a65c1
+Author: Gaurav Lokhande <46524941+07gaura@users.noreply.github.com>
+Date:   Wed Aug 9 16:55:23 2023 +0530
+
+    Merge pull request #22 from krishig/Development
+    
+    Development
+
+[33mcommit e3a65c11083721b83eb981fda51dae8fdd903fe0[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Aug 9 16:54:18 2023 +0530
+
+    Changes for jwt token
+
+[33mcommit 7d78b18580f16f15a592066aa0b1a687a6825f53[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Aug 9 16:50:11 2023 +0530
+
+    Changes for jwt token
+
+[33mcommit 6f32cd8c69d36f6d45bc465693327a2b80701256[m
+Author: devendra lokhande <devendra.lokhande06@gmail.com>
+Date:   Wed Aug 9 16:37:33 2023 +0530
+
+    commented changes for jwt token
