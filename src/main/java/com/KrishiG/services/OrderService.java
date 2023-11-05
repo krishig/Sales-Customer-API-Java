@@ -21,11 +21,13 @@ public interface OrderService {
 
     public ResponseEntity<Object> updateStatusByOrderId(Long orderId, StatusRequestDto status);
 
-    public ResponseEntity<Object> getOrderByCustomerId(Long customerId);
+    public ResponseEntity<Object> getOrderByCustomerId(int pageNumber,
+                                                       int pageSize, String sortBy,
+                                                       String sortDir, Long customerId);
 
     public ResponseEntity<Object> getAllOrdersDetails(Date dateTime, Status status, int pageNumber, int pageSize, String sortBy, String sortDir);
 
-    public ResponseEntity<Object> getOrderDetailsBySalesUserId(int pageNumber, int pageSize, String sortBy, String sortDir, Long userId);
+    public ResponseEntity<Object> getOrderDetailsBySalesUserId(int pageNumber, int pageSize, String sortBy, String sortDir, Long userId, Long customerId);
 
     public ResponseEntity<Object> getOrderByOrderNumber(int pageNumber, int pageSize, String sortBy, String sortDir, String orderNo);
 
