@@ -4,6 +4,10 @@ import com.KrishiG.dtos.request.CustomerAddressRequestDto;
 import com.KrishiG.dtos.request.CustomerRequestDto;
 import com.KrishiG.services.CustomerService;
 import com.KrishiG.util.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
@@ -17,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/customer")
 @CrossOrigin(origins={"*"}, maxAge = 4800)
+@Tag(name="CustomerController",description = "APIs for CustomerController!!")
 public class CustomerController {
 
     Logger logger = LoggerFactory.getLogger(CustomerController.class);
@@ -29,6 +34,13 @@ public class CustomerController {
 
     //create
     @PostMapping("/addCustomer")
+    @Operation(summary = "Create new customer ", description = "API for create new customer")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Success !! | Ok"),
+            @ApiResponse(responseCode = "401", description = "Not Authorized !!"),
+            @ApiResponse(responseCode = "201", description = "Created !!")
+
+    })
     public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto,
                                                  @RequestHeader Map<String, String> header) {
         logger.info("POST CALL API for add customer:>>>/customer/addCustomer");
@@ -40,6 +52,7 @@ public class CustomerController {
 
     //update
     @PutMapping("/{customerId}")
+    @Operation(description = "API for update customer")
     public ResponseEntity<Object> updateCustomer(@Valid @RequestBody CustomerRequestDto customerRequestDto, @PathVariable("customerId") Long customerId,
                                                  @RequestHeader Map<String, String> header) {
         logger.info("UPDATE CALL API for update customer and Address:>>>/customer/{customerId}");
@@ -51,6 +64,7 @@ public class CustomerController {
 
     //delete
     @DeleteMapping("/{customerId}")
+    @Operation(description = "API for delete customer")
     public ResponseEntity<Object> deleteCustomer(@PathVariable("customerId") Long customerId) {
         logger.info("DELETE CALL API for delete customer:>>>/customer/{customerId}");
         ResponseEntity<Object> responseEntity = customerService.deleteCustomer(customerId);
@@ -60,6 +74,7 @@ public class CustomerController {
 
     //getAll
     @GetMapping("/getAll")
+    @Operation(description = "API for get all customers")
     public ResponseEntity<Object> getAllCustomers( @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
                                                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
                                                                                   @RequestParam(value = "sortBy",defaultValue = "id",required = false) String sortBy,
@@ -77,6 +92,7 @@ public class CustomerController {
         return allCustomers;
     }
     @GetMapping("/findByMobile")
+    @Operation(description = "API for get customer by mobile number")
     public ResponseEntity<Object> getCustomerByMobile(@PathParam("mobileNumber") String mobileNumber,
                                                       @RequestParam(value = "pageNumber",defaultValue = "1",required = false) int pageNumber,
                                                       @RequestParam(value = "pageSize",defaultValue = "5",required = false) int pageSize,
@@ -95,6 +111,7 @@ public class CustomerController {
     }
 
     @GetMapping("/findById/{id}")
+    @Operation(description = "API for get customer by Id")
     public ResponseEntity<Object> getCustomerById(@PathVariable Long id, @RequestHeader Map<String, String> header) {
         logger.info("GET CALL API for get customer by customer id:>>>/customer/findById/{id}");
         Long userId = jwtUtil.getUserIdFromToken(header);
@@ -108,6 +125,7 @@ public class CustomerController {
     }
 
     @PostMapping("/address")
+    @Operation(description = "API for add address of customer")
     public ResponseEntity<Object> addAddressOfCustomer(@Valid @RequestBody CustomerAddressRequestDto addressDto, @RequestHeader Map<String, String> header) {
         logger.info("POST CALL API for add/update Address:>>>/customer/address");
         Long userId = jwtUtil.getUserIdFromToken(header);
@@ -121,6 +139,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/address/{addressId}")
+    @Operation(description = "API for delete address of customer")
     public ResponseEntity<Object> deleteAddress(@PathVariable Long addressId, @RequestHeader Map<String, String> header) {
         logger.info("DELETE CALL API for Delete Address:>>>/customer/address/{addressId}");
         Long userId = jwtUtil.getUserIdFromToken(header);
