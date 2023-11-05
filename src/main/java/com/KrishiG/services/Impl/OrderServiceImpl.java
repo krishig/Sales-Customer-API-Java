@@ -183,14 +183,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<Object> getOrderByCustomerId(Long customerId) {
-        List<Orders> orders = new ArrayList<>();
+    public ResponseEntity<Object> getOrderByCustomerId(int pageNumber, int pageSize, String sortBy, String sortDir, Long customerId) {
+        List<OrderResponseDto> dtoList = new ArrayList<>();
+        Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
+        Page<Orders> page = null;
         Optional<Customer> customer = customerRepository.findById(customerId);
         if(customer.isPresent()) {
-            orders = orderRepository.findByCustomerId(customer.get());
+            page = orderRepository.findByCustomerId(customer.get(), pageable);
         }
-        List<OrderResponseDto> dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
-        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, dtoList, false, true);
+        PageableResponse<OrderResponseDto> response = new PageableResponse<>();
+        response.setPageNumber(page.getNumber() + 1);
+        response.setPageSize(page.getSize());
+        response.setTotalElements(page.getTotalElements());
+        response.setTotalPages(page.getTotalPages());
+        response.setLastPage(page.isLast());
+        if (page.isEmpty()) {
+            response.setContent(dtoList);
+            ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
+            return responseEntity;
+        }
+        List<Orders> orders = page.getContent();
+
+        dtoList = orders.stream().map(orders1 -> convertEntityToDto(orders1)).collect(Collectors.toList());
+        response.setContent(dtoList);
+
+        ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(null, HttpStatus.OK, response, false, true);
         return responseEntity;
     }
 
@@ -247,11 +265,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<Object> getOrderDetailsBySalesUserId(int pageNumber, int pageSize, String sortBy, String sortDir, Long userId) {
+    public ResponseEntity<Object> getOrderDetailsBySalesUserId(int pageNumber, int pageSize, String sortBy, String sortDir, Long userId, Long customerId) {
         List<OrderResponseDto> dtoList = new ArrayList<>();
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? (Sort.by(sortBy).descending()) : (Sort.by(sortBy).ascending());
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, sort);
-        Page<Orders> page =  orderRepository.findByCreatedBy(userId, pageable);
+        Page<Orders> page = null;
+        if(customerId != null) {
+            Optional<Customer> customer = customerRepository.findById(customerId);
+            if(customer.isPresent()) {
+                page = orderRepository.findByCustomerId(customer.get(), pageable);
+            }
+        } else {
+            page = orderRepository.findByCreatedBy(userId, pageable);
+        }
         PageableResponse<OrderResponseDto> response = new PageableResponse<>();
         response.setPageNumber(page.getNumber() + 1);
         response.setPageSize(page.getSize());
