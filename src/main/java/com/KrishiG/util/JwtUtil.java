@@ -63,7 +63,7 @@ public class JwtUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime expDate = LocalDateTime.parse(dateStr, formatter);
-        if(expDate.plusMinutes(3).isBefore(currentDateTime)) {
+        if(expDate.plusDays(7).isBefore(currentDateTime)) {
             return true;
         }
         return false;
