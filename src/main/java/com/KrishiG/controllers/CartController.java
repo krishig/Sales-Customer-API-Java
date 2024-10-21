@@ -5,6 +5,10 @@ import com.KrishiG.dtos.request.CartProductsRequestDto;
 import com.KrishiG.services.CartProductService;
 import com.KrishiG.services.CartService;
 import com.KrishiG.util.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +22,7 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping("/cart")
+@Tag(name="CartController",description = "APIs for CartController!!")
 public class CartController {
 
     Logger logger = LoggerFactory.getLogger(CartController.class);
@@ -32,11 +37,16 @@ public class CartController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/addProduct")
+    @Operation(summary = "API for add product to cart ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Success !! | Ok"),
+            @ApiResponse(responseCode = "401", description = "Not Authorized !!")
+    })
     public ResponseEntity<Object> addProductToCart(@Valid @RequestBody CartProductsRequestDto cartProductsRequestDto,
                                                    @RequestHeader Map<String, String> header)
     {
         Long userId = jwtUtil.getUserIdFromToken(header);
-        logger.info("Inside CartController for addProduct ");
+        logger.info("POST CALL API for Add Product:>>>>/cart/addProduct");
         ResponseEntity<Object> responseEntity = cartProductService.addProductToCart(cartProductsRequestDto, userId);
         if(responseEntity != null) {
             logger.info("products added successfully !!");
@@ -47,11 +57,12 @@ public class CartController {
     }
 
     @DeleteMapping("/{cartId}/{cartProductId}")
+    @Operation(description = "API for delete product from cart")
     public ResponseEntity<Object> deleteProductFromCart(@PathVariable("cartId") Long cartId,
                                                         @PathVariable("cartProductId") Long cartProductId,
                                                         @RequestHeader Map<String, String> header)
     {
-        logger.info("Inside DeleteController to delete product from cart");
+        logger.info("DELETE CALL API for delete product:>>>>/cart/{cartId}/{cartProductId}");
 
         Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> responseEntity = cartProductService.deleteProductFromCart(cartId, cartProductId);
@@ -64,9 +75,10 @@ public class CartController {
     }
 
     @GetMapping("getCartProduct/{cartId}")
+    @Operation(description = "API for getCartProduct from Cart")
     public ResponseEntity<Object> getCartProducts(@PathVariable("cartId") Long cartId, @RequestHeader Map<String, String> header)
     {
-        logger.info("Inside getCartProduct from Cart");
+        logger.info("GET CALL API for get cart's product:>>>/cart/getCartProduct/{cartId}");
 
         Long userId = jwtUtil.getUserIdFromToken(header);
         ResponseEntity<Object> cartProducts = cartProductService.getCartProducts(cartId);

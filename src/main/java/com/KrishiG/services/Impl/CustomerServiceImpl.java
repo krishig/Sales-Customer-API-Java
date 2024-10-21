@@ -105,7 +105,28 @@ public class CustomerServiceImpl implements CustomerService {
             logger.info("Customer Not Found with the given ID {} ", customerId);
             throw new ResourceNotFoundException("Unable to Update Customer with the given Id " + customerId);
         }
+
+
+        CustomerAddress customerAddresses = null;
+
+        CustomerAddress customerAddress = mapper.map(customerRequestDto.getAddress().get(0), CustomerAddress.class);
+        if (customerAddress.getId() != null) {
+            customerAddress.setCustomer(customerDB);
+            customerAddress.setModifiedBy(userId);
+        } else {
+            customerAddress.setCustomer(customerDB);
+            customerAddress.setCreatedBy(userId);
+        }
+        customerAddresses = addressRepository.save(customerAddress);
+        if (customerAddresses == null) {
+            throw new ResourceNotFoundException("Could not able to add address " + customerRequestDto.getAddress());
+        }
+        CustomerAddressResponseDto addressDto1 = convertEntityToDtoForAddress(customerAddresses);
+
         CustomerResponseDto customerResponseDto = convertEntityToDto(customerDB);
+        List<CustomerAddressResponseDto> addressesList = new ArrayList<>();
+        addressesList.add(addressDto1);
+        customerResponseDto.setAddress(addressesList);
         String updateMessage = "Customer Updated Successfully";
         ResponseEntity<Object> responseEntity = ApiResponse.generateResponse(updateMessage, HttpStatus.CREATED, customerResponseDto, false, true);
         logger.info("Customer Updated Successfully!!");
@@ -269,6 +290,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerAddressResponseDto.setStreetName(customerAddress.getStreetName());
         customerAddressResponseDto.setDistrict(customerAddress.getDistrict());
         customerAddressResponseDto.setVillageName(customerAddress.getVillageName());
+        customerAddressResponseDto.setBlock(customerAddress.getBlock());
         customerAddressResponseDto.setState(customerAddress.getState());
         customerAddressResponseDto.setPostalCode(customerAddress.getPostalCode());
         customerAddressResponseDto.setCustomer(customerAddress.getCustomer().getId());

@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@Table(name = "PAYMENT")
 public class PaymentMethod {
 
     @Id

@@ -27,7 +27,7 @@ public class Image {
     @Column(name = "image_name")
     private String imageName;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", length = 500)
     private String imageUrl;
 
     @Column(name = "created_by")

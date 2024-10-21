@@ -1,6 +1,7 @@
 package com.KrishiG.dtos.response;
 
 import com.KrishiG.entities.Customer;
+import com.KrishiG.entities.OrderItems;
 import com.KrishiG.entities.OrderStatus;
 import com.KrishiG.entities.PaymentMethod;
 import com.KrishiG.util.Status;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +34,10 @@ public class OrderResponseDto {
     private String contactNumber;
 
     private Long addressId;
+
+    private  CustomerAddressResponseDto addressResponseDto;
+
+    private List<ProductResponseDto> productResponseDtos;
 
     private Long createdBy;
 

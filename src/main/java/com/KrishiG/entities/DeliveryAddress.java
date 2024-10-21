@@ -14,17 +14,11 @@ import java.util.Date;
 @Builder
 @Getter
 @Setter
-@Table(name = "CUSTOMER_ADDRESS")
-public class CustomerAddress {
-
+@Table(name = "DELIVERY_ADDRESS")
+public class DeliveryAddress {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Customer customer;
 
     @Column(name = "house_number")
     private int houseNumber;
@@ -34,8 +28,6 @@ public class CustomerAddress {
 
     @Column(name = "village_name")
     private String villageName;
-
-    private String block;
 
     private String district;
 

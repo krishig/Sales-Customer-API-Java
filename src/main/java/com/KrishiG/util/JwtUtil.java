@@ -7,9 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Component
@@ -35,6 +38,10 @@ public class JwtUtil {
                 String body = new String(base64Url.decode(base64EncodedBody));
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, Object> map = mapper.readValue(body, Map.class);
+                Long i = Long.parseLong(map.get("exp").toString());
+                if(isTokenExpire(i)){
+                    throw new JwtTokenException("Please login again!");
+                }
                 userId =  Long.parseLong(map.get("public_id").toString());
                 boolean existingUser = userService.getUserById(userId);
                 if(existingUser) {
@@ -49,5 +56,16 @@ public class JwtUtil {
             throw new JwtTokenException("Please pass the token!");
         }
         return userId;
+    }
+
+    private boolean isTokenExpire(Long date) {
+        String dateStr = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date (date*1000));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime expDate = LocalDateTime.parse(dateStr, formatter);
+        if(expDate.plusDays(7).isBefore(currentDateTime)) {
+            return true;
+        }
+        return false;
     }
 }

@@ -32,7 +32,8 @@ public class Orders {
     @Column(name = "total_price")
     private float totalPrice;
 
-    @JoinColumn(name = "status")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     @JoinColumn(name = "payment_method")
@@ -58,11 +59,9 @@ public class Orders {
     @Column(name = "modified_by")
     private Long modifiedBy;
 
-    @UpdateTimestamp
     @Column(name = "closed_at")
     private Date closedDate;
 
-    @UpdateTimestamp
     @Column(name = "out_of_delivered_at")
     private Date outOfDeliveryDate;
 
